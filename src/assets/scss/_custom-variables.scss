@@ -1,0 +1,47 @@
+// _custom-variables.scss
+// Aquí puedes definir todos tus colores personalizados
+
+// Forward Bootstrap's functions, variables, and mixins
+@forward "bootstrap/scss/functions";
+@forward "bootstrap/scss/variables";
+@forward "bootstrap/scss/mixins";
+
+// Colores primarios personalizados
+$primary: #4f46e5; // Índigo moderno
+$secondary: #64748b; // Slate
+$success: #10b981; // Emerald
+$info: #06b6d4; // Cyan
+$warning: #f59e0b; // Amber
+$danger: #ef4444; // Red
+$light: #f8fafc; // Slate muy claro
+$dark: #1e293b; // Slate oscuro
+
+// Colores adicionales que puedes usar
+$purple: #8b5cf6;
+$pink: #ec4899;
+$orange: #f97316;
+$teal: #14b8a6;
+$indigo: #6366f1;
+
+// Personalización de la tipografía
+$font-family-sans-serif: "Inter", "Segoe UI", Roboto, sans-serif;
+$font-size-base: 1rem;
+$line-height-base: 1.6;
+
+// Personalización de bordes y radios
+$border-radius: 0.75rem;
+$border-radius-sm: 0.5rem;
+$border-radius-lg: 1rem;
+
+// Personalización de espaciado
+$spacer: 1rem;
+
+// Personalización de sombras
+$box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+// Personalización de transiciones
+$transition-base: all 0.2s ease-in-out;

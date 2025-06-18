@@ -1,0 +1,111 @@
+// Usar la nueva sintaxis @use de Sass
+@use "sass:color";
+
+// Importar Bootstrap con variables personalizadas usando "with"
+@use "bootstrap/scss/bootstrap" as * with (
+  $primary: #4f46e5,
+  // Índigo moderno
+  $secondary: #64748b,
+  // Slate
+  $success: #10b981,
+  // Emerald
+  $info: #06b6d4,
+  // Cyan
+  $warning: #f59e0b,
+  // Amber
+  $danger: #ef4444,
+  // Red
+  $light: #f8fafc,
+  // Slate muy claro
+  $dark: #1e293b,
+  // Slate oscuro
+  $font-family-sans-serif:
+    (
+      "Inter",
+      "Segoe UI",
+      Roboto,
+      sans-serif,
+    ),
+  $font-size-base: 1rem,
+  $line-height-base: 1.6,
+  $border-radius: 0.75rem,
+  $border-radius-sm: 0.5rem,
+  $border-radius-lg: 1rem,
+  $spacer: 1rem
+);
+
+// Colores adicionales personalizados
+$purple: #8b5cf6;
+$pink: #ec4899;
+$orange: #f97316;
+$teal: #14b8a6;
+$indigo: #6366f1;
+
+// Personalización de sombras
+$box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+// Personalización de transiciones
+$transition-base: all 0.2s ease-in-out;
+
+/* Estilos personalizados adicionales */
+body {
+  font-family: $font-family-sans-serif;
+  line-height: $line-height-base;
+}
+
+/* Clases utilitarias personalizadas */
+.btn-custom {
+  background-color: $purple;
+  border-color: $purple;
+  color: white;
+
+  &:hover {
+    background-color: color.adjust($purple, $lightness: -10%);
+    border-color: color.adjust($purple, $lightness: -10%);
+  }
+}
+
+.text-purple {
+  color: $purple !important;
+}
+.text-pink {
+  color: $pink !important;
+}
+.text-orange {
+  color: $orange !important;
+}
+.text-teal {
+  color: $teal !important;
+}
+
+.bg-purple {
+  background-color: $purple !important;
+}
+.bg-pink {
+  background-color: $pink !important;
+}
+.bg-orange {
+  background-color: $orange !important;
+}
+.bg-teal {
+  background-color: $teal !important;
+}
+
+/* Estilos para mejorar la apariencia general */
+.card {
+  box-shadow: $box-shadow;
+  transition: $transition-base;
+
+  &:hover {
+    box-shadow: $box-shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+.btn {
+  transition: $transition-base;
+}
