@@ -10,7 +10,7 @@
 1. Clona el repositorio:
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/maurii9070/proyfrontendgrupo03.git
 cd frontend
 ```
 
@@ -28,7 +28,7 @@ npm install
 npm start
 ```
 
-La aplicación estará disponible en `http://localhost:3000`
+La aplicación estará disponible en `http://localhost:4200`
 
 ### Modo producción
 
