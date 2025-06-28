@@ -8,6 +8,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { registerLocaleData } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
 
 registerLocaleData(es);
 export const appConfig: ApplicationConfig = {
@@ -15,5 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     { provide: LOCALE_ID, useValue: 'es-AR' },
+    provideHttpClient(),
   ],
 };
