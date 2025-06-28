@@ -34,6 +34,9 @@
   $spacer: 1rem
 );
 
+// Importar Bootstrap Icons
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
 // Colores adicionales personalizados
 $purple: #8b5cf6;
 $pink: #ec4899;
@@ -109,6 +112,3 @@ body {
 .btn {
   transition: $transition-base;
 }
-
-/* Importing Bootstrap SCSS file. */
-@import "bootstrap/scss/bootstrap";
