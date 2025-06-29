@@ -46,12 +46,31 @@ export class LoginComponent {
           this.isLoading = false;
           // Guardar token
           this.autenticacionService.setToken(response.token);
-
           // Mostrar toast de éxito
-          this.toastService.showSuccess('Inicio de sesión exitoso');
-
-          // Redirigir (puedes cambiar esta ruta)
-          //this.router.navigate(['/dashboard']);
+          //this.toastService.showSuccess('Inicio de sesión exitoso');
+          // Obtener perfil del usuario autenticado
+          this.autenticacionService.getPerfilUsuario().subscribe({
+            next: (perfil) => {
+              // Mostrar toast de éxito
+              this.toastService.showSuccess('Inicio de sesión exitoso');
+              // Redirigir según el rol
+              if (perfil._rol === 'Paciente') {
+                this.router.navigate(['/paciente/', perfil._id]);
+              } else if (perfil._rol === 'Doctor') {
+                this.router.navigate(['/doctor/', perfil._id]);
+              } else if (
+                perfil._rol === 'Admin' ||
+                perfil._rol === 'Administrador'
+              ) {
+                this.router.navigate(['/admin/', perfil._id]);
+              } else {
+                this.toastService.showError('Rol no reconocido.');
+              }
+            },
+            error: (error) => {
+              this.toastService.showError('No se pudo obtener el perfil.');
+            },
+          });
         },
         error: (error) => {
           this.isLoading = false;
