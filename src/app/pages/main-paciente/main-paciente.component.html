@@ -39,11 +39,11 @@
         <!-- Lista de turnos ficticios usando @if y @for de Angular 17+ -->
         @if (tieneTurnos) {
         @for (turno of turnos; track turno) {
-        <div class="turno-card align-items-center">
+        <div class="turno-card align-items-center" [class.turno-cancelado]="turno.estado === 'cancelado'">
           <div class="turno-info">
             <i class="bi bi-clock-history text-primary"></i>
             <div>
-              <div class="fw-bold">{{ turno.especialidad }} - {{ turno.doctor }}</div>
+              <div class="fw-bold">{{ turno.doctor.especialidad.nombre }} - {{ turno.doctor.nombre }}</div>
               <div class="text-muted small mb-1">
                 <i class="bi bi-calendar-event text-primary"></i> {{ turno.fecha }} &nbsp;
                 <i class="bi bi-clock text-primary"></i> {{ turno.hora }}
@@ -68,9 +68,45 @@
             <button class="btn btn-outline-info btn-turno d-flex align-items-center gap-2">
               <i class="bi bi-eye"></i> Ver detalles
             </button>
-            <button class="btn btn-outline-danger btn-turno d-flex align-items-center gap-2">
+            <button class="btn btn-outline-danger btn-turno d-flex align-items-center gap-2" (click)="mostrarModalCancelar(turno._id)" [disabled]="turno.estado === 'cancelado'">
               <i class="bi bi-x-circle"></i> Cancelar
             </button>
+<!-- Modal de confirmación para cancelar turno (manejado por variable booleana) -->
+<div *ngIf="mostrarModal" class="modal fade show d-block custom-modal-backdrop">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+    <div class="modal-content shadow rounded-4 border-0">
+      <div class="modal-header bg-danger bg-opacity-10 border-0 rounded-top-4">
+        <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="modalCancelarTurnoLabel">
+          <i class="bi bi-exclamation-triangle-fill"></i> Confirmar cancelación
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarModalCancelar()" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <p class="mb-3 fs-5">¿Estás seguro de que deseas cancelar este turno?</p>
+        <i class="bi bi-calendar-x text-danger" style="font-size:3rem;"></i>
+      </div>
+      <div class="modal-footer d-flex justify-content-between border-0 pb-4 pt-0">
+        <button type="button" class="btn btn-outline-secondary px-4" (click)="cerrarModalCancelar()">
+          <i class="bi bi-x-lg"></i> No, volver
+        </button>
+        <button type="button" class="btn btn-danger px-4" (click)="confirmarCancelarTurno()">
+          <i class="bi bi-check-lg"></i> Sí, cancelar turno
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30,41,59,0.35);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
           </div>
         </div>
         }
