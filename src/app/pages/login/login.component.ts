@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AutenticacionService } from '../../services/autenticacion.service';
 import { ToastService } from '../../services/toast.service';
+import { AuthFirebaseService } from '../../services/auth-firebase.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ import { ToastService } from '../../services/toast.service';
 export class LoginComponent {
   private fb = inject(FormBuilder);
   private autenticacionService = inject(AutenticacionService);
+  private autenticacionFirebaseService = inject(AuthFirebaseService);
   private router = inject(Router);
   private toastService = inject(ToastService);
 
@@ -105,10 +107,15 @@ export class LoginComponent {
     console.log('Navegando a crear cuenta...');
   }
 
-  onGoogleLogin() {
-    // Lógica para login con Google
-    console.log('Iniciando sesión con Google...');
-    // Aquí iría la integración con Google OAuth
+  async onGoogleLogin() {
+    try {
+      const result = await this.autenticacionFirebaseService.loginWithGoogle();
+
+      const token = await result.user.getIdToken();
+      console.log('Token de Google:', token);
+    } catch (error) {
+      this.toastService.showError('Error al iniciar sesión con Google');
+    }
   }
 
   onForgotPassword() {
