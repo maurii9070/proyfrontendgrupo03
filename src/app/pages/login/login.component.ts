@@ -1,44 +1,80 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AutenticacionService } from '../../services/autenticacion.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  loginData = {
-    dni: '',
-    password: '',
-  };
+  private fb = inject(FormBuilder);
+  private autenticacionService = inject(AutenticacionService);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
 
+  loginForm: FormGroup;
   isLoading = false;
   showPassword = false;
 
-  constructor() {}
+  constructor() {
+    this.loginForm = this.fb.group({
+      dni: ['', [Validators.required, Validators.pattern(/^[0-9]{7,8}$/)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
 
   onSubmit() {
-    if (this.isFormValid()) {
+    if (this.loginForm.valid) {
       this.isLoading = true;
 
-      // Simulación de proceso de login
-      console.log('Datos de login:', this.loginData);
+      const loginData = {
+        dni: this.loginForm.get('dni')?.value,
+        password: this.loginForm.get('password')?.value,
+      };
 
-      // Aquí iría la lógica de autenticación
-      setTimeout(() => {
-        this.isLoading = false;
-        // Redirect o manejo de respuesta
-      }, 2000);
+      this.autenticacionService.login(loginData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          // Guardar token
+          this.autenticacionService.setToken(response.token);
+
+          // Mostrar toast de éxito
+          this.toastService.showSuccess('Inicio de sesión exitoso');
+
+          // Redirigir (puedes cambiar esta ruta)
+          //this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error en login:', error);
+
+          // Mostrar toast de error
+          const errorMessage =
+            error.error?.message || 'Error de conexión. Intenta nuevamente.';
+          this.toastService.showError(errorMessage);
+        },
+      });
+    } else {
+      // Marcar todos los campos como touched para mostrar errores
+      this.loginForm.markAllAsTouched();
     }
   }
 
-  isFormValid(): boolean {
-    return (
-      this.loginData.dni.length >= 7 &&
-      this.loginData.dni.length <= 8 &&
-      this.loginData.password.length >= 6
-    );
+  get dni() {
+    return this.loginForm.get('dni');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
   }
 
   togglePassword() {
