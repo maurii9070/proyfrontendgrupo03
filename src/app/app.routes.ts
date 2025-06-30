@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { TurnoReservaComponent } from './pages/turno-reserva/turno-reserva.component';
 import { LoginComponent } from './pages/login/login.component';
 import { MainPacienteComponent } from './pages/main-paciente/main-paciente.component';
+import { SolicitarDniGoogleComponent } from './pages/solicitar-dni-google/solicitar-dni-google.component';
 
 export const routes: Routes = [
   {
@@ -13,7 +14,11 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path:'paciente/:idPaciente',
-    component: MainPacienteComponent
-  }
+    path: 'login/solicitud-dni',
+    component: SolicitarDniGoogleComponent,
+  },
+  {
+    path: 'paciente/:idPaciente',
+    component: MainPacienteComponent,
+  },
 ];
