@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AutenticacionService } from '../../services/autenticacion.service';
 import { ToastService } from '../../services/toast.service';
+import { AuthFirebaseService } from '../../services/auth-firebase.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ import { ToastService } from '../../services/toast.service';
 export class LoginComponent {
   private fb = inject(FormBuilder);
   private autenticacionService = inject(AutenticacionService);
+  private autenticacionFirebaseService = inject(AuthFirebaseService);
   private router = inject(Router);
   private toastService = inject(ToastService);
 
@@ -105,10 +107,52 @@ export class LoginComponent {
     console.log('Navegando a crear cuenta...');
   }
 
-  onGoogleLogin() {
-    // Lógica para login con Google
-    console.log('Iniciando sesión con Google...');
-    // Aquí iría la integración con Google OAuth
+  async onGoogleLogin() {
+    try {
+      const result = await this.autenticacionFirebaseService.loginWithGoogle();
+      const token = await result.user.getIdToken();
+
+      this.autenticacionFirebaseService
+        .verificarUsuarioEnBackend(token)
+        .subscribe({
+          next: (response) => {
+            // Manejar la respuesta del backend
+            if (response.dniConfirmado === false) {
+              // Enviar todos los datos necesarios al componente de solicitud DNI
+              this.router.navigate(['/login/solicitud-dni'], {
+                state: {
+                  userData: response,
+                  token: token,
+                  googleUser: {
+                    email: result.user.email,
+                    displayName: result.user.displayName,
+                    photoURL: result.user.photoURL,
+                    uid: result.user.uid,
+                  },
+                },
+              });
+            } else {
+              this.autenticacionService.setToken(response.token);
+              this.autenticacionService.getPerfilUsuario().subscribe({
+                next: (perfil) => {
+                  this.toastService.showSuccess('Inicio de sesión exitoso');
+                  this.router.navigate(['/paciente/', perfil._id]);
+                },
+                error: (error) => {
+                  console.error('Error al obtener perfil del usuario:', error);
+                },
+              });
+            }
+          },
+          error: (error) => {
+            this.toastService.showError(
+              'Error al verificar usuario en backend'
+            );
+          },
+        });
+    } catch (error) {
+      this.toastService.showError('Error al iniciar sesión con Google');
+    }
   }
 
   onForgotPassword() {
