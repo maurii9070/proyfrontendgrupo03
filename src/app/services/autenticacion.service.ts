@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { jwtDecode } from 'jwt-decode';
 
 export interface LoginRequest {
   dni: string;
@@ -41,14 +40,14 @@ export class AutenticacionService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
-  
+
   getPerfilUsuario(): Observable<any> {
     const token = this.getToken();
     if (!token) {
       throw new Error('No hay token disponible');
     }
     return this.http.get(`${this.apiUrl}/me`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
   }
 }

@@ -1,17 +1,42 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { PacienteService } from '../../services/paciente.service';
 import { AutenticacionService } from '../../services/autenticacion.service';
 import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { TurnoService } from '../../services/turno.service';
+import { ToastService } from '../../services/toast.service';
 
 export interface Paciente{
+  _id:string
   nombre: string;
   apellido: string;
   email: string;
   dni: string;
-  fechjaNacimiento?: string;
+  fechaNacimiento?: string;
   telefono?: string;
+}
+export interface Especialidad {
+  _id: string;
+  nombre: string;
+  }
+export interface Doctor {
+  _id: string;
+  nombre: string;
+  apellido: string;
+  especialidad: Especialidad;
+  email: string;
+  telefono?: string;
+}
+export interface Turno {
+  _id: string;
+  especialidad: string;
+  doctor: Doctor;
+  paciente: Paciente;
+  fecha: string;
+  hora: string;
+  estado: string;
+  observaciones?: string;
 }
 @Component({
   selector: 'app-main-paciente',
@@ -24,14 +49,23 @@ export class MainPacienteComponent implements OnInit {
   pacienteId: string = '';
   pacienteService = inject(PacienteService);
   route = inject(ActivatedRoute);
+  turnoService=inject(TurnoService)
+  toastService = inject(ToastService);
+
   paciente: Paciente = {
+    _id: '',
     nombre: '',
     apellido: '',
     email: '',
     dni: '',
-    fechjaNacimiento: '',
+    fechaNacimiento: '',
     telefono: ''
   };
+  turnos: Turno[] = [];
+  @ViewChild('modalCancelarTurno') modalCancelarTurno: any;
+  turnoIdParaCancelar: string | null = null;
+  mostrarModal = false;
+
   ngOnInit() {
     this.pacienteId = this.route.snapshot.paramMap.get('idPaciente') || '';
     this.pacienteService.getPacienteById(this.pacienteId).subscribe((data: any) => {
@@ -39,38 +73,40 @@ export class MainPacienteComponent implements OnInit {
     }, error => {
       console.error('Error al obtener los datos del paciente:', error);
     });
+    this.turnoService.getTurnosByPacienteId(this.pacienteId).subscribe((data: any) => {
+      this.turnos = data.sort((a: Turno, b: Turno) => {
+        return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+      });
+    }, error => {
+      console.error('Error al obtener los turnos del paciente:', error);
+    });
   }
-
-
-  turnos: any[] = [
-    {
-      especialidad: 'Cardiología',
-      doctor: 'Dr. García',
-      fecha: '2025-07-10',
-      hora: '10:00',
-      estado: 'pendiente',
-      observaciones: 'Traer estudios previos.'
-    },
-    {
-      especialidad: 'Neurología',
-      doctor: 'Dra. López',
-      fecha: '2025-07-15',
-      hora: '14:30',
-      estado: 'confirmado',
-      observaciones: ''
-    },
-    {
-      especialidad: 'Clínica',
-      doctor: 'Dr. Suárez',
-      fecha: '2025-06-20',
-      hora: '09:00',
-      estado: 'cancelado',
-      observaciones: 'Cancelado por el paciente.'
-    }
-  ].sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-
   get tieneTurnos(): boolean {
     return this.turnos.length > 0;
   }
+  mostrarModalCancelar(turnoId: string) {
+    this.turnoIdParaCancelar = turnoId;
+    this.mostrarModal = true;
+  }
+
+  cerrarModalCancelar() {
+    this.mostrarModal = false;
+    this.turnoIdParaCancelar = null;
+  }
+
+  confirmarCancelarTurno() {
+    if (!this.turnoIdParaCancelar) return;
+    this.turnoService.cancelarTurno(this.turnoIdParaCancelar).subscribe(() => {
+      this.cerrarModalCancelar();
+      this.toastService.showSuccess('Turno cancelado exitosamente.');
+      // Recargar la página
+      window.location.reload();
+    }, error => {
+      console.error('Error al cancelar el turno:', error);
+      this.cerrarModalCancelar();
+      this.toastService.showError('No se pudo cancelar el turno. Inténtalo más tarde.');
+    });
+  }
+
 }
 

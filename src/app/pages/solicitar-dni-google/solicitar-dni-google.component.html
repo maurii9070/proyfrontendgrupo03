@@ -1,0 +1,66 @@
+<div
+  class="d-flex justify-content-center align-items-center min-vh-100 bg-primary-subtle"
+>
+  <div
+    class="card shadow-lg border-0 rounded-4"
+    style="max-width: 400px; width: 100%"
+  >
+    <div class="card-body p-5">
+      <!-- Logo o título -->
+      <div class="text-center mb-4">
+        <h3 class="fw-bold text-primary mb-2">Ingresar DNI</h3>
+        <p class="text-muted">Ingrese su número de documento</p>
+      </div>
+
+      <!-- Formulario de DNI -->
+      <form [formGroup]="dniForm" (ngSubmit)="onSubmit()">
+        <!-- Campo DNI -->
+        <div class="mb-3">
+          <label for="dni" class="form-label fw-medium text-dark">DNI</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="bi bi-person-vcard text-secondary"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control border-start-0 ps-2"
+              id="dni"
+              formControlName="dni"
+              placeholder="Ingrese su DNI"
+              maxlength="8"
+            />
+          </div>
+          <div class="form-text">Ingrese su número de documento sin puntos</div>
+          <!-- Mensaje de validación -->
+          @if (dni?.invalid && dni?.touched) {
+          <div class="text-danger small mt-1">
+            @if (dni?.errors?.['required']) {
+            <span>El DNI es requerido</span>
+            } @if (dni?.errors?.['pattern']) {
+            <span>El DNI debe tener entre 7 y 8 dígitos</span>
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Botón de ingresar -->
+        <div class="d-grid">
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg rounded-3"
+            [disabled]="dniForm.invalid || isLoading"
+          >
+            @if (isLoading) {
+            <span class="spinner-border spinner-border-sm me-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+            } @else {
+            <i class="bi bi-box-arrow-in-right me-2"></i>
+            }
+            {{ isLoading ? "Procesando..." : "Ingresar" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
