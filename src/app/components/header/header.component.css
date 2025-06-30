@@ -1,0 +1,10 @@
+.navbar-nav .nav-link {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.navbar-nav .nav-link.custom-hover:hover {
+  background-color: #0d6efd;
+  color: white !important;
+}
