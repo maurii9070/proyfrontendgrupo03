@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://tu-api-produccion.com/api',
+  apiUrl: 'https://backend-consultorio-uwzz.onrender.com/api',
 };
