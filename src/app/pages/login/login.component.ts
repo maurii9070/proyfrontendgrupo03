@@ -160,3 +160,5 @@ export class LoginComponent {
     console.log('Recuperar contraseña...');
   }
 }
+
+//test
