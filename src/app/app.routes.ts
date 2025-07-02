@@ -4,6 +4,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { MainPacienteComponent } from './pages/main-paciente/main-paciente.component';
 import { SolicitarDniGoogleComponent } from './pages/solicitar-dni-google/solicitar-dni-google.component';
 import { RegistroPacienteComponent } from './pages/registro-paciente/registro-paciente.component';
+import { ListDoctoresComponent } from './pages/list-doctores/list-doctores.component';
 
 export const routes: Routes = [
   {
@@ -25,5 +26,9 @@ export const routes: Routes = [
   {
     path: 'registro-paciente',
     component: RegistroPacienteComponent,
+  },
+  {
+    path:'doctores',
+    component: ListDoctoresComponent
   },
 ];
