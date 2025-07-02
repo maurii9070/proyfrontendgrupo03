@@ -1,16 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PacienteService {
 
-  http= inject(HttpClient);
-  private apiUrl = 'http://localhost:4000/api/pacientes/:idPaciente';
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/pacientes`;
 
-  getPacienteById(idPaciente: string) {
-    const url = this.apiUrl.replace(':idPaciente', idPaciente);
-    return this.http.get(url);
+  registrarPaciente(paciente: any) {
+    return this.http.post(`${this.apiUrl}/registro`, paciente);
+  }
+
+  getPacienteById(id: string) {
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
 }
