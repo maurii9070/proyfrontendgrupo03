@@ -1,0 +1,30 @@
+
+/* Responsive card grid spacing */
+.card {
+  border-radius: 1rem;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.15);
+}
+.card .badge {
+  font-size: 0.95em;
+  padding: 0.5em 0.75em;
+}
+.card-title {
+  font-weight: 600;
+}
+.input-group-text {
+  background: var(--bs-primary);
+  color: #fff;
+}
+.form-label {
+  font-weight: 500;
+}
+.btn-primary {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.alert-info {
+  border-radius: 0.75rem;
+}
