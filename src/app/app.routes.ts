@@ -6,6 +6,7 @@ import { SolicitarDniGoogleComponent } from './pages/solicitar-dni-google/solici
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { RegistroPacienteComponent } from './pages/registro-paciente/registro-paciente.component';
 import { ListDoctoresComponent } from './pages/list-doctores/list-doctores.component';
+import { RegistroDoctorComponent } from './pages/registro-doctor/registro-doctor.component';
 
 export const routes: Routes = [
   {
@@ -35,6 +36,10 @@ export const routes: Routes = [
   {
     path:'doctores',
     component: ListDoctoresComponent
+  },
+  {
+    path: 'registro-doctor',
+    component: RegistroDoctorComponent
   },
   {
     path: '**',

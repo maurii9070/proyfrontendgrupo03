@@ -17,7 +17,7 @@ export class RegistroPacienteComponent {
     telefono: '',
     fechaNacimiento: '',
     email: '',
-    password: ''
+    password: '' 
   };
 
   mensaje = '';

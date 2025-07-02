@@ -11,14 +11,18 @@ export class DoctorService {
 
   private apiUrl = `${environment.apiUrl}/doctores`;
 
+  registrarDoctor(doctor: any) {
+    return this.http.post(this.apiUrl, doctor);
+  }
+  
   getDoctores() {
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get(this.apiUrl);
   }
 
   getDoctoresByName(nombre: string) {
-    return this.http.get<any[]>(`${this.apiUrl}/name?nombre=${nombre}`);
+    return this.http.get(`${this.apiUrl}/name?nombre=${nombre}`);
   } 
   getDoctoresByEspecialidad(idEspecialidad: string) {
-    return this.http.get<any[]>(`${this.apiUrl}/especialidad/${idEspecialidad}`);
+    return this.http.get(`${this.apiUrl}/especialidad/${idEspecialidad}`);
   }
 }
