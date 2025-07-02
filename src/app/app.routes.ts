@@ -3,6 +3,7 @@ import { TurnoReservaComponent } from './pages/turno-reserva/turno-reserva.compo
 import { LoginComponent } from './pages/login/login.component';
 import { MainPacienteComponent } from './pages/main-paciente/main-paciente.component';
 import { SolicitarDniGoogleComponent } from './pages/solicitar-dni-google/solicitar-dni-google.component';
+import { RegistroPacienteComponent } from './pages/registro-paciente/registro-paciente.component';
 import { ListDoctoresComponent } from './pages/list-doctores/list-doctores.component';
 
 export const routes: Routes = [
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'paciente/:idPaciente',
     component: MainPacienteComponent,
+  },
+  {
+    path: 'registro-paciente',
+    component: RegistroPacienteComponent,
   },
   {
     path:'doctores',
