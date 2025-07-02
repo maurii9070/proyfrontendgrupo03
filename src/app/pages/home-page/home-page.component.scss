@@ -1,0 +1,313 @@
+/* hero section */
+
+.hero-section {
+  background-image: url('https://centrichealthcare.org/wp-content/uploads/2021/09/z.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  text-align: center;
+  padding: 100px 20px;
+  position: relative; 
+  min-height: 450px; 
+
+  &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+  }
+
+  .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+  }
+
+  h1 {
+      font-size: 3.2em; 
+      @media (min-width: 768px) { 
+          font-size: 3.8em; 
+      }
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  p {
+      font-size: 1.1em;
+      @media (min-width: 768px) {
+          font-size: 1.4em;
+      }
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .search-bar {
+      max-width: 500px;
+      margin: 0 auto;
+      
+      .form-control {
+          border-top-left-radius: 2rem !important; 
+          border-bottom-left-radius: 2rem !important;
+          padding: 0.8rem 1.5rem; 
+          font-size: 1.05em;
+      }
+      .btn-primary {
+          border-top-right-radius: 2rem !important; 
+          border-bottom-right-radius: 2rem !important;
+          padding: 0.8rem 1.5rem;
+          font-size: 1.05em;
+      }
+  }
+}
+
+
+/* section servicios */
+/* Cards de Servicios */
+.service-cards {
+    background-color: var(--bs-gray-100);
+
+    h2 {
+        color: var(--bs-primary);
+    }
+
+    .service-card {
+        border: none;
+        border-radius: var(--bs-border-radius-lg); // Usando variable CSS
+        box-shadow: var(--bs-box-shadow-sm); // Usando variable CSS
+        transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        cursor: pointer;
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-icon {
+            font-size: 3.8em;
+            color: var(--bs-primary);
+            transition: color 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 1.35em;
+            font-weight: var(--bs-font-weight-bold); // Usando variable CSS
+            color: var(--bs-dark);
+        }
+
+        .card-text {
+            font-size: 0.95em;
+            color: var(--bs-secondary);
+        }
+
+        &:hover {
+            transform: translateY(-0.5rem);
+            background-color: var(--bs-primary);
+            color: var(--bs-white);
+
+            .card-icon {
+                color: var(--bs-white);
+            }
+            .card-title, .card-text {
+                color: var(--bs-white);
+            }
+        }
+    }
+}
+
+/* Sección "Información para Pacientes" y Portal Paciente */
+.patient-info {
+    background-color: var(--bs-white);
+    border-top: 1px solid var(--bs-gray-200);
+
+    h2 {
+        color: var(--bs-primary);
+    }
+
+    p.lead {
+        color: var(--bs-secondary);
+    }
+
+    .patient-links {
+        li {
+            .info-link {
+                color: var(--bs-primary);
+                font-size: 1.1em;
+                &:hover {
+                    
+                    color: #3f39c2; // darken(var(--bs-primary), 10%)
+                }
+                i {
+                    color: var(--bs-info);
+                }
+            }
+        }
+    }
+
+
+    img {
+        max-height: 400px;
+        object-fit: cover;
+    }
+}
+
+
+
+/* Sección de Profesionales y Especialidades */
+.professionals-specialties {
+    background-color: var(--bs-gray-100);
+
+    h2 {
+        color: var(--bs-dark);
+    }
+
+    .feature-box {
+        border-radius: var(--bs-border-radius-lg); // Usando variable CSS
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: var(--bs-box-shadow); // Usando variable CSS
+        min-height: 300px;
+
+        h3 {
+            font-size: 2em;
+            @media (min-width: 768px) {
+                font-size: 2.5em;
+            }
+        }
+
+        p {
+            font-size: 1.05em;
+            @media (min-width: 768px) {
+                font-size: 1.15em;
+            }
+        }
+
+        .btn-outline-light {
+            border-color: var(--bs-white);
+            color: var(--bs-white);
+            &:hover {
+                background-color: var(--bs-white);
+                color: var(--bs-primary);
+            }
+        }
+
+        &:hover {
+            transform: translateY(-0.5rem);
+            box-shadow: var(--bs-box-shadow-lg); // Usando variable CSS
+        }
+    }
+
+    .professional-box {
+        // Aquí NO podemos usar darken() directamente sin Sass.
+        // Opción 1 (la mejor): Definir variables de gradiente en _custom-variables.scss.
+        // Opción 2: Usar valores fijos que simulen el gradiente.
+        background: linear-gradient(135deg, var(--bs-primary) 0%, #3f39c2 100%); /* #3f39c2 es darken(primary, 15%) */
+    }
+
+    .specialty-box {
+        background: linear-gradient(135deg, var(--bs-success) 0%, #177f5c 100%); /* #177f5c es darken(success, 15%) */
+    }
+}
+
+
+
+/* Sección de Noticias */
+.news-section {
+    background-color: var(--bs-white);
+
+    .news-card {
+        border: 1px solid var(--bs-gray-200);
+        border-radius: var(--bs-border-radius-lg); // Usando variable CSS
+        overflow: hidden;
+        box-shadow: var(--bs-box-shadow-sm); // Usando variable CSS
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .card-title {
+            font-size: 1.25em;
+            color: var(--bs-dark);
+        }
+
+        .card-text {
+            font-size: 0.9em;
+            color: var(--bs-secondary);
+        }
+
+        &:hover {
+            transform: translateY(-0.3rem);
+            box-shadow: var(--bs-box-shadow); // Usando variable CSS
+        }
+    }
+}
+
+
+
+/* Sección de Testimonios/Comentarios de Pacientes */
+.testimonials-section {
+    background-color: var(--bs-info-bg-subtle);
+    color: var(--bs-info-text-emphasis);
+
+    h2 {
+        color: var(--bs-info-text-emphasis);
+    }
+
+    .testimonial-card {
+        background-color: var(--bs-white);
+        border: none;
+        border-radius: var(--bs-border-radius-lg); // Usando variable CSS
+        box-shadow: var(--bs-box-shadow-sm); // Usando variable CSS
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--bs-dark);
+        }
+
+        .testimonial-author {
+            strong {
+                color: var(--bs-primary);
+            }
+            span {
+                font-size: 0.9em;
+                color: var(--bs-secondary);
+            }
+        }
+    }
+}
+
+
+
+/* Sección de CTA (Call to Action) Final */
+.cta-bottom {
+    background-color: var(--bs-primary);
+    color: var(--bs-white);
+    padding: 60px 20px;
+
+    h2 {
+        color: var(--bs-white);
+    }
+
+    .btn-light {
+        color: var(--bs-primary);
+        &:hover {
+            background-color: #f8f9fa; /* Color fijo para hover */
+            color: #3f39c2; /* Color fijo para hover */
+        }
+    }
+    .btn-outline-light {
+        color: var(--bs-white);
+        border-color: var(--bs-white);
+        &:hover {
+            background-color: var(--bs-white);
+            color: var(--bs-primary);
+        }
+    }
+}
