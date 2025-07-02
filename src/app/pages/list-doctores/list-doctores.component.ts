@@ -40,10 +40,9 @@ export class ListDoctoresComponent implements OnInit {
       this.especialidades = especialidades;
     });
   }
-  
+
   cargarDoctores(nombre: string = '', especialidad: string = '') {
     // Si ambos filtros están vacíos, trae todos
-    /*
     if (nombre.trim() === '' && especialidad.trim() === '') {
       this.doctorService.getDoctores().subscribe((doctores: Doctor[] | null | undefined) => {
         this.doctores = Array.isArray(doctores) ? doctores : [];
@@ -65,7 +64,6 @@ export class ListDoctoresComponent implements OnInit {
         this.doctores = lista.filter(doc => doc.especialidad?.nombre === especialidad);
       });
     }
-      */
   }
 
   onBuscarNombre() {
