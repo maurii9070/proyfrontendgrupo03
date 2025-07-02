@@ -108,5 +108,9 @@ export class MainPacienteComponent implements OnInit {
     });
   }
 
+  onClickSolicitarTurno() {
+    // Redirigir a la página de solicitud de turno
+    window.location.href = `/doctores`;
+  }
 }
 
