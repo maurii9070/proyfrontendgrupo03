@@ -3,10 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TurnoService {
-
   private http = inject(HttpClient);
 
   private apiUrl = `${environment.apiUrl}/turnos`;
@@ -21,15 +20,22 @@ export class TurnoService {
 
   //update turno observaciones solo
 
-
   getTurnoById(turnoId: string) {
     return this.http.get(`${this.apiUrl}/${turnoId}`);
   }
 
   cancelarTurno(turnoId: string) {
-    return this.http.put(`${this.apiUrl}/${turnoId}/cancelado`,{});
+    return this.http.put(`${this.apiUrl}/${turnoId}/cancelado`, {});
   }
   realizarTurno(turnoId: string) {
     return this.http.put(`${this.apiUrl}/${turnoId}/realiado`, {});
+  }
+
+  getTurnosByDoctorFecha(doctorId: string, fecha: string) {
+    return this.http.get(`${this.apiUrl}/doctor/${doctorId}/fecha`, {
+      params: {
+        fecha: fecha,
+      },
+    });
   }
 }
