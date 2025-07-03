@@ -53,8 +53,15 @@
                     [class.btn-primary]="selectedHour === hora"
                     [class.btn-outline-primary]="selectedHour !== hora"
                     (click)="onHourSelect(hora)"
+                    [disabled]="deshabilitarHora(hora)"
                   >
                     {{ hora }}
+                    @if (deshabilitarHora(hora)) {
+                    <i
+                      class="bi bi-lock-fill text-muted ms-1"
+                      title="Hora no disponible"
+                    ></i>
+                    }
                   </button>
                 </div>
                 }
