@@ -7,6 +7,7 @@ import { DoctorService } from '../../services/doctor.service';
 export interface Especialidad{
   _id: string;
   nombre: string;
+  descripcion?: string;
 }
 export interface Doctor {
   _id: string;
