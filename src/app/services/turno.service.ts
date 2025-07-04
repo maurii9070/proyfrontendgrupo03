@@ -84,7 +84,9 @@ export class TurnoService {
   confirmarTurno(turnoId: string) {
     return this.http.put(`${this.apiUrl}/${turnoId}/confirmado`, {});
   }
-
+  actualizarDetallesTurno(turnoId: string, turno: any) {
+    return this.http.put(`${this.apiUrl}/${turnoId}`, turno);
+  }
   getTurnosByDoctorFecha(doctorId: string, fecha: string) {
     return this.http.get(`${this.apiUrl}/doctor/${doctorId}/fecha`, {
       params: {
