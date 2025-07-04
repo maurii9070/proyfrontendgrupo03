@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PacienteService } from '../../services/paciente.service';
+import { Paciente } from '../../models/paciente.model';
 
 @Component({
   selector: 'app-registro-paciente',
@@ -10,7 +11,8 @@ import { PacienteService } from '../../services/paciente.service';
   styleUrl: './registro-paciente.component.css'
 })
 export class RegistroPacienteComponent {
-  paciente = {
+  // Objeto para el formulario de registro (sin _id)
+  paciente: Omit<Paciente, '_id'> = {
     nombre: '',
     apellido: '',
     dni: '',
@@ -30,18 +32,11 @@ export class RegistroPacienteComponent {
     this.mensaje = '';
     this.error = '';
     this.cargando = true;
+    
     this.pacienteService.registrarPaciente(this.paciente).subscribe({
       next: (res) => {
         this.mensaje = 'Paciente registrado exitosamente.';
-        this.paciente = {
-          nombre: '',
-          apellido: '',
-          dni: '',
-          telefono: '',
-          fechaNacimiento: '',
-          email: '',
-          password: ''
-        };
+        this.limpiarFormulario();
         this.cargando = false;
       },
       error: (err) => {
@@ -49,5 +44,17 @@ export class RegistroPacienteComponent {
         this.cargando = false;
       }
     });
+  }
+
+  private limpiarFormulario(): void {
+    this.paciente = {
+      nombre: '',
+      apellido: '',
+      dni: '',
+      telefono: '',
+      fechaNacimiento: '',
+      email: '',
+      password: ''
+    };
   }
 }

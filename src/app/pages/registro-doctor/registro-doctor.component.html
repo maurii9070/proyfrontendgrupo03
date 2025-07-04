@@ -4,7 +4,7 @@
     <form (ngSubmit)="registrarDoctor()" #form="ngForm">
       <div class="mb-3">
         <label class="form-label fw-bold">Nombre</label>
-        <input type="text" class="form-control" name="nombre" [(ngModel)]="doctor.nombre" required #nombre="ngModel">
+        <input type="text" class="form-control" name="nombre" [(ngModel)]="doctorForm.nombre" required #nombre="ngModel">
         <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
           El nombre es obligatorio.
         </div>
@@ -12,7 +12,7 @@
   
       <div class="mb-3">
         <label class="form-label fw-bold">Apellido</label>
-        <input type="text" class="form-control" name="apellido" [(ngModel)]="doctor.apellido" required #apellido="ngModel">
+        <input type="text" class="form-control" name="apellido" [(ngModel)]="doctorForm.apellido" required #apellido="ngModel">
         <div class="text-danger" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
           El apellido es obligatorio.
         </div>
@@ -20,7 +20,7 @@
   
       <div class="mb-3">
         <label class="form-label fw-bold">DNI</label>
-        <input type="text" class="form-control" name="dni" [(ngModel)]="doctor.dni" required pattern="^[0-9]{8}$" #dni="ngModel">
+        <input type="text" class="form-control" name="dni" [(ngModel)]="doctorForm.dni" required pattern="^[0-9]{8}$" #dni="ngModel">
         <div class="form-text text-muted">Debe contener exactamente 8 números (sin puntos ni letras).</div>
         <div class="text-danger" *ngIf="dni.invalid && (dni.dirty || dni.touched)">
           <div *ngIf="dni.errors?.['required']">El DNI es obligatorio.</div>
@@ -30,7 +30,7 @@
   
       <div class="mb-3">
         <label class="form-label fw-bold">Teléfono</label>
-        <input type="text" class="form-control" name="telefono" [(ngModel)]="doctor.telefono" required pattern="^388[0-9]{7}$" #telefono="ngModel">
+        <input type="text" class="form-control" name="telefono" [(ngModel)]="doctorForm.telefono" required pattern="^388[0-9]{7}$" #telefono="ngModel">
         <div class="form-text text-muted">Debe comenzar con 388 y tener 10 dígitos en total (ej: 3881234567).</div>
         <div class="text-danger" *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
           <div *ngIf="telefono.errors?.['required']">El teléfono es obligatorio.</div>
@@ -40,7 +40,7 @@
 
       <div class="mb-3">
         <label class="form-label fw-bold">Matrícula</label>
-        <input type="text" class="form-control" name="matricula" [(ngModel)]="doctor.matricula" required #matricula="ngModel">
+        <input type="text" class="form-control" name="matricula" [(ngModel)]="doctorForm.matricula" required #matricula="ngModel">
         <div class="text-danger" *ngIf="matricula.invalid && (matricula.dirty || matricula.touched)">
           La matrícula es obligatoria.
         </div>
@@ -48,7 +48,7 @@
 
       <div class="mb-3">
         <label class="form-label fw-bold">Especialidad</label>
-        <select class="form-control" name="especialidad" [(ngModel)]="doctor.especialidad" required #especialidad="ngModel">
+        <select class="form-control" name="especialidad" [(ngModel)]="especialidadId" required #especialidad="ngModel">
           <option value="">Seleccione una especialidad</option>
           <option *ngFor="let esp of especialidades" [value]="esp._id">{{ esp.nombre }} - {{ esp.descripcion }}</option>
         </select>
@@ -59,7 +59,7 @@
 
       <div class="mb-3">
         <label class="form-label fw-bold">Precio de Consulta</label>
-        <input type="number" class="form-control" name="precioConsulta" [(ngModel)]="doctor.precioConsulta" required min="0" #precioConsulta="ngModel">
+        <input type="number" class="form-control" name="precioConsulta" [(ngModel)]="doctorForm.precioConsulta" required min="0" #precioConsulta="ngModel">
         <div class="text-danger" *ngIf="precioConsulta.invalid && (precioConsulta.dirty || precioConsulta.touched)">
           <div *ngIf="precioConsulta.errors?.['required']">El precio de consulta es obligatorio.</div>
           <div *ngIf="precioConsulta.errors?.['min']">El precio debe ser mayor o igual a 0.</div>
@@ -68,7 +68,7 @@
   
       <div class="mb-3">
         <label class="form-label fw-bold">Email</label>
-        <input type="email" class="form-control" name="email" [(ngModel)]="doctor.email" required pattern="^[^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]+$" #email="ngModel">
+        <input type="email" class="form-control" name="email" [(ngModel)]="doctorForm.email" required pattern="^[^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]+$" #email="ngModel">
         <div class="form-text text-muted">Debe tener formato de correo electrónico (ej: usuario&#64;dominio.com).</div>
         <div class="text-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
           <div *ngIf="email.errors?.['required']">El email es obligatorio.</div>
@@ -78,7 +78,7 @@
   
       <div class="mb-3">
         <label class="form-label fw-bold">Contraseña</label>
-        <input type="password" class="form-control" name="password" [(ngModel)]="doctor.password" required minlength="6" pattern="^(?=.*[A-Z])(?=.*\d).+$" #password="ngModel">
+        <input type="password" class="form-control" name="password" [(ngModel)]="doctorForm.password" required minlength="6" pattern="^(?=.*[A-Z])(?=.*\d).+$" #password="ngModel">
         <div class="form-text text-muted">Mínimo 6 caracteres, al menos una mayúscula y un número.</div>
         <div class="text-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
           <div *ngIf="password.errors?.['required']">La contraseña es obligatoria.</div>
