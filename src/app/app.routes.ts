@@ -7,11 +7,12 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { RegistroPacienteComponent } from './pages/registro-paciente/registro-paciente.component';
 import { ListDoctoresComponent } from './pages/list-doctores/list-doctores.component';
 import { RegistroDoctorComponent } from './pages/registro-doctor/registro-doctor.component';
+import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomePageComponent
+    component: HomePageComponent,
   },
   {
     path: 'paciente/turno/:idDoctor',
@@ -34,16 +35,20 @@ export const routes: Routes = [
     component: RegistroPacienteComponent,
   },
   {
-    path:'doctores',
-    component: ListDoctoresComponent
+    path: 'doctores',
+    component: ListDoctoresComponent,
   },
   {
     path: 'registro-doctor',
-    component: RegistroDoctorComponent
+    component: RegistroDoctorComponent,
+  },
+  {
+    path: 'estadisticas',
+    component: EstadisticasComponent,
   },
   {
     path: '**',
     redirectTo: '',
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];
