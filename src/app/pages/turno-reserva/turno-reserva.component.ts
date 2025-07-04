@@ -9,6 +9,8 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { CustomDatepickerI18n } from '../../services/datepicker-i18n.service';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TurnoService } from '../../services/turno.service';
 
 @Component({
   selector: 'app-turno-reserva',
@@ -19,6 +21,11 @@ import { CommonModule } from '@angular/common';
 })
 export class TurnoReservaComponent implements OnInit {
   private calendar = inject(NgbCalendar);
+  private router = inject(ActivatedRoute);
+  private turnoService = inject(TurnoService);
+
+  private idDoctor: string | null = null; // ID del doctor seleccionado
+  turnosPorFecha: any[] = [];
 
   // Prueba para MercadoPago
   precioConsulta: number = 5000; // Precio de la consulta
@@ -30,6 +37,7 @@ export class TurnoReservaComponent implements OnInit {
   horas: string[] = [];
 
   ngOnInit() {
+    this.idDoctor = this.router.snapshot.paramMap.get('idDoctor');
     const startHour = 13;
     const endHour = 20;
     for (let hora = startHour; hora <= endHour; hora++) {
@@ -65,9 +73,43 @@ export class TurnoReservaComponent implements OnInit {
 
   onDateSelect(date: NgbDate) {
     this.selectedDate = date;
-    // Resetear la hora seleccionada cuando se cambia la fecha
+    this.turnoService
+      .getTurnosByDoctorFecha(
+        this.idDoctor!,
+        `${date.day}/${date.month}/${date.year}`
+      )
+      .subscribe((response: any) => {
+        this.turnosPorFecha = response;
+        console.log(
+          'Turnos disponibles para la fecha seleccionada:',
+          this.turnosPorFecha
+        );
+      });
     this.selectedHour = null;
     console.log('Fecha seleccionada:', date);
+  }
+
+  deshabilitarHora(hora: string): boolean {
+    // Deshabilitar horas que ya están ocupadas
+    const ocupada = this.turnosPorFecha.some((turno) => turno.hora === hora);
+
+    // Si la fecha seleccionada es hoy, deshabilitar horas pasadas
+    if (this.selectedDate) {
+      const today = this.calendar.getToday();
+      if (
+        this.selectedDate.year === today.year &&
+        this.selectedDate.month === today.month &&
+        this.selectedDate.day === today.day
+      ) {
+        const [horaNum] = hora.split(':').map(Number);
+        const now = new Date();
+        if (horaNum <= now.getHours()) {
+          return true;
+        }
+      }
+    }
+
+    return ocupada;
   }
 
   onHourSelect(hour: string) {

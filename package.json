@@ -22,6 +22,8 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.6",
     "bootstrap-icons": "^1.13.1",
+    "chart.js": "^4.5.0",
+    "ng2-charts": "^8.0.0",
     "rxjs": "~7.8.0",
     "sass": "^1.89.2",
     "tslib": "^2.3.0",
