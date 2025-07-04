@@ -7,6 +7,7 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { RegistroPacienteComponent } from './pages/registro-paciente/registro-paciente.component';
 import { ListDoctoresComponent } from './pages/list-doctores/list-doctores.component';
 import { RegistroDoctorComponent } from './pages/registro-doctor/registro-doctor.component';
+import { MainAdminComponent } from './pages/main-admin/main-admin.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,10 @@ export const routes: Routes = [
   {
     path: 'registro-doctor',
     component: RegistroDoctorComponent
+  },
+  {
+    path:'admin',
+    component: MainAdminComponent,
   },
   {
     path: '**',
