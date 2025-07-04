@@ -61,10 +61,10 @@ export class LoginComponent {
               } else if (perfil._rol === 'Doctor') {
                 this.router.navigate(['/doctor/', perfil._id]);
               } else if (
-                perfil._rol === 'Admin' ||
+                perfil._rol === 'admin' ||
                 perfil._rol === 'Administrador'
               ) {
-                this.router.navigate(['/admin/', perfil._id]);
+                this.router.navigate(['/admin/']);
               } else {
                 this.toastService.showError('Rol no reconocido.');
               }
