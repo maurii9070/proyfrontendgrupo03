@@ -8,6 +8,7 @@ import { RegistroPacienteComponent } from './pages/registro-paciente/registro-pa
 import { ListDoctoresComponent } from './pages/list-doctores/list-doctores.component';
 import { RegistroDoctorComponent } from './pages/registro-doctor/registro-doctor.component';
 import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
+import { MainAdminComponent } from './pages/main-admin/main-admin.component';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,10 @@ export const routes: Routes = [
   {
     path: 'estadisticas',
     component: EstadisticasComponent,
+  },
+  {
+    path:'admin',
+    component: MainAdminComponent,
   },
   {
     path: '**',

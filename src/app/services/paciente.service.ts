@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { Paciente } from '../models/paciente.model';
+import { Paciente } from './turno.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +20,12 @@ export class PacienteService {
 
   getPacienteById(id: string): Observable<Paciente> {
     return this.http.get<Paciente>(`${this.apiUrl}/${id}`);
+  }
+  // Angular service
+  getPacienteByDni(dni: string) {
+    return this.http.get(`${this.apiUrl}/dni/${dni}`);
+  }
+  getAllPacientes() {
+    return this.http.get<Paciente[]>(`${this.apiUrl}`);
   }
 }

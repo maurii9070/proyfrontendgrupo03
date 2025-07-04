@@ -1,6 +1,44 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { Especialidad } from './especialidad.service';
+export interface Paciente {
+  _id: string;
+  nombre: string;
+  apellido: string;
+  dni: string;
+  telefono: string;
+  email: string;
+  fechaNacimiento: string;
+}
+export interface Doctor {
+  _id: string;
+  nombre: string;
+  apellido: string;
+  especialidad: Especialidad;
+  telefono: string;
+  email: string;
+  precioConsulta: number;
+  
+}
+export interface Archivo {
+  _id: string;
+  nombre: string;
+  url: string;
+  tipo: string; // 'comprobante-pago' | 'archivo-medico'
+  fechaSubida: string;
+}
+export interface Turno {
+  _id: string;
+  fecha: string;
+  hora: string;
+  paciente: Paciente;
+  doctor: Doctor;
+  estado: string;
+  observaciones: string;
+  archivos: Archivo[];
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +49,7 @@ export class TurnoService {
   private apiUrl = `${environment.apiUrl}/turnos`;
 
   getTurnosByPacienteId(pacienteId: string) {
-    return this.http.get(`${this.apiUrl}/paciente/${pacienteId}`);
+    return this.http.get<Turno[]>(`${this.apiUrl}/paciente/${pacienteId}`);
   }
   getTurnosByDoctorId(doctorId: string) {
     return this.http.get(`${this.apiUrl}/doctor/${doctorId}`);
@@ -28,7 +66,19 @@ export class TurnoService {
     return this.http.put(`${this.apiUrl}/${turnoId}/cancelado`, {});
   }
   realizarTurno(turnoId: string) {
-    return this.http.put(`${this.apiUrl}/${turnoId}/realiado`, {});
+    return this.http.put(`${this.apiUrl}/${turnoId}/realizado`, {});
+  }
+  getAllTurnos() {
+    return this.http.get<Turno[]>(this.apiUrl);
+  }
+  getTurnosByFecha(fecha: string) {
+    return this.http.get<Turno[]>(`${this.apiUrl}/fecha`,{params: { fecha:fecha }});
+  }
+  getTurnosPendientes() {
+    return this.http.get<Turno[]>(`${this.apiUrl}/estado/pendiente`);
+  }
+  confirmarTurno(turnoId: string) {
+    return this.http.put(`${this.apiUrl}/${turnoId}/confirmado`, {});
   }
 
   getTurnosByDoctorFecha(doctorId: string, fecha: string) {

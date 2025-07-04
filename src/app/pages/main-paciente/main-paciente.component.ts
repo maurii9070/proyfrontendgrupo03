@@ -6,37 +6,40 @@ import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { TurnoService } from '../../services/turno.service';
 import { ToastService } from '../../services/toast.service';
-
-export interface Paciente{
-  _id:string
-  nombre: string;
-  apellido: string;
-  email: string;
-  dni: string;
-  fechaNacimiento?: string;
-  telefono?: string;
-}
-export interface Especialidad {
+import { Especialidad } from '../list-doctores/list-doctores.component';
+export interface Paciente {
   _id: string;
   nombre: string;
-  }
+  apellido: string;
+  dni: string;
+  telefono: string;
+  email: string;
+  fechaNacimiento: string;
+}
 export interface Doctor {
   _id: string;
   nombre: string;
   apellido: string;
   especialidad: Especialidad;
+  telefono: string;
   email: string;
-  telefono?: string;
+}
+export interface Archivo {
+  _id: string;
+  nombre: string;
+  url: string;
+  tipo: string; // 'comprobante-pago' | 'archivo-medico'
+  fechaSubida: string;
 }
 export interface Turno {
   _id: string;
-  especialidad: string;
-  doctor: Doctor;
-  paciente: Paciente;
   fecha: string;
   hora: string;
+  paciente: Paciente;
+  doctor: Doctor;
   estado: string;
-  observaciones?: string;
+  observaciones: string;
+  archivos: Archivo[];
 }
 @Component({
   selector: 'app-main-paciente',

@@ -27,4 +27,7 @@ export class DoctorService {
   getDoctoresByEspecialidad(idEspecialidad: string): Observable<Doctor[]> {
     return this.http.get<Doctor[]>(`${this.apiUrl}/especialidad/${idEspecialidad}`);
   }
+  desactivarDoctor(id: string) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }
