@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { ListDoctoresComponent } from '../list-doctores/list-doctores.component';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { PacienteService } from '../../services/paciente.service';
 import { AutenticacionService } from '../../services/autenticacion.service';
@@ -43,7 +44,7 @@ export interface Turno {
 }
 @Component({
   selector: 'app-main-paciente',
-  imports: [CommonModule],
+  imports: [CommonModule, ListDoctoresComponent],
   standalone: true,
   templateUrl: './main-paciente.component.html',
   styleUrls: ['./main-paciente.component.css']
@@ -52,9 +53,9 @@ export class MainPacienteComponent implements OnInit {
   pacienteId: string = '';
   pacienteService = inject(PacienteService);
   route = inject(ActivatedRoute);
-  turnoService=inject(TurnoService)
+  turnoService = inject(TurnoService);
   toastService = inject(ToastService);
-
+  mostrarBotonTurno = true; // Controla la visibilidad del botón de solicitar turno
   paciente: Paciente = {
     _id: '',
     nombre: '',
@@ -68,6 +69,7 @@ export class MainPacienteComponent implements OnInit {
   @ViewChild('modalCancelarTurno') modalCancelarTurno: any;
   turnoIdParaCancelar: string | null = null;
   mostrarModal = false;
+  mostrarDoctores = false;
 
   ngOnInit() {
     this.pacienteId = this.route.snapshot.paramMap.get('idPaciente') || '';
@@ -112,8 +114,12 @@ export class MainPacienteComponent implements OnInit {
   }
 
   onClickSolicitarTurno() {
-    // Redirigir a la página de solicitud de turno
-    window.location.href = `/doctores`;
+    // Mostrar el componente de doctores como hijo
+    this.mostrarDoctores = true;
+  }
+
+  onCerrarDoctores() {
+    this.mostrarDoctores = false;
   }
 }
 

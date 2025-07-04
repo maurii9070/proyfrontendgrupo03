@@ -30,93 +30,113 @@
     <!-- Turnos a la derecha -->
     <div class="col-12 col-lg-8">
       <div class="turnos-section mb-4 h-100">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2 class="mb-0"><i class="bi bi-calendar2-check text-primary"></i> Mis Turnos</h2>
-          <button (click)="onClickSolicitarTurno()" class="btn btn-primary btn-turno d-flex align-items-center gap-2">
-            <i class="bi bi-plus-circle text-white"></i> Nuevo Turno
-          </button>
+        <div class="row g-2 align-items-center mb-3 flex-column flex-md-row">
+          <div class="col-12 col-md-auto flex-grow-1 mb-2 mb-md-0">
+            <h2 class="mb-0 text-center text-md-start"><i class="bi bi-calendar2-check text-primary"></i> Mis Turnos</h2>
+          </div>
+          <div class="col-12 col-md-auto text-center text-md-end">
+            <button (click)="onClickSolicitarTurno()" class="btn btn-primary btn-turno d-flex align-items-center gap-2 w-100 w-md-auto justify-content-center">
+              <i class="bi bi-plus-circle text-white"></i> Nuevo Turno
+            </button>
+          </div>
         </div>
-        <!-- Lista de turnos ficticios usando @if y @for de Angular 17+ -->
-        @if (tieneTurnos) {
-        @for (turno of turnos; track turno) {
-        <div class="turno-card align-items-center" [class.turno-cancelado]="turno.estado === 'cancelado'">
-          <div class="turno-info">
-            <i class="bi bi-clock-history text-primary"></i>
-            <div>
-              <div class="fw-bold">{{ turno.doctor.especialidad.nombre }} - {{ turno.doctor.nombre }}</div>
-              <div class="text-muted small mb-1">
-                <i class="bi bi-calendar-event text-primary"></i> {{ turno.fecha }} &nbsp;
-                <i class="bi bi-clock text-primary"></i> {{ turno.hora }}
-              </div>
-              <span class="badge ms-1"
-                [ngClass]="{
-                  'bg-warning text-dark': turno.estado === 'pendiente',
-                  'bg-success': turno.estado === 'confirmado',
-                  'bg-danger': turno.estado === 'cancelado'
-                }">
-                <i class="bi"
-                  [ngClass]="{
-                    'bi-hourglass-split': turno.estado === 'pendiente',
-                    'bi-check-circle': turno.estado === 'confirmado',
-                    'bi-x-circle': turno.estado === 'cancelado'
-                  }"></i>
-                {{ turno.estado | titlecase }}
-              </span>
+        <!-- Mostrar el componente de doctores como hijo si mostrarDoctores es true, si no la lista de turnos -->
+        @if (mostrarDoctores) {
+          <div class="card shadow-sm p-3 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <h3 class="mb-0"><i class="bi bi-person-badge text-primary"></i> Selecciona un doctor</h3>
+              <button class="btn btn-outline-danger d-flex align-items-center gap-2 fw-bold" (click)="onCerrarDoctores()">
+                <i class="bi bi-x-circle"></i> Cerrar selección
+              </button>
             </div>
+            <app-list-doctores [pacienteId]="pacienteId"  [mostrarBotonTurno]="true" (cerrar)="onCerrarDoctores()"></app-list-doctores>
           </div>
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-info btn-turno d-flex align-items-center gap-2">
-              <i class="bi bi-eye"></i> Ver detalles
-            </button>
-            <button class="btn btn-outline-danger btn-turno d-flex align-items-center gap-2" (click)="mostrarModalCancelar(turno._id)" [disabled]="turno.estado === 'cancelado'">
-              <i class="bi bi-x-circle"></i> Cancelar
-            </button>
-<!-- Modal de confirmación para cancelar turno (manejado por variable booleana) -->
-<div *ngIf="mostrarModal" class="modal fade show d-block custom-modal-backdrop">
-  <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
-    <div class="modal-content shadow rounded-4 border-0">
-      <div class="modal-header bg-danger bg-opacity-10 border-0 rounded-top-4">
-        <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="modalCancelarTurnoLabel">
-          <i class="bi bi-exclamation-triangle-fill"></i> Confirmar cancelación
-        </h5>
-        <button type="button" class="btn-close" (click)="cerrarModalCancelar()" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body text-center py-4">
-        <p class="mb-3 fs-5">¿Estás seguro de que deseas cancelar este turno?</p>
-        <i class="bi bi-calendar-x text-danger" style="font-size:3rem;"></i>
-      </div>
-      <div class="modal-footer d-flex justify-content-between border-0 pb-4 pt-0">
-        <button type="button" class="btn btn-outline-secondary px-4" (click)="cerrarModalCancelar()">
-          <i class="bi bi-x-lg"></i> No, volver
-        </button>
-        <button type="button" class="btn btn-danger px-4" (click)="confirmarCancelarTurno()">
-          <i class="bi bi-check-lg"></i> Sí, cancelar turno
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<style>
-.custom-modal-backdrop {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(30,41,59,0.35);
-  z-index: 1050;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>
-          </div>
-        </div>
-        }
         } @else {
-        <div class="no-turnos">
-          <i class="bi bi-emoji-frown text-primary" style="font-size:2rem;"></i><br>
-          No tienes turnos reservados.
-        </div>
+          @if (tieneTurnos) {
+            @for (turno of turnos; track turno) {
+              <div class="turno-card align-items-center mb-3" [class.turno-cancelado]="turno.estado === 'cancelado'">
+                <div class="turno-info">
+                  <i class="bi bi-clock-history text-primary"></i>
+                  <div>
+                    <div class="fw-bold">{{ turno.doctor.especialidad.nombre }} - {{ turno.doctor.nombre }}</div>
+                    <div class="text-muted small mb-1">
+                      <i class="bi bi-calendar-event text-primary"></i> {{ turno.fecha }} &nbsp;
+                      <i class="bi bi-clock text-primary"></i> {{ turno.hora }}
+                    </div>
+                    <span class="badge ms-1" [ngClass]="{
+                        'bg-warning text-dark': turno.estado === 'pendiente',
+                        'bg-success': turno.estado === 'confirmado',
+                        'bg-danger': turno.estado === 'cancelado'
+                      }">
+                      <i class="bi" [ngClass]="{
+                          'bi-hourglass-split': turno.estado === 'pendiente',
+                          'bi-check-circle': turno.estado === 'confirmado',
+                          'bi-x-circle': turno.estado === 'cancelado'
+                        }"></i>
+                      {{ turno.estado | titlecase }}
+                    </span>
+                  </div>
+                </div>
+                <div class="d-flex gap-2 flex-wrap mt-2">
+                  <button class="btn btn-outline-info btn-turno d-flex align-items-center gap-2">
+                    <i class="bi bi-eye"></i> Ver detalles
+                  </button>
+                  <button class="btn btn-outline-danger btn-turno d-flex align-items-center gap-2"
+                    (click)="mostrarModalCancelar(turno._id)" [disabled]="turno.estado === 'cancelado'">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                  </button>
+                </div>
+                <!-- Modal de confirmación para cancelar turno (manejado por variable booleana) -->
+                <div *ngIf="mostrarModal" class="modal fade show d-block custom-modal-backdrop">
+                  <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+                    <div class="modal-content shadow rounded-4 border-0">
+                      <div class="modal-header bg-danger bg-opacity-10 border-0 rounded-top-4">
+                        <h5 class="modal-title text-danger d-flex align-items-center gap-2"
+                          id="modalCancelarTurnoLabel">
+                          <i class="bi bi-exclamation-triangle-fill"></i> Confirmar cancelación
+                        </h5>
+                        <button type="button" class="btn-close" (click)="cerrarModalCancelar()"
+                          aria-label="Cerrar"></button>
+                      </div>
+                      <div class="modal-body text-center py-4">
+                        <p class="mb-3 fs-5">¿Estás seguro de que deseas cancelar este turno?</p>
+                        <i class="bi bi-calendar-x text-danger" style="font-size:3rem;"></i>
+                      </div>
+                      <div class="modal-footer d-flex justify-content-between border-0 pb-4 pt-0">
+                        <button type="button" class="btn btn-outline-secondary px-4" (click)="cerrarModalCancelar()">
+                          <i class="bi bi-x-lg"></i> No, volver
+                        </button>
+                        <button type="button" class="btn btn-danger px-4" (click)="confirmarCancelarTurno()">
+                          <i class="bi bi-check-lg"></i> Sí, cancelar turno
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <style>
+                  .custom-modal-backdrop {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(30, 41, 59, 0.35);
+                    z-index: 1050;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                </style>
+              </div>
+            }
+          } @else {
+            <div class="no-turnos text-center py-5">
+              <i class="bi bi-emoji-frown text-primary" style="font-size:2rem;"></i><br>
+              No tienes turnos reservados.
+            </div>
+          }
         }
+        </div>
       </div>
     </div>
   </div>
-</div>
