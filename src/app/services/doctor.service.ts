@@ -10,8 +10,11 @@ export interface Doctor {
   nombre: string;
   apellido: string;
   especialidad: Especialidad;
-  precioConsulta: number;
   telefono: string;
+  email: string;
+  precioConsulta: number;
+  activo: boolean;
+  
 }
 @Injectable({
   providedIn: 'root'
@@ -35,5 +38,8 @@ export class DoctorService {
   } 
   getDoctoresByEspecialidad(idEspecialidad: string) {
     return this.http.get<Doctor[]>(`${this.apiUrl}/especialidad/${idEspecialidad}`);
+  }
+  desactivarDoctor(id: string) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
