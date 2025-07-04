@@ -26,6 +26,10 @@
                     (click)="onClickRegistrarDoctor()">
                     <i class="bi bi-person-plus"></i> Registrar Doctor
                 </button>
+                <button class="btn btn-outline-info w-100" [class.active]="section==='estadisticas'"
+                    (click)="onClickEstadisticas()">
+                    <i class="bi bi-graph-up"></i> Estadísticas
+                </button>
 
             </nav>
             <div class="mt-auto p-3 small text-muted">&copy; 2025 Admin</div>

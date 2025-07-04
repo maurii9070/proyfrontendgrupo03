@@ -25,7 +25,6 @@ export class MainAdminComponent implements OnInit {
   showEliminarDoctorModal = false;
   doctorAEliminar: any = null;
   showConfirmPagoModal = false;
-
   
 
   turnoService = inject(TurnoService);
@@ -56,6 +55,9 @@ export class MainAdminComponent implements OnInit {
     });
   }
 
+  onClickEstadisticas() {
+    this.router.navigate(['/estadisticas']);
+  }
 onClickRegistrarDoctor(){
   this.router.navigate(['/registro-doctor']); //cambiar a /admin/registro-doctor
 }
