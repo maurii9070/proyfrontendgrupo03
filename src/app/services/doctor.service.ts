@@ -1,30 +1,42 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
-import { Doctor } from '../models/doctor.model';
-
+export interface Especialidad{
+  _id: string;
+  nombre: string;
+}
+export interface Doctor {
+  _id: string;
+  nombre: string;
+  apellido: string;
+  especialidad: Especialidad;
+  telefono: string;
+  email: string;
+  precioConsulta: number;
+  activo: boolean;
+  
+}
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorService {
 
-  private http = inject(HttpClient);
+  http= inject(HttpClient);
+
   private apiUrl = `${environment.apiUrl}/doctores`;
 
-  registrarDoctor(doctor: Omit<Doctor, '_id'>): Observable<Doctor> {
-    return this.http.post<Doctor>(this.apiUrl, doctor);
+  registrarDoctor(doctor: any) {
+    return this.http.post(this.apiUrl, doctor);
   }
   
-  getDoctores(): Observable<Doctor[]> {
+  getDoctores() {
     return this.http.get<Doctor[]>(this.apiUrl);
   }
 
-  getDoctoresByName(nombre: string): Observable<Doctor[]> {
+  getDoctoresByName(nombre: string) {
     return this.http.get<Doctor[]>(`${this.apiUrl}/name?nombre=${nombre}`);
   } 
-  
-  getDoctoresByEspecialidad(idEspecialidad: string): Observable<Doctor[]> {
+  getDoctoresByEspecialidad(idEspecialidad: string) {
     return this.http.get<Doctor[]>(`${this.apiUrl}/especialidad/${idEspecialidad}`);
   }
   desactivarDoctor(id: string) {
