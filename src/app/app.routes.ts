@@ -16,7 +16,7 @@ export const routes: Routes = [
     component: HomePageComponent,
   },
   {
-    path: 'paciente/turno/:idDoctor',
+    path: 'paciente/:idPaciente/turno/:idDoctor',
     component: TurnoReservaComponent,
   },
   {
