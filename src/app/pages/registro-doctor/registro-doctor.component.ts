@@ -3,8 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DoctorService } from '../../services/doctor.service';
 import { EspecialidadService } from '../../services/especialidad.service';
-import { Doctor } from '../../models/doctor.model';
-import { Especialidad } from '../../models/especialidad.model';
+
+interface Especialidad {
+  _id: string;
+  nombre: string;
+  descripcion: string;
+}
 
 @Component({
   selector: 'app-registro-doctor',
@@ -13,8 +17,7 @@ import { Especialidad } from '../../models/especialidad.model';
   styleUrl: './registro-doctor.component.css'
 })
 export class RegistroDoctorComponent implements OnInit {
-  // Objeto para el formulario de registro (sin _id)
-  doctorForm: Omit<Doctor, '_id'> = {
+  doctor = {
     dni: '',
     email: '',
     password: '',
@@ -24,12 +27,9 @@ export class RegistroDoctorComponent implements OnInit {
     telefono: '',
     matricula: '',
     especialidad: '',
-    precioConsulta: 0,
+    precioConsulta: '',
     activo: true
   };
-
-  // Propiedad separada para manejar el ID de la especialidad en el select
-  especialidadId: string = '';
 
   especialidades: Especialidad[] = [];
   cargando = false;
@@ -45,7 +45,7 @@ export class RegistroDoctorComponent implements OnInit {
     this.cargarEspecialidades();
   }
 
-  cargarEspecialidades(): void {
+  cargarEspecialidades() {
     this.especialidadService.getEspecialidades().subscribe({
       next: (especialidades: Especialidad[]) => {
         this.especialidades = especialidades;
@@ -56,54 +56,34 @@ export class RegistroDoctorComponent implements OnInit {
     });
   }
 
-  registrarDoctor(): void {
+  registrarDoctor() {
     this.cargando = true;
     this.mensaje = '';
     this.error = '';
 
-    // Buscar la especialidad seleccionada
-    const especialidadSeleccionada = this.especialidades.find(esp => esp._id === this.especialidadId);
-    
-    if (!especialidadSeleccionada) {
-      this.error = 'Debe seleccionar una especialidad válida';
-      this.cargando = false;
-      return;
-    }
-
-    // Actualizar la especialidad con el objeto completo
-    const doctorData: Omit<Doctor, '_id'> = {
-      ...this.doctorForm,
-      especialidad: especialidadSeleccionada._id,
-      precioConsulta: Number(this.doctorForm.precioConsulta)
-    };
-
-    this.doctorService.registrarDoctor(doctorData).subscribe({
+    this.doctorService.registrarDoctor(this.doctor).subscribe({
       next: (response) => {
         this.mensaje = 'Doctor registrado exitosamente';
         this.cargando = false;
-        this.limpiarFormulario();
+        // Limpiar el formulario después del registro exitoso
+        this.doctor = {
+          dni: '',
+          email: '',
+          password: '',
+          nombre: '',
+          apellido: '', 
+          rol: "doctor",
+          telefono: '',
+          matricula: '',
+          especialidad: '',
+          precioConsulta: '',
+          activo: true
+        };
       },
       error: (err) => {
         this.error = 'Error al registrar el doctor: ' + (err.error?.message || err.message || 'Error desconocido');
         this.cargando = false;
       }
     });
-  }
-
-  private limpiarFormulario(): void {
-    this.doctorForm = {
-      dni: '',
-      email: '',
-      password: '',
-      nombre: '',
-      apellido: '', 
-      rol: "doctor",
-      telefono: '',
-      matricula: '',
-      especialidad: '',
-      precioConsulta: 0,
-      activo: true
-    };
-    this.especialidadId = '';
   }
 }
