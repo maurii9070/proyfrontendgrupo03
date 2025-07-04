@@ -42,4 +42,7 @@ export class DoctorService {
   desactivarDoctor(id: string) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+  getDoctorById(id: string) {
+    return this.http.get<Doctor>(`${this.apiUrl}/${id}`);
+  }
 }
