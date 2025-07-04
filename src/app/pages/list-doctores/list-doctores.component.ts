@@ -1,13 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EspecialidadService } from '../../services/especialidad.service';
 import { DoctorService } from '../../services/doctor.service';
+import { Router } from '@angular/router';
 
 export interface Especialidad{
   _id: string;
   nombre: string;
-  descripcion?: string;
 }
 export interface Doctor {
   _id: string;
@@ -25,6 +24,8 @@ export interface Doctor {
 })
 
 export class ListDoctoresComponent implements OnInit {
+  @Input() pacienteId!: string;
+  @Input() mostrarBotonTurno: boolean = false; // Controla la visibilidad del botón de solicitar turno
   busquedaNombre: string = '';
   filtroEspecialidad: string = '';
 
@@ -34,6 +35,7 @@ export class ListDoctoresComponent implements OnInit {
   
   doctorService= inject(DoctorService);
   especialidadService= inject(EspecialidadService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.cargarDoctores();
@@ -52,6 +54,7 @@ export class ListDoctoresComponent implements OnInit {
       // Solo filtro por nombre
       this.doctorService.getDoctoresByName(nombre).subscribe((doctores: Doctor[]) => {
         this.doctores = doctores;
+        console.log('Doctores filtrados por nombre:', this.doctores);
       });
     } else if (nombre.trim() === '' && especialidad.trim() !== '') {
       // Solo filtro por especialidad
@@ -67,6 +70,9 @@ export class ListDoctoresComponent implements OnInit {
     }
   }
 
+  onClickReservarTurno(idDoctor:string){
+    this.router.navigate(['/paciente', this.pacienteId, 'turno', idDoctor]);
+  }
   onBuscarNombre() {
     this.cargarDoctores(this.busquedaNombre, this.filtroEspecialidad);
   }

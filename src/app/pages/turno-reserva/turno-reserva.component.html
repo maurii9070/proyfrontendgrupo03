@@ -83,13 +83,15 @@
             <h6 class="mb-3">💳 Selecciona tu método de pago</h6>
             <div class="row g-2 justify-content-center">
               <div class="col-12 col-sm-6">
-                <button class="btn btn-primary w-100" type="button">
+                <button class="btn btn-primary w-100" type="button"
+                  (click)="onClickReservarConMercadoPago()">
                   <i class="fas fa-credit-card me-2"></i>
                   MercadoPago
                 </button>
               </div>
               <div class="col-12 col-sm-6">
-                <button class="btn btn-success w-100" type="button">
+                <button class="btn btn-success w-100" type="button"
+                  (click)="onClickReservarConTransferencia()">
                   <i class="fas fa-university me-2"></i>
                   Transferencia
                 </button>

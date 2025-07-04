@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Especialidad } from './especialidad.service';
+import { Observable } from 'rxjs';
 export interface Paciente {
   _id: string;
   nombre: string;
@@ -19,7 +20,7 @@ export interface Doctor {
   telefono: string;
   email: string;
   precioConsulta: number;
-  
+
 }
 export interface Archivo {
   _id: string;
@@ -55,7 +56,10 @@ export class TurnoService {
     return this.http.get(`${this.apiUrl}/doctor/${doctorId}`);
   }
   //falta el create turno
-
+  crearTurno(idPaciente: string, idDoctor: string, fecha: string, hora: string, observaciones: string): Observable<any> {
+    const body = { fecha, hora, observaciones };
+    return this.http.post(`${this.apiUrl}/paciente/${idPaciente}/doctor/${idDoctor}`, body);
+  }
   //update turno observaciones solo
 
   getTurnoById(turnoId: string) {
@@ -72,7 +76,7 @@ export class TurnoService {
     return this.http.get<Turno[]>(this.apiUrl);
   }
   getTurnosByFecha(fecha: string) {
-    return this.http.get<Turno[]>(`${this.apiUrl}/fecha`,{params: { fecha:fecha }});
+    return this.http.get<Turno[]>(`${this.apiUrl}/fecha`, { params: { fecha: fecha } });
   }
   getTurnosPendientes() {
     return this.http.get<Turno[]>(`${this.apiUrl}/estado/pendiente`);
