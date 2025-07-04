@@ -1,0 +1,27 @@
+/* Solo estilos mínimos necesarios que Bootstrap no cubre */
+
+/* Limitar altura de gráficos en canvas */
+canvas {
+  max-height: 300px !important;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  canvas {
+    max-height: 250px !important;
+  }
+}
+
+/* Animación suave para hover en cards */
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Asegurar que los iconos tengan el tamaño correcto */
+.fs-1 {
+  font-size: 2.5rem !important;
+}
