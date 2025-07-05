@@ -11,6 +11,7 @@ import { EstadisticasComponent } from './pages/estadisticas/estadisticas.compone
 import { MainAdminComponent } from './pages/main-admin/main-admin.component';
 import { MainDoctorComponent } from './pages/main-doctor/main-doctor.component';
 import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
+import { ResetearPasswordDoctorComponent } from './pages/resetear-password-doctor/resetear-password-doctor.component';
 
 export const routes: Routes = [
   {
@@ -55,6 +56,10 @@ export const routes: Routes = [
     component: MainAdminComponent,
   },
   { path: 'doctor/:idDoctor', component: MainDoctorComponent },
+  {
+    path: 'doctor/:dni/resetear-password-doctor',
+    component: ResetearPasswordDoctorComponent,
+  },
   {
     path: '**',
     redirectTo: '',
