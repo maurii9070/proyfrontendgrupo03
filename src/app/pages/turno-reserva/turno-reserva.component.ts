@@ -13,6 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TurnoService } from '../../services/turno.service';
 import { Doctor, DoctorService } from '../../services/doctor.service';
 import { MercadoPagoService } from '../../services/mercado-pago.service';
+import { Pago, PagoService } from '../../services/pago.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-turno-reserva',
@@ -24,9 +26,12 @@ import { MercadoPagoService } from '../../services/mercado-pago.service';
 export class TurnoReservaComponent implements OnInit {
   private calendar = inject(NgbCalendar);
   private router = inject(ActivatedRoute);
+  private router_redireccion = inject(Router)
   private turnoService = inject(TurnoService);
   private doctorService = inject(DoctorService)
   private mercadoPagoService = inject(MercadoPagoService);
+  private pagoService = inject(PagoService);
+  private toastService = inject(ToastService)
 
   private idDoctor: string | null = null; // ID del doctor seleccionado
   turnosPorFecha: any[] = [];
@@ -145,7 +150,7 @@ export class TurnoReservaComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Turno creado:', response);
-          this.mercadoPagoService.crearPreferencia(this.doctor._id).subscribe({
+          this.mercadoPagoService.crearPreferencia(this.doctor._id,response._id).subscribe({
               next: (res) => {
                 console.log('Preferencia creada:', res);
                 window.location.href = res.init_point; // Redirige al Checkout Pro
@@ -172,7 +177,22 @@ export class TurnoReservaComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Turno creado:', response);
-          // Aquí puedes mostrar un mensaje de éxito o redirigir al usuario
+          const pago: Pago = {
+            monto: this.precioConsulta,
+            metodoPago: 'transferencia',
+            turno: response._id // Asumiendo que el turno creado tiene un ID
+          };
+          this.pagoService.crearNuevoPago(pago).subscribe({
+            next: (res) => {
+              console.log('Pago creado:', res);
+              // Aquí puedes mostrar un mensaje de éxito o redirigir al usuario
+              this.toastService.showSuccess('Turno reservado con éxito', 'Pago realizado con transferencia. Seguir indicaciones para completar el proceso.');
+              this.router_redireccion.navigate(['/paciente', this.idPaciente]);
+            },
+            error: (err) => {
+              console.error('Error al crear el pago:', err);
+            }
+          });
         },
         error: (error) => {
           console.error('Error al crear el turno:', error);
