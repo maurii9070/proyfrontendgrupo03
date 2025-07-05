@@ -104,6 +104,7 @@ export class LoginComponent {
 
   onCreateAccount() {
     // Navegación a página de registro
+    this.router.navigate(['/login/registro-paciente']);
     console.log('Navegando a crear cuenta...');
   }
 
