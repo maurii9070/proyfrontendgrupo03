@@ -11,6 +11,7 @@ import { EstadisticasComponent } from './pages/estadisticas/estadisticas.compone
 import { MainAdminComponent } from './pages/main-admin/main-admin.component';
 import { MainDoctorComponent } from './pages/main-doctor/main-doctor.component';
 import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
+import { ResetearPasswordDoctorComponent } from './pages/resetear-password-doctor/resetear-password-doctor.component';
 import { EspecialidadesComponent } from './pages/especialidades/especialidades.component';
 
 export const routes: Routes = [
@@ -35,7 +36,7 @@ export const routes: Routes = [
   },
   {
     path: 'resetear-password',
-    component: ResetearPasswordComponent
+    component: ResetearPasswordComponent,
   },
 
   // paginas privadas
@@ -43,12 +44,12 @@ export const routes: Routes = [
     path: 'paciente/:idPaciente/turno/:idDoctor',
     component: TurnoReservaComponent,
   },
-  
+
   {
     path: 'paciente/:idPaciente',
     component: MainPacienteComponent,
   },
-  
+
   {
     path: 'doctores',
     component: ListDoctoresComponent,
@@ -65,9 +66,8 @@ export const routes: Routes = [
   // Paginas publicas
   {
     path: 'home/especialidades',
-    component: EspecialidadesComponent
+    component: EspecialidadesComponent,
   },
-
 
   // Administración
 
@@ -76,8 +76,12 @@ export const routes: Routes = [
     component: MainAdminComponent,
   },
   { path: 'doctor/:idDoctor', component: MainDoctorComponent },
-  
+
   // Ruta wilcard para manejar rutas no definidas (dejar al final)
+  {
+    path: 'doctor/:dni/resetear-password-doctor',
+    component: ResetearPasswordDoctorComponent,
+  },
   {
     path: '**',
     redirectTo: '',

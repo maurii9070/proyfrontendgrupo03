@@ -306,4 +306,7 @@ export class MainDoctorComponent {
       modalRef.close();
     });
   }
+  onForgotPassword() {
+    this.router.navigate(['/doctor/' + this.doctor.dni + '/resetear-password-doctor']);
+  }
 }
