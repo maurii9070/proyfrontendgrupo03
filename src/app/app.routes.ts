@@ -10,6 +10,7 @@ import { RegistroDoctorComponent } from './pages/registro-doctor/registro-doctor
 import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
 import { MainAdminComponent } from './pages/main-admin/main-admin.component';
 import { MainDoctorComponent } from './pages/main-doctor/main-doctor.component';
+import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
     path: 'login/solicitud-dni',
     component: SolicitarDniGoogleComponent,
   },
+  { path: 'resetear-password', component: ResetearPasswordComponent },
   {
     path: 'paciente/:idPaciente',
     component: MainPacienteComponent,
