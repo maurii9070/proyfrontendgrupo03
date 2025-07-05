@@ -1,0 +1,71 @@
+
+
+.container {
+    background: #e5f3f8;
+    padding: 2rem;  
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+} 
+
+.turnos-section {
+    background: #f0f7ff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .turno-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(79,70,229,0.07);
+    transition: box-shadow 0.2s;
+  }
+  .turno-card:hover {
+    box-shadow: 0 4px 16px rgba(79,70,229,0.13);
+  }
+  
+  .turno-info {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  
+  .turno-icon {
+    font-size: 2rem;
+    color: #4f46e5;
+    background: #e0e7ff;
+    border-radius: 50%;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  .btn-turno {
+    min-width: 120px;
+  }
+  
+  .no-turnos {
+    text-align: center;
+    color: #64748b;
+    font-size: 1.1rem;
+    margin: 2rem 0;
+  }
+  
+  @media (max-width: 600px) {
+    .turnos-section {
+      padding: 1rem;
+    }
+    .turno-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
+  
+  

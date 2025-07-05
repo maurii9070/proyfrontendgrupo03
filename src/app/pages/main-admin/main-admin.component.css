@@ -1,0 +1,45 @@
+/* Estilos para el panel de administrador */
+.main-admin-container {
+    min-height: 100vh;
+    background: var(--bs-light);
+}
+
+.admin-aside {
+    border-right: 1px solid #e5e7eb;
+    background: #f8fafc;
+}
+
+.admin-aside .nav .btn.active,
+.admin-aside .nav .btn:focus {
+    background: var(--bs-primary);
+    color: #fff;
+    border-color: var(--bs-primary);
+}
+
+.table-responsive {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+@media (max-width: 767.98px) {
+    .admin-aside {
+        min-height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        flex-direction: row !important;
+        width: 100vw;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .admin-aside .nav {
+        flex-direction: row !important;
+        gap: 0.5rem;
+    }
+
+    .main-admin-container .row.flex-nowrap {
+        flex-direction: column;
+    }
+}
