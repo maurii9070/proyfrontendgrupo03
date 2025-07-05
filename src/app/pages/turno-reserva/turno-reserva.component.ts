@@ -150,7 +150,7 @@ export class TurnoReservaComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Turno creado:', response);
-          this.mercadoPagoService.crearPreferencia(this.doctor._id).subscribe({
+          this.mercadoPagoService.crearPreferencia(this.doctor._id,response._id).subscribe({
               next: (res) => {
                 console.log('Preferencia creada:', res);
                 window.location.href = res.init_point; // Redirige al Checkout Pro
