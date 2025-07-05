@@ -80,7 +80,7 @@ export class LoginComponent {
 
           // Mostrar toast de error
           const errorMessage =
-            error.error?.message || 'Error de conexión. Intenta nuevamente.';
+            error.error?.msg || 'Error de conexión. Intenta nuevamente.';
           this.toastService.showError(errorMessage);
         },
       });
@@ -156,7 +156,7 @@ export class LoginComponent {
   }
 
   onForgotPassword() {
-    // Lógica para recuperar contraseña
-    console.log('Recuperar contraseña...');
+    // Navegación a página de resetear contraseña
+    this.router.navigate(['/resetear-password']);
   }
 }

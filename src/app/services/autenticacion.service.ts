@@ -50,4 +50,11 @@ export class AutenticacionService {
       headers: { Authorization: `Bearer ${token}` },
     });
   }
+
+  resetPassword(dni: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      dni,
+      newPassword,
+    });
+  }
 }
