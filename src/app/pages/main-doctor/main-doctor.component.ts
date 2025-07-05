@@ -1,17 +1,26 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModal, NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModal,
+  NgbDropdown,
+  NgbDropdownMenu,
+  NgbDropdownToggle,
+} from '@ng-bootstrap/ng-bootstrap';
 import { DoctorService } from '../../services/doctor.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { TurnoService } from '../../services/turno.service';
+import { Archivo, TurnoService } from '../../services/turno.service';
+import { FirestoreService } from '../../services/firestore.service';
+import { ArchivosService } from '../../services/archivos.service';
+import { ToastService } from '../../services/toast.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { UploadFileComponent } from '../../components/upload-file/upload-file.component';
 
 export interface Especialidad {
   _id: string;
-  nombre: string;
-}   
+  nombre: string; // Puede ser null si no se ha asignado una especialidad
+}
 
 export interface Doctor {
   _id: string;
@@ -27,7 +36,7 @@ export interface Doctor {
 }
 
 export interface Paciente {
-  _id: string
+  _id: string;
   nombre: string;
   apellido: string;
   email: string;
@@ -45,12 +54,20 @@ export interface Turno {
   hora: string;
   estado: string;
   observaciones: string;
+  archivos: Array<Archivo>;
 }
 
 @Component({
   selector: 'app-main-doctor',
   standalone: true,
-  imports: [CommonModule, NgbDropdown, NgbDropdownMenu, NgbDropdownToggle,FormsModule,RouterModule],
+  imports: [
+    CommonModule,
+    NgbDropdown,
+    NgbDropdownMenu,
+    NgbDropdownToggle,
+    FormsModule,
+    RouterModule,
+  ],
   templateUrl: './main-doctor.component.html',
   styleUrl: './main-doctor.component.css',
 })
@@ -59,8 +76,11 @@ export class MainDoctorComponent {
   doctorService = inject(DoctorService);
   route = inject(ActivatedRoute);
   turnoService = inject(TurnoService);
+  firestoreService = inject(FirestoreService);
+  archivosService = inject(ArchivosService);
+  toastService = inject(ToastService);
   turnos: Turno[] = [];
-  doctor: Doctor = {} as Doctor;
+  doctor: Doctor | any = {} as Doctor; // Puede ser null si no se ha cargado aún
   turno: Turno = {} as Turno;
   filtroEstado: string = 'todos';
   ordenFecha: 'proxima' | 'lejana' = 'proxima';
@@ -74,7 +94,11 @@ export class MainDoctorComponent {
   observacionEdit: string = '';
   guardandoObservacion: boolean = false;
 
-  constructor(private modalService: NgbModal, private router: Router) { }
+  // Subida de archivos
+  archivoSeleccionado: File | null = null;
+  subiendoArchivo: boolean = false;
+
+  constructor(private modalService: NgbModal, private router: Router) {}
 
   abrirSubirArchivo() {
     //this.router.navigate(['/subir-archivo']);
@@ -93,34 +117,43 @@ export class MainDoctorComponent {
   guardarObservacion() {
     if (!this.turno) return;
     this.guardandoObservacion = true;
-    this.turnoService.actualizarDetallesTurno(this.turno._id, { observaciones: this.observacionEdit }).subscribe({
-      next: () => {
-        this.turno.observaciones = this.observacionEdit;
-        this.editandoObservacion = false;
-        this.guardandoObservacion = false;
-      },
-      error: (error) => {
-        console.error('Error al actualizar observación:', error);
-        this.guardandoObservacion = false;
-      }
-    });
+    this.turnoService
+      .actualizarDetallesTurno(this.turno._id, {
+        observaciones: this.observacionEdit,
+      })
+      .subscribe({
+        next: () => {
+          this.turno.observaciones = this.observacionEdit;
+          this.editandoObservacion = false;
+          this.guardandoObservacion = false;
+        },
+        error: (error) => {
+          console.error('Error al actualizar observación:', error);
+          this.guardandoObservacion = false;
+        },
+      });
   }
 
   ngOnInit(): void {
     //obtener doctor
     this.doctorId = this.route.snapshot.paramMap.get('idDoctor') || '';
-    this.doctorService.getDoctorById(this.doctorId).subscribe((data: any) => {
-      this.doctor = data;
-    }, error => {
-      console.error('Error al obtener el doctor:', error);
-    });
+    this.doctorService.getDoctorById(this.doctorId).subscribe(
+      (data: any) => {
+        this.doctor = data;
+      },
+      (error) => {
+        console.error('Error al obtener el doctor:', error);
+      }
+    );
     //obtener turnos
-    this.turnoService.getTurnos(this.doctorId).subscribe((data: any) => {
-      this.turnos = data;
-    }, error => {
-      console.error('Error al obtener los turnos del doctor:', error);
-    });
-
+    this.turnoService.getTurnosByDoctorId(this.doctorId).subscribe(
+      (data: any) => {
+        this.turnos = data;
+      },
+      (error) => {
+        console.error('Error al obtener los turnos del doctor:', error);
+      }
+    );
   }
 
   setFiltroEstado(estado: string) {
@@ -136,10 +169,12 @@ export class MainDoctorComponent {
   get turnosFiltrados() {
     let filtrados = this.turnos;
     if (this.filtroEstado !== 'todos') {
-      filtrados = filtrados.filter(t => t.estado === this.filtroEstado);
+      filtrados = filtrados.filter((t) => t.estado === this.filtroEstado);
     }
     if (this.dni && this.dni !== 0) {
-      filtrados = filtrados.filter(t => t.paciente?.dni?.includes(this.dni.toString()));
+      filtrados = filtrados.filter((t) =>
+        t.paciente?.dni?.includes(this.dni.toString())
+      );
     }
     filtrados = filtrados.slice().sort((a, b) => {
       const fechaA = new Date(a.fecha);
@@ -193,7 +228,12 @@ export class MainDoctorComponent {
 
   //Abrir Modal
   modalModo: 'realizado' | 'cancelar' | null = null;
-  abrirModal(content: any, turnoModal: Turno, size: string, modo: 'realizado' | 'cancelar'): void {
+  abrirModal(
+    content: any,
+    turnoModal: Turno,
+    size: string,
+    modo: 'realizado' | 'cancelar'
+  ): void {
     this.turno = turnoModal;
     this.modalModo = modo;
     this.modalService.open(content, { size: size, backdrop: 'static' });
@@ -202,26 +242,68 @@ export class MainDoctorComponent {
   //Cancelar Turno
   confirmarCancelarTurno() {
     if (!this.turno) return;
-    this.turnoService.cancelarTurno(this.turno._id).subscribe(() => {
-      // Recargar la página
-      window.location.reload();
-      this.modalService.dismissAll();
-    }, error => {
-      console.error('Error al cancelar el turno:', error);
-    });
+    this.turnoService.cancelarTurno(this.turno._id).subscribe(
+      () => {
+        // Recargar la página
+        window.location.reload();
+        this.modalService.dismissAll();
+      },
+      (error) => {
+        console.error('Error al cancelar el turno:', error);
+      }
+    );
   }
 
   //Confirmar Turno
   confirmarRealizarTurno() {
     if (!this.turno) return;
-    this.turnoService.realizarTurno(this.turno._id).subscribe(() => {
-      // Recargar la página
-      window.location.reload();
-      this.modalService.dismissAll();
-    }, error => {
-      console.error('Error al confirmar el turno:', error);
-    });
-    
+    this.turnoService.realizarTurno(this.turno._id).subscribe(
+      () => {
+        // Recargar la página
+        window.location.reload();
+        this.modalService.dismissAll();
+      },
+      (error) => {
+        console.error('Error al confirmar el turno:', error);
+      }
+    );
   }
 
+  getIconoTipo(): string {
+    return 'bi bi-file-earmark text-primary';
+  }
+
+  verArchivo(url: string): void {
+    window.open(url, '_blank');
+  }
+
+  // Métodos para el modal de archivos
+  abrirModalArchivos() {
+    const modalRef = this.modalService.open(UploadFileComponent, {
+      size: 'lg',
+      backdrop: 'static',
+    });
+
+    modalRef.componentInstance.turnoId = this.turno._id;
+    modalRef.componentInstance.archivosExistentes = this.turno.archivos || [];
+
+    // Suscribirse a eventos
+    modalRef.componentInstance.archivoSubido.subscribe((archivo: any) => {
+      // Actualizar la lista de archivos localmente
+      if (!this.turno.archivos) {
+        this.turno.archivos = [];
+      }
+      this.turno.archivos.push({
+        url: archivo.url,
+        tipo: archivo.tipo,
+        nombre: archivo.nombre,
+        _id: Date.now().toString(), // ID temporal
+        fechaSubida: new Date().toISOString(),
+      });
+    });
+
+    modalRef.componentInstance.cerrarModal.subscribe(() => {
+      modalRef.close();
+    });
+  }
 }
