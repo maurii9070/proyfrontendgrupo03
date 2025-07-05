@@ -10,7 +10,7 @@ export class MercadoPagoService {
   private apiUrl = `${environment.apiUrl}/mercadoPago`;
   private http= inject(HttpClient);
   ///crear-preferencia/:idDoctor
-  crearPreferencia(idDoctor:string){
-    return this.http.post<{ init_point: string }>(`${this.apiUrl}/crear-preferencia/${idDoctor}`,{});
+  crearPreferencia(idDoctor:string, idTurno:string){
+    return this.http.post<{ init_point: string }>(`${this.apiUrl}/crear-preferencia/${idDoctor}/turno/${idTurno}`,{});
   }
 }
