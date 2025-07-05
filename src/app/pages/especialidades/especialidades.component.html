@@ -1,0 +1,85 @@
+<div class="container py-5">
+  <!-- Header -->
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary mb-3">Nuestras Especialidades</h1>
+    <p class="lead text-muted">Conoce nuestros profesionales especializados</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3 text-muted">Cargando especialidades y doctores...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !cargando" class="alert alert-danger text-center" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ error }}
+    <button class="btn btn-outline-danger btn-sm ms-3" (click)="refrescarEspecialidades()">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Grid de Especialidades con Doctores -->
+  <div *ngIf="!cargando && !error && especialidades.length > 0" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <div class="col" *ngFor="let especialidad of especialidades">
+      <div class="card h-100 shadow-sm especialidad-card">
+        <!-- Header de la especialidad -->
+        <div class="card-header-custom">
+          <div class="especialidad-icon-container">
+            <i class="bi bi-hospital-fill especialidad-icon"></i>
+          </div>
+          <h5 class="card-title text-white fw-bold mb-0">{{ especialidad.nombre }}</h5>
+        </div>
+
+        <!-- Contenido con doctores -->
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="badge bg-primary rounded-pill">
+              {{ especialidad.doctores.length }}
+              {{ especialidad.doctores.length === 1 ? 'Profesional' : 'Profesionales' }}
+            </span>
+          </div>
+
+          <!-- Lista de doctores -->
+          <div class="doctores-list">
+            <div class="doctor-item" *ngFor="let doctor of especialidad.doctores.slice(0, 3)">
+              <i class="bi bi-person-circle text-primary me-2"></i>
+              <span class="doctor-name">{{ getNombreCompleto(doctor) }}</span>
+            </div>
+
+            <!-- Mostrar "y más" si hay más de 3 doctores -->
+            <div *ngIf="especialidad.doctores.length > 3" class="doctor-item text-muted">
+              <i class="bi bi-three-dots me-2"></i>
+              <span>y {{ especialidad.doctores.length - 3 }} más</span>
+            </div>
+          </div>
+
+          <!-- Botón para ver más -->
+          <div class="mt-3">
+            <button class="btn btn-outline-primary w-100"
+              title="Ver todos los profesionales de {{ especialidad.nombre }}">
+              <i class="bi bi-eye me-2"></i>
+              Ver Todos los Profesionales
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje si no hay especialidades -->
+  <div *ngIf="!cargando && !error && especialidades.length === 0" class="text-center py-5">
+    <i class="bi bi-inbox display-1 text-muted"></i>
+    <h3 class="mt-3 text-muted">No hay especialidades disponibles</h3>
+    <p class="text-muted">Pronto agregaremos más profesionales</p>
+    <button class="btn btn-primary mt-3" (click)="refrescarEspecialidades()">
+      <i class="bi bi-arrow-clockwise me-2"></i>
+      Actualizar
+    </button>
+  </div>
+</div>

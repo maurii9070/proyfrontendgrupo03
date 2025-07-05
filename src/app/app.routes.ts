@@ -11,16 +11,16 @@ import { EstadisticasComponent } from './pages/estadisticas/estadisticas.compone
 import { MainAdminComponent } from './pages/main-admin/main-admin.component';
 import { MainDoctorComponent } from './pages/main-doctor/main-doctor.component';
 import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
+import { EspecialidadesComponent } from './pages/especialidades/especialidades.component';
 
 export const routes: Routes = [
+  // Pagina de inicio
   {
     path: '',
     component: HomePageComponent,
   },
-  {
-    path: 'paciente/:idPaciente/turno/:idDoctor',
-    component: TurnoReservaComponent,
-  },
+
+  // Autenticación
   {
     path: 'login',
     component: LoginComponent,
@@ -29,15 +29,26 @@ export const routes: Routes = [
     path: 'login/solicitud-dni',
     component: SolicitarDniGoogleComponent,
   },
-  { path: 'resetear-password', component: ResetearPasswordComponent },
-  {
-    path: 'paciente/:idPaciente',
-    component: MainPacienteComponent,
-  },
   {
     path: 'login/registro-paciente',
     component: RegistroPacienteComponent,
   },
+  {
+    path: 'resetear-password',
+    component: ResetearPasswordComponent
+  },
+
+  // paginas privadas
+  {
+    path: 'paciente/:idPaciente/turno/:idDoctor',
+    component: TurnoReservaComponent,
+  },
+  
+  {
+    path: 'paciente/:idPaciente',
+    component: MainPacienteComponent,
+  },
+  
   {
     path: 'doctores',
     component: ListDoctoresComponent,
@@ -50,11 +61,23 @@ export const routes: Routes = [
     path: 'estadisticas',
     component: EstadisticasComponent,
   },
+
+  // Paginas publicas
+  {
+    path: 'home/especialidades',
+    component: EspecialidadesComponent
+  },
+
+
+  // Administración
+
   {
     path: 'admin',
     component: MainAdminComponent,
   },
   { path: 'doctor/:idDoctor', component: MainDoctorComponent },
+  
+  // Ruta wilcard para manejar rutas no definidas (dejar al final)
   {
     path: '**',
     redirectTo: '',
