@@ -27,7 +27,7 @@ export class RegistroDoctorComponent implements OnInit {
     telefono: '',
     matricula: '',
     especialidad: '',
-    precioConsulta: '',
+    precioConsulta: 0,
     activo: true
   };
 
@@ -56,7 +56,8 @@ export class RegistroDoctorComponent implements OnInit {
     });
   }
 
-  registrarDoctor() {
+  
+  registrarDoctor(): void {
     this.cargando = true;
     this.mensaje = '';
     this.error = '';
@@ -65,20 +66,14 @@ export class RegistroDoctorComponent implements OnInit {
       next: (response) => {
         this.mensaje = 'Doctor registrado exitosamente';
         this.cargando = false;
-        // Limpiar el formulario después del registro exitoso
-        this.doctor = {
-          dni: '',
-          email: '',
-          password: '',
-          nombre: '',
-          apellido: '', 
-          rol: "doctor",
-          telefono: '',
-          matricula: '',
-          especialidad: '',
-          precioConsulta: '',
-          activo: true
+        const payload = {
+          ...this.doctor,
+          especialidadId: this.doctor.especialidad // Enviamos solo el ID
         };
+    
+        delete (payload as any).especialidad; // Opcional: limpiamos el campo que no espera el backend
+        // Limpiar el formulario después del registro exitoso
+        this.limpiarFormulario();
       },
       error: (err) => {
         this.error = 'Error al registrar el doctor: ' + (err.error?.message || err.message || 'Error desconocido');
@@ -86,4 +81,20 @@ export class RegistroDoctorComponent implements OnInit {
       }
     });
   }
+
+  private limpiarFormulario(): void {
+    this.doctor = {
+      dni: '',
+      email: '',
+      password: '',
+      nombre: '',
+      apellido: '', 
+      rol: "doctor",
+      telefono: '',
+      matricula: '',
+      especialidad: '',
+      precioConsulta: 0,
+      activo: true
+    };
+}
 }
