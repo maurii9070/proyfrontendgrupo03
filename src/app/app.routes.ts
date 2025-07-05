@@ -35,7 +35,7 @@ export const routes: Routes = [
     component: MainPacienteComponent,
   },
   {
-    path: 'registro-paciente',
+    path: 'login/registro-paciente',
     component: RegistroPacienteComponent,
   },
   {
