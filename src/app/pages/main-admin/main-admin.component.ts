@@ -137,13 +137,15 @@ export class MainAdminComponent implements OnInit {
             this.turnoService
               .getTurnosByPacienteId(paciente._id)
               .subscribe((turnos: Turno[]) => {
-                this.turnosFiltrados = turnos.filter((turno) => {
-                  // Convertir fecha del turno y filtro a formato yyyy/m/d
-                  const fechaTurno = this.formatearFechaString(turno.fecha);
-                  const fechaFiltro = this.formatearFechaString(
+                const fechaFiltro = this.formatearFechaString(
                     this.filtroFecha
                   );
-                  return fechaTurno === fechaFiltro;
+                this.turnosFiltrados = turnos.filter((turno) => {
+                  turno.fecha = this.formatearFechaString(turno.fecha);
+                  if(this.formatearFechaString(turno.fecha) === fechaFiltro) {
+                    return turno;
+                  }
+                  return false;
                 });
               });
           } else {
