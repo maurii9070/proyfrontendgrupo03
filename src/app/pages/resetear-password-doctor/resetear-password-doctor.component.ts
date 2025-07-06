@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { AutenticacionService } from '../../services/autenticacion.service';
 import { ToastService } from '../../services/toast.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-resetear-password-doctor',
@@ -23,6 +24,7 @@ export class ResetearPasswordDoctorComponent {
   private toastService = inject(ToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private location = inject(Location);
 
   resetPasswordForm: FormGroup;
   isLoading = false;
@@ -31,10 +33,13 @@ export class ResetearPasswordDoctorComponent {
   submitted = false;
 
   constructor() {
-    this.resetPasswordForm = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      repeatPassword: ['', [Validators.required]],
-    }, { validators: this.passwordMatchValidator });
+    this.resetPasswordForm = this.fb.group(
+      {
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        repeatPassword: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator }
+    );
   }
 
   // Getters para facilitar el acceso a los controles
@@ -63,20 +68,25 @@ export class ResetearPasswordDoctorComponent {
   onSubmit() {
     this.submitted = true;
     if (this.resetPasswordForm.valid) {
-      this.isLoading = true
-      let dni : string = '';
+      this.isLoading = true;
+      let dni: string = '';
       dni = this.route.snapshot.paramMap.get('dni') || '';
       const { newPassword } = this.resetPasswordForm.value;
       if (!dni) {
-        this.toastService.showError('No se pudo obtener el identificador del doctor.');
+        this.toastService.showError(
+          'No se pudo obtener el identificador del doctor.'
+        );
         this.isLoading = false;
         return;
       }
       this.autenticacionService.resetPassword(dni, newPassword).subscribe({
         next: (response) => {
           this.isLoading = false;
-          this.toastService.showSuccess('Contraseña restablecida con éxito');
-          this.router.navigate(['/login']);
+          this.toastService.showSuccess(
+            'Contraseña restablecida con éxito. Por favor, inicia sesión nuevamente.'
+          );
+          this.autenticacionService.logout(); // Cerrar sesión
+          this.router.navigate(['/login']); // Redirigir al login
         },
         error: (error) => {
           this.isLoading = false;
@@ -87,5 +97,9 @@ export class ResetearPasswordDoctorComponent {
       // Marcar todos los campos como touched para mostrar errores
       this.resetPasswordForm.markAllAsTouched();
     }
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

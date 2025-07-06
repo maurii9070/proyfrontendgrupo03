@@ -20,7 +20,6 @@ import { roleGuard } from './core/guards/role.guard';
 import { AccesoDenegadoComponent } from './pages/acceso-denegado/acceso-denegado.component';
 
 export const routes: Routes = [
-
   // *****     Rutas públicas (no requieren autenticación) ******
 
   // Pagina de inicio
@@ -34,7 +33,7 @@ export const routes: Routes = [
   },
   {
     path: 'acceso-denegado',
-    component: AccesoDenegadoComponent
+    component: AccesoDenegadoComponent,
   },
   {
     path: 'doctores',
@@ -109,11 +108,11 @@ export const routes: Routes = [
     path: 'doctor/:dni/resetear-password-doctor',
     component: ResetearPasswordDoctorComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: 'admin' }, // Solo administradores pueden acceder a esta
+    data: { role: 'Doctor' }, // Solo administradores pueden acceder a esta
   },
 
   // Ruta wilcard para manejar rutas no definidas (dejar al final)
-  
+
   {
     path: '**',
     redirectTo: '',

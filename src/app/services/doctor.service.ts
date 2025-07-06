@@ -53,4 +53,12 @@ export class DoctorService {
   getDoctorById(id: string) {
     return this.http.get<Doctor>(`${this.apiUrl}/${id}`);
   }
+
+  actualizarDoctor(id: string, doctor: any, token: string) {
+    return this.http.put(`${this.apiUrl}/${id}`, doctor, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 }
