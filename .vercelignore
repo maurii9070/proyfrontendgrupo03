@@ -1,0 +1,13 @@
+node_modules
+.angular
+*.log
+.DS_Store
+.vscode
+.idea
+*.tgz
+*.tar.gz
+coverage
+.nyc_output
+src/**/*.spec.ts
+e2e
+docs
