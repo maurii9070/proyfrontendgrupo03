@@ -530,11 +530,26 @@
                 <h6 class="text-primary fw-bold mb-0">
                   <i class="bi bi-files me-2"></i>Archivos del Turno
                 </h6>
+                <!-- Input file oculto para archivos médicos -->
+                <input
+                  #fileInputMedico
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                  style="display: none"
+                  (change)="onArchivoMedicoSeleccionado($event)"
+                />
                 <button
                   class="btn btn-outline-primary btn-sm"
-                  (click)="abrirModalArchivos()"
+                  [disabled]="subiendoArchivoMedico"
+                  (click)="iniciarSubidaArchivoMedico()"
                 >
-                  <i class="bi bi-cloud-upload me-1"></i> Subir Archivo
+                  @if (subiendoArchivoMedico) {
+                  <span
+                    class="spinner-border spinner-border-sm me-1"
+                    role="status"
+                  ></span>
+                  Subiendo... } @else {
+                  <i class="bi bi-cloud-upload me-1"></i> Subir Archivo }
                 </button>
               </div>
 
@@ -561,13 +576,22 @@
                             <small class="text-muted">{{ archivo.tipo }}</small>
                           </div>
                         </div>
-                        <button
-                          class="btn btn-outline-primary btn-sm"
-                          (click)="verArchivo(archivo.url)"
-                          title="Ver archivo"
-                        >
-                          <i class="bi bi-eye"></i>
-                        </button>
+                        <div class="d-flex gap-1">
+                          <button
+                            class="btn btn-outline-primary btn-sm"
+                            (click)="verArchivo(archivo.url)"
+                            title="Ver archivo"
+                          >
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <button
+                            class="btn btn-outline-danger btn-sm"
+                            (click)="eliminarArchivoMedico(archivo)"
+                            title="Eliminar archivo"
+                          >
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
