@@ -17,6 +17,7 @@ import {
 import { ToastService } from '../../services/toast.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AutenticacionService } from '../../services/autenticacion.service';
 
 export interface Especialidad {
   _id: string;
@@ -100,7 +101,10 @@ export class MainDoctorComponent {
   // Subida directa de archivos
   subiendoArchivoMedico: boolean = false;
 
-  constructor(private modalService: NgbModal, private router: Router) {}
+  token: string = '';
+  constructor(private modalService: NgbModal, private router: Router, private autenticationService: AutenticacionService) {
+    this.token = this.autenticationService.getToken()!;
+  }
 
   // Método removido - ya no se usa modal para subir archivos
 
@@ -135,6 +139,7 @@ export class MainDoctorComponent {
   }
 
   ngOnInit(): void {
+    
     //obtener doctor
     this.doctorId = this.route.snapshot.paramMap.get('idDoctor') || '';
     this.doctorService.getDoctorById(this.doctorId).subscribe(
@@ -257,7 +262,7 @@ export class MainDoctorComponent {
   //Confirmar Turno
   confirmarRealizarTurno() {
     if (!this.turno) return;
-    this.turnoService.realizarTurno(this.turno._id).subscribe(
+    this.turnoService.realizarTurno(this.turno._id, this.token).subscribe(
       () => {
         // Recargar la página
         window.location.reload();
