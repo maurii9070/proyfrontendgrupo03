@@ -66,14 +66,14 @@ export const routes: Routes = [
     path: 'paciente/:idPaciente/turno/:idDoctor',
     component: TurnoReservaComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: 'paciente' }, // Solo pacientes pueden acceder a esta ruta
+    data: { role: 'Paciente' }, // Solo pacientes pueden acceder a esta ruta
   },
 
   {
     path: 'paciente/:idPaciente',
     component: MainPacienteComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: 'paciente' }, // Solo pacientes pueden acceder a esta ruta
+    data: { role: 'Paciente' }, // Solo pacientes pueden acceder a esta ruta
   },
 
   // rutas para doctores
@@ -82,7 +82,7 @@ export const routes: Routes = [
     path: 'doctor/:idDoctor',
     component: MainDoctorComponent,
     canActivate: [authGuard, roleGuard],
-    data: { role: 'doctor' }, // Solo doctores pueden acceder a esta ruta
+    data: { role: 'Doctor' }, // Solo doctores pueden acceder a esta ruta
   },
 
   {
