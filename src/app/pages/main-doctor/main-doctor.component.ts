@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   NgbModal,
@@ -10,12 +10,13 @@ import { DoctorService } from '../../services/doctor.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { Archivo, TurnoService } from '../../services/turno.service';
-import { FirestoreService } from '../../services/firestore.service';
-import { ArchivosService } from '../../services/archivos.service';
+import {
+  ArchivosService,
+  ArchivoSubida,
+} from '../../services/archivos.service';
 import { ToastService } from '../../services/toast.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { UploadFileComponent } from '../../components/upload-file/upload-file.component';
 
 export interface Especialidad {
   _id: string;
@@ -76,7 +77,6 @@ export class MainDoctorComponent {
   doctorService = inject(DoctorService);
   route = inject(ActivatedRoute);
   turnoService = inject(TurnoService);
-  firestoreService = inject(FirestoreService);
   archivosService = inject(ArchivosService);
   toastService = inject(ToastService);
   turnos: Turno[] = [];
@@ -89,20 +89,20 @@ export class MainDoctorComponent {
   paginaActual: number = 1;
   tamanioPagina: number = 5;
 
+  // ViewChild para el input file
+  @ViewChild('fileInputMedico') fileInputMedico!: ElementRef<HTMLInputElement>;
+
   // Edición de observaciones
   editandoObservacion: boolean = false;
   observacionEdit: string = '';
   guardandoObservacion: boolean = false;
 
-  // Subida de archivos
-  archivoSeleccionado: File | null = null;
-  subiendoArchivo: boolean = false;
+  // Subida directa de archivos
+  subiendoArchivoMedico: boolean = false;
 
   constructor(private modalService: NgbModal, private router: Router) {}
 
-  abrirSubirArchivo() {
-    //this.router.navigate(['/subir-archivo']);
-  }
+  // Método removido - ya no se usa modal para subir archivos
 
   iniciarEdicionObservacion() {
     this.editandoObservacion = true;
@@ -277,33 +277,91 @@ export class MainDoctorComponent {
     window.open(url, '_blank');
   }
 
-  // Métodos para el modal de archivos
-  abrirModalArchivos() {
-    const modalRef = this.modalService.open(UploadFileComponent, {
-      size: 'lg',
-      backdrop: 'static',
-    });
+  // Métodos para subida directa de archivos médicos
+  iniciarSubidaArchivoMedico() {
+    this.fileInputMedico.nativeElement.click();
+  }
 
-    modalRef.componentInstance.turnoId = this.turno._id;
-    modalRef.componentInstance.archivosExistentes = this.turno.archivos || [];
+  onArchivoMedicoSeleccionado(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    // Suscribirse a eventos
-    modalRef.componentInstance.archivoSubido.subscribe((archivo: any) => {
-      // Actualizar la lista de archivos localmente
-      if (!this.turno.archivos) {
-        this.turno.archivos = [];
-      }
-      this.turno.archivos.push({
-        url: archivo.url,
-        tipo: archivo.tipo,
-        nombre: archivo.nombre,
-        _id: Date.now().toString(), // ID temporal
-        fechaSubida: new Date().toISOString(),
+    // Validar archivo usando el servicio
+    const validacion = this.archivosService.validarArchivo(file);
+    if (!validacion.esValido) {
+      this.toastService.showError(validacion.mensaje!, 'Archivo no válido');
+      event.target.value = '';
+      return;
+    }
+
+    // Proceder con la subida
+    this.subirArchivoMedico(file);
+    event.target.value = '';
+  }
+
+  private subirArchivoMedico(file: File) {
+    if (!this.turno._id) return;
+
+    this.subiendoArchivoMedico = true;
+
+    // Usar el servicio para subir archivo médico
+    this.archivosService
+      .subirArchivoMedicoCompleto(file, this.turno._id)
+      .subscribe({
+        next: (archivo: ArchivoSubida) => {
+          // Actualizar la lista de archivos localmente
+          if (!this.turno.archivos) {
+            this.turno.archivos = [];
+          }
+          this.turno.archivos.push({
+            url: archivo.url,
+            tipo: archivo.tipo,
+            nombre: archivo.nombre,
+            _id: archivo._id,
+            fechaSubida: archivo.fechaSubida,
+          });
+
+          this.subiendoArchivoMedico = false;
+          this.toastService.showSuccess(
+            'Archivo médico subido exitosamente',
+            'Éxito'
+          );
+
+          // Modal se mantiene abierto para mejor UX
+          // this.modalService.dismissAll();
+        },
+        error: (error) => {
+          this.subiendoArchivoMedico = false;
+          this.toastService.showError(
+            'Error al subir el archivo médico',
+            'Error'
+          );
+          console.error('Error en subida de archivo médico:', error);
+        },
       });
-    });
+  }
 
-    modalRef.componentInstance.cerrarModal.subscribe(() => {
-      modalRef.close();
+  // Método para eliminar archivos médicos
+  eliminarArchivoMedico(archivo: any) {
+    if (!confirm('¿Está seguro de que desea eliminar este archivo?')) {
+      return;
+    }
+
+    this.archivosService.eliminarArchivoCompleto(archivo).subscribe({
+      next: () => {
+        // Eliminar de la lista local
+        this.turno.archivos = this.turno.archivos.filter(
+          (a) => a._id !== archivo._id
+        );
+        this.toastService.showSuccess(
+          'Archivo eliminado exitosamente',
+          'Éxito'
+        );
+      },
+      error: (error) => {
+        this.toastService.showError('Error al eliminar el archivo', 'Error');
+        console.error('Error al eliminar archivo:', error);
+      },
     });
   }
   onForgotPassword() {

@@ -14,6 +14,7 @@ import { ToastService } from '../../services/toast.service';
 export class UploadFileComponent {
   @Input() turnoId: string = '';
   @Input() archivosExistentes: any[] = [];
+  @Input() tipo: 'medico' | 'pago' = 'medico';
   @Output() archivoSubido = new EventEmitter<any>();
   @Output() cerrarModal = new EventEmitter<void>();
 
@@ -57,6 +58,10 @@ export class UploadFileComponent {
       }
 
       this.archivoSeleccionado = file;
+      // Si es comprobante de pago, nombre predefinido
+      if (this.tipo === 'pago') {
+        this.nombrePersonalizado = 'comprobante';
+      }
     }
     // Limpiar el input
     event.target.value = '';
@@ -85,64 +90,96 @@ export class UploadFileComponent {
     const baseFileName = this.nombrePersonalizado.trim();
     const fileName = `turno_${this.turnoId}_${Date.now()}_${baseFileName}`;
 
-    // Subir archivo a Firebase Storage
-    this.firestoreService
-      .uploadArchivoMedico(this.archivoSeleccionado, fileName)
-      .subscribe({
-        next: (downloadUrl: string) => {
-          console.log('Archivo subido a Firebase:', downloadUrl);
-
-          // Guardar URL en la base de datos usando el servicio
-          this.archivosService
-            .subirArchivoMedico(
-              downloadUrl,
-              this.turnoId,
-              this.nombrePersonalizado
-            )
-            .subscribe({
-              next: (response) => {
-                console.log(
-                  'Archivo registrado en la base de datos:',
-                  response
-                );
-                this.subiendoArchivo = false;
-                this.archivoSeleccionado = null;
-                this.nombrePersonalizado = '';
-
-                // Emitir evento de éxito con el nombre personalizado
-                this.archivoSubido.emit({
-                  url: downloadUrl,
-                  tipo: 'medico',
-                  nombre: baseFileName,
-                });
-
-                this.toastService.showSuccess(
-                  'El archivo se ha subido correctamente',
-                  'Archivo subido'
-                );
-              },
-              error: (error) => {
-                console.error(
-                  'Error al registrar archivo en la base de datos:',
-                  error
-                );
-                this.subiendoArchivo = false;
-                this.toastService.showError(
-                  'No se pudo registrar el archivo en la base de datos',
-                  'Error en la base de datos'
-                );
-              },
-            });
-        },
-        error: (error) => {
-          console.error('Error al subir archivo a Firebase:', error);
-          this.subiendoArchivo = false;
-          this.toastService.showError(
-            'No se pudo subir el archivo al almacenamiento',
-            'Error de subida'
-          );
-        },
-      });
+    if (this.tipo === 'pago') {
+      // Subir comprobante de pago a Firebase Storage
+      this.firestoreService
+        .uploadComprobantePago(this.archivoSeleccionado, fileName)
+        .subscribe({
+          next: (downloadUrl: string) => {
+            // Guardar URL en la base de datos usando el servicio
+            this.archivosService
+              .subirArchivoPago(
+                downloadUrl,
+                this.turnoId,
+                this.nombrePersonalizado
+              )
+              .subscribe({
+                next: (response) => {
+                  this.subiendoArchivo = false;
+                  this.archivoSeleccionado = null;
+                  this.nombrePersonalizado = '';
+                  this.archivoSubido.emit({
+                    url: downloadUrl,
+                    tipo: 'pago',
+                    nombre: baseFileName,
+                  });
+                  this.toastService.showSuccess(
+                    'El comprobante se ha subido correctamente',
+                    'Comprobante subido'
+                  );
+                },
+                error: (error) => {
+                  this.subiendoArchivo = false;
+                  this.toastService.showError(
+                    'No se pudo registrar el comprobante en la base de datos',
+                    'Error en la base de datos'
+                  );
+                },
+              });
+          },
+          error: (error) => {
+            this.subiendoArchivo = false;
+            this.toastService.showError(
+              'No se pudo subir el comprobante al almacenamiento',
+              'Error de subida'
+            );
+          },
+        });
+    } else {
+      // Subir archivo médico a Firebase Storage
+      this.firestoreService
+        .uploadArchivoMedico(this.archivoSeleccionado, fileName)
+        .subscribe({
+          next: (downloadUrl: string) => {
+            this.archivosService
+              .subirArchivoMedico(
+                downloadUrl,
+                this.turnoId,
+                this.nombrePersonalizado
+              )
+              .subscribe({
+                next: (response) => {
+                  this.subiendoArchivo = false;
+                  this.archivoSeleccionado = null;
+                  this.nombrePersonalizado = '';
+                  this.archivoSubido.emit({
+                    url: downloadUrl,
+                    tipo: 'medico',
+                    nombre: baseFileName,
+                  });
+                  this.toastService.showSuccess(
+                    'El archivo se ha subido correctamente',
+                    'Archivo subido'
+                  );
+                },
+                error: (error) => {
+                  this.subiendoArchivo = false;
+                  this.toastService.showError(
+                    'No se pudo registrar el archivo en la base de datos',
+                    'Error en la base de datos'
+                  );
+                },
+              });
+          },
+          error: (error) => {
+            this.subiendoArchivo = false;
+            this.toastService.showError(
+              'No se pudo subir el archivo al almacenamiento',
+              'Error de subida'
+            );
+          },
+        });
+    }
   }
 
   formatFileSize(bytes: number): string {
