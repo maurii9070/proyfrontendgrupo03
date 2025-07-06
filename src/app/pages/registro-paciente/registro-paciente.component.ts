@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { PacienteService } from '../../services/paciente.service';
 
 @Component({
   selector: 'app-registro-paciente',
   imports: [CommonModule, FormsModule],
   templateUrl: './registro-paciente.component.html',
-  styleUrl: './registro-paciente.component.css'
+  styleUrl: './registro-paciente.component.css',
 })
 export class RegistroPacienteComponent {
   paciente = {
@@ -17,14 +18,17 @@ export class RegistroPacienteComponent {
     telefono: '',
     fechaNacimiento: '',
     email: '',
-    password: '' 
+    password: '',
   };
 
   mensaje = '';
   error = '';
   cargando = false;
 
-  constructor(private pacienteService: PacienteService) {}
+  constructor(
+    private pacienteService: PacienteService,
+    private router: Router
+  ) {}
 
   registrarPaciente(): void {
     this.mensaje = '';
@@ -32,7 +36,8 @@ export class RegistroPacienteComponent {
     this.cargando = true;
     this.pacienteService.registrarPaciente(this.paciente).subscribe({
       next: (res) => {
-        this.mensaje = 'Paciente registrado exitosamente.';
+        this.mensaje =
+          'Paciente registrado exitosamente. Redirigiendo al login...';
         this.paciente = {
           nombre: '',
           apellido: '',
@@ -40,14 +45,15 @@ export class RegistroPacienteComponent {
           telefono: '',
           fechaNacimiento: '',
           email: '',
-          password: ''
+          password: '',
         };
         this.cargando = false;
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         this.error = err.error?.mensaje || 'Error al registrar paciente.';
         this.cargando = false;
-      }
+      },
     });
   }
 }

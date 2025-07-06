@@ -180,7 +180,7 @@ export class LoginComponent {
           },
         });
     } catch (error) {
-      this.toastService.showError('Error al iniciar sesión con Google');
+      console.log('Error en inicio de sesión con Google:', error);
     }
   }
 

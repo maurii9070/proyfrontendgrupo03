@@ -1,0 +1,151 @@
+/* Estilos personalizados para el formulario de registro de doctor */
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+  padding: 10px 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn-primary {
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+}
+
+.btn-primary:disabled {
+  transform: none;
+  box-shadow: none;
+}
+
+.alert {
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.text-primary {
+  color: #007bff !important;
+}
+
+.form-label {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.form-text {
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+/* Iconos con animación sutil */
+.fas {
+  transition: color 0.3s ease;
+}
+
+.form-control:focus + .form-text .fas,
+.form-control:focus ~ .form-text .fas,
+.form-select:focus + .form-text .fas,
+.form-select:focus ~ .form-text .fas {
+  color: #007bff;
+}
+
+/* Animaciones para los mensajes */
+.alert {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejoras responsivas */
+@media (max-width: 768px) {
+  .card {
+    margin: 10px;
+    border-radius: 10px;
+  }
+
+  .card-body {
+    padding: 20px !important;
+  }
+
+  .btn-lg {
+    padding: 15px 20px;
+  }
+}
+
+/* Validación visual mejorada */
+.form-control.ng-invalid.ng-touched,
+.form-select.ng-invalid.ng-touched {
+  border-color: #dc3545;
+  animation: shake 0.5s ease-in-out;
+}
+
+.form-control.ng-valid.ng-touched,
+.form-select.ng-valid.ng-touched {
+  border-color: #28a745;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* Spinner personalizado */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Estilos específicos para el select de especialidad */
+.form-select {
+  background-position: right 12px center;
+}
+
+/* Mejoras para los campos de precio */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
