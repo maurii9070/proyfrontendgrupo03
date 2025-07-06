@@ -26,12 +26,12 @@ import { ToastService } from '../../services/toast.service';
 export class TurnoReservaComponent implements OnInit {
   private calendar = inject(NgbCalendar);
   private router = inject(ActivatedRoute);
-  private router_redireccion = inject(Router)
+  private router_redireccion = inject(Router);
   private turnoService = inject(TurnoService);
-  private doctorService = inject(DoctorService)
+  private doctorService = inject(DoctorService);
   private mercadoPagoService = inject(MercadoPagoService);
   private pagoService = inject(PagoService);
-  private toastService = inject(ToastService)
+  private toastService = inject(ToastService);
 
   private idDoctor: string | null = null; // ID del doctor seleccionado
   turnosPorFecha: any[] = [];
@@ -45,10 +45,9 @@ export class TurnoReservaComponent implements OnInit {
   // Array de horas disponibles
   horas: string[] = [];
 
-  idPaciente: string = ""; // ID del paciente, se puede obtener de la sesión o del servicio de autenticación
+  idPaciente: string = ''; // ID del paciente, se puede obtener de la sesión o del servicio de autenticación
   observaciones: string = ''; // Observaciones del turno
   doctor: Doctor = undefined!; // Información del doctor seleccionado
-
 
   ngOnInit() {
     this.idDoctor = this.router.snapshot.paramMap.get('idDoctor');
@@ -57,11 +56,13 @@ export class TurnoReservaComponent implements OnInit {
     for (let hora = startHour; hora <= endHour; hora++) {
       this.horas.push(`${hora}:00`);
     }
-    this.doctorService.getDoctorById(this.idDoctor!).subscribe((doctor: Doctor) => {
-      this.doctor = doctor;
-      this.precioConsulta = doctor.precioConsulta;
-      console.log('Doctor seleccionado:', this.doctor);
-    });
+    this.doctorService
+      .getDoctorById(this.idDoctor!)
+      .subscribe((doctor: Doctor) => {
+        this.doctor = doctor;
+        this.precioConsulta = doctor.precioConsulta;
+        console.log('Doctor seleccionado:', this.doctor);
+      });
   }
 
   // Deshabilitar fechas pasadas, fines de semana y fechas a más de 2 meses
@@ -146,23 +147,32 @@ export class TurnoReservaComponent implements OnInit {
 
     this.idPaciente = this.router.snapshot.paramMap.get('idPaciente') || '';
     console.log('ID del paciente:', this.idPaciente);
-    this.turnoService.crearTurno(this.idPaciente, this.doctor._id, fechaString, this.selectedHour, this.observaciones)
+    this.turnoService
+      .crearTurno(
+        this.idPaciente,
+        this.doctor._id,
+        fechaString,
+        this.selectedHour,
+        this.observaciones
+      )
       .subscribe({
         next: (response) => {
           console.log('Turno creado:', response);
-          this.mercadoPagoService.crearPreferencia(this.doctor._id,response._id).subscribe({
+          this.mercadoPagoService
+            .crearPreferencia(this.doctor._id, response._id)
+            .subscribe({
               next: (res) => {
                 console.log('Preferencia creada:', res);
                 window.location.href = res.init_point; // Redirige al Checkout Pro
               },
               error: (err) => {
                 console.error('Error al crear preferencia:', err);
-              }
+              },
             });
         },
         error: (error) => {
           console.error('Error al crear el turno:', error);
-        }
+        },
       });
   }
   onClickReservarConTransferencia() {
@@ -173,30 +183,47 @@ export class TurnoReservaComponent implements OnInit {
 
     const fechaString = `${this.selectedDate.day}/${this.selectedDate.month}/${this.selectedDate.year}`;
     this.idPaciente = this.router.snapshot.paramMap.get('idPaciente') || '';
-    this.turnoService.crearTurno(this.idPaciente, this.doctor._id, fechaString, this.selectedHour, this.observaciones)
+    this.turnoService
+      .crearTurno(
+        this.idPaciente,
+        this.doctor._id,
+        fechaString,
+        this.selectedHour,
+        this.observaciones
+      )
       .subscribe({
         next: (response) => {
           console.log('Turno creado:', response);
           const pago: Pago = {
             monto: this.precioConsulta,
             metodoPago: 'transferencia',
-            turno: response._id // Asumiendo que el turno creado tiene un ID
+            turno: response._id, // Asumiendo que el turno creado tiene un ID
           };
           this.pagoService.crearNuevoPago(pago).subscribe({
             next: (res) => {
               console.log('Pago creado:', res);
               // Aquí puedes mostrar un mensaje de éxito o redirigir al usuario
-              this.toastService.showSuccess('Turno reservado con éxito', 'Pago realizado con transferencia. Seguir indicaciones para completar el proceso.');
+              this.toastService.showSuccess(
+                'Turno reservado con éxito',
+                'Pago realizado con transferencia. Seguir indicaciones para completar el proceso.'
+              );
               this.router_redireccion.navigate(['/paciente', this.idPaciente]);
             },
             error: (err) => {
               console.error('Error al crear el pago:', err);
-            }
+            },
           });
         },
         error: (error) => {
           console.error('Error al crear el turno:', error);
-        }
+        },
       });
+  }
+
+  onClickVolver() {
+    this.router_redireccion.navigate([
+      '/paciente',
+      this.router.snapshot.paramMap.get('idPaciente'),
+    ]);
   }
 }

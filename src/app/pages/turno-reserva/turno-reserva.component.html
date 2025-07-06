@@ -1,6 +1,15 @@
-<div class="container">
+<div class="container mt-4 mb-5">
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7 col-xl-6">
+      <div class="w-100 d-flex justify-content-end mb-3">
+        <button
+          class="btn btn-secondary"
+          (click)="onClickVolver()"
+          title="Volver al perfil del paciente"
+        >
+          <i class="bi bi-arrow-left"></i> Volver
+        </button>
+      </div>
       <div class="card">
         <div
           class="card-header d-flex justify-content-between align-items-center"
@@ -83,15 +92,21 @@
             <h6 class="mb-3">💳 Selecciona tu método de pago</h6>
             <div class="row g-2 justify-content-center">
               <div class="col-12 col-sm-6">
-                <button class="btn btn-primary w-100" type="button"
-                  (click)="onClickReservarConMercadoPago()">
+                <button
+                  class="btn btn-primary w-100"
+                  type="button"
+                  (click)="onClickReservarConMercadoPago()"
+                >
                   <i class="fas fa-credit-card me-2"></i>
                   MercadoPago
                 </button>
               </div>
               <div class="col-12 col-sm-6">
-                <button class="btn btn-success w-100" type="button"
-                  (click)="onClickReservarConTransferencia()">
+                <button
+                  class="btn btn-success w-100"
+                  type="button"
+                  (click)="onClickReservarConTransferencia()"
+                >
                   <i class="fas fa-university me-2"></i>
                   Transferencia
                 </button>
@@ -103,7 +118,8 @@
               <div class="alert alert-info mb-2">
                 <small class="text-muted">
                   <i class="fas fa-info-circle me-1"></i>
-                  <strong>Mercado Pago:</strong> Si el pago es rechazado deberá volver a reservar el turno.
+                  <strong>Mercado Pago:</strong> Si el pago es rechazado deberá
+                  volver a reservar el turno.
                 </small>
                 <small class="text-muted">
                   <i class="fas fa-info-circle me-1"></i>
