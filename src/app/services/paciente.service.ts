@@ -28,4 +28,11 @@ export class PacienteService {
       },
     });
   }
+  updatePaciente(idPaciente: string, email: string, telefono: string) {
+    const body = { email, telefono };
+    return this.http.put(`${this.apiUrl}/${idPaciente}`, body);
+  }
+  desvincularGoogle(idPaciente: string) {
+    return this.http.put(`${this.apiUrl}/desvincular/${idPaciente}`, {});
+  }
 }
