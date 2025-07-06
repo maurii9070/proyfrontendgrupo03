@@ -118,7 +118,8 @@
         </div>
       </div>
 
-      <!-- Input para nombre personalizado -->
+      @if(tipo==='medico'){
+        <!-- Input para nombre personalizado -->
       <div class="mb-3">
         <label for="nombrePersonalizado" class="form-label">
           <i class="bi bi-tag me-1"></i>Nombre del archivo
@@ -145,6 +146,8 @@
         </div>
         }
       </div>
+      }
+      
 
       <!-- Botones de acción -->
       <div class="d-flex gap-2 justify-content-end">

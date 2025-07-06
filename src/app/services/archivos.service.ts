@@ -17,4 +17,11 @@ export class ArchivosService {
       nombre,
     });
   }
+  subirArchivoPago(url: string, idTurno: string, nombre: string) {
+    return this.http.post<any>(`${this.baseUrl}/${idTurno}`, {
+      tipo: 'pago',
+      url,
+      nombre,
+    });
+  }
 }

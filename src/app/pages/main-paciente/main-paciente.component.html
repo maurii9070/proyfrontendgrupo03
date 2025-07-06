@@ -65,12 +65,12 @@
                     </div>
                     <span class="badge ms-1" [ngClass]="{
                         'bg-warning text-dark': turno.estado === 'pendiente',
-                        'bg-success': turno.estado === 'confirmado',
+                        'bg-success': turno.estado === 'confirmado' || turno.estado === 'realizado',
                         'bg-danger': turno.estado === 'cancelado'
                       }">
                       <i class="bi" [ngClass]="{
                           'bi-hourglass-split': turno.estado === 'pendiente',
-                          'bi-check-circle': turno.estado === 'confirmado',
+                          'bi-check-circle': turno.estado === 'confirmado' || turno.estado === 'realizado',
                           'bi-x-circle': turno.estado === 'cancelado'
                         }"></i>
                       {{ turno.estado | titlecase }}
@@ -78,7 +78,8 @@
                   </div>
                 </div>
                 <div class="d-flex gap-2 flex-wrap mt-2">
-                  <button class="btn btn-outline-info btn-turno d-flex align-items-center gap-2">
+                  <button class="btn btn-outline-info btn-turno d-flex align-items-center gap-2"
+                    (click)="abrirModalDetalle(turno._id)">
                     <i class="bi bi-eye"></i> Ver detalles
                   </button>
                   <button class="btn btn-outline-danger btn-turno d-flex align-items-center gap-2"
@@ -113,6 +114,105 @@
                     </div>
                   </div>
                 </div>
+                <!-- Modal Detalle Turno -->
+                @if (mostrarModalDetalle && detalleTurno) {
+                  <div class="modal fade show d-block custom-modal-backdrop">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width:700px;">
+                      <div class="modal-content shadow rounded-4 border-0">
+                        <div class="modal-header bg-primary bg-opacity-10 border-0 rounded-top-4">
+                          <h5 class="modal-title text-primary d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar2-week"></i> Detalle del Turno
+                          </h5>
+                          <button type="button" class="btn-close" (click)="cerrarModalDetalle()" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body py-4">
+                          <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                              <h6 class="fw-bold mb-2"><i class="bi bi-person-badge text-primary"></i> Doctor</h6>
+                              <div>{{ detalleTurno.doctor.nombre }} {{ detalleTurno.doctor.apellido }}</div>
+                              <div class="text-muted small">{{ detalleTurno.doctor.especialidad.nombre }}</div>
+                              <div class="text-muted small"><i class="bi bi-envelope"></i> {{ detalleTurno.doctor.email }}</div>
+                              <div class="text-muted small"><i class="bi bi-telephone"></i> {{ detalleTurno.doctor.telefono }}</div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                              <h6 class="fw-bold mb-2"><i class="bi bi-calendar-event text-primary"></i> Información del Turno</h6>
+                              <div><i class="bi bi-calendar"></i> {{ detalleTurno.fecha }}</div>
+                              <div><i class="bi bi-clock"></i> {{ detalleTurno.hora }}</div>
+                              <div>
+                                <span class="badge ms-1" [ngClass]="{
+                                  'bg-warning text-dark': detalleTurno.estado === 'pendiente',
+                                  'bg-success': detalleTurno.estado === 'confirmado' || detalleTurno.estado === 'realizado',
+                                  'bg-danger': detalleTurno.estado === 'cancelado'
+                                }">
+                                  <i class="bi" [ngClass]="{
+                                    'bi-hourglass-split': detalleTurno.estado === 'pendiente',
+                                    'bi-check-circle': detalleTurno.estado === 'confirmado' || detalleTurno.estado === 'realizado',
+                                    'bi-x-circle': detalleTurno.estado === 'cancelado'
+                                  }"></i>
+                                  {{ detalleTurno.estado | titlecase }}
+                                </span>
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <h6 class="fw-bold mb-2"><i class="bi bi-card-text text-primary"></i> Observaciones</h6>
+                              <div class="text-muted">{{ detalleTurno.observaciones || 'Sin observaciones.' }}</div>
+                            </div>
+                            <!-- Archivos médicos -->
+                            @if (detalleTurno.archivos && detalleTurno.archivos.length > 0) {
+                              <div class="col-12">
+                                <h6 class="fw-bold mb-2"><i class="bi bi-file-medical text-primary"></i> Archivos médicos</h6>
+                                <div class="row g-2">
+                                  @for (archivo of detalleTurno.archivos; track archivo._id) {
+                                    @if (archivo.tipo === 'archivo-medico') {
+                                      <div class="col-12 col-md-6">
+                                        <div class="card shadow-sm border-0 mb-2">
+                                          <div class="card-body d-flex flex-column gap-2">
+                                            <div class="d-flex align-items-center gap-2">
+                                              <i class="bi bi-file-earmark-medical text-primary" style="font-size:1.5rem"></i>
+                                              <div>
+                                                <div class="fw-medium">{{ archivo.nombre }}</div>
+                                                <small class="text-muted">{{ archivo.fechaSubida | date:'short' }}</small>
+                                              </div>
+                                            </div>
+                                            <a [href]="archivo.url" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                              <i class="bi bi-eye"></i> Ver archivo
+                                            </a>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    }
+                                  }
+                                </div>
+                              </div>
+                            }
+                            <!-- Subida de comprobante de pago -->
+                            @if (detalleTurno.estado === 'pendiente') {
+                              <div class="col-12">
+                                <h6 class="fw-bold mb-2"><i class="bi bi-receipt text-primary"></i> Comprobante de pago</h6>
+                                <app-upload-file
+                                  [turnoId]="detalleTurno._id"
+                                  [archivosExistentes]="getArchivosPago(detalleTurno.archivos)"
+                                  (archivoSubido)="onComprobanteSubido($event)"
+                                  [tipo]="'pago'">
+                                  
+                                </app-upload-file>
+                                <div class="alert alert-info mt-3" role="alert">
+                                  <i class="bi bi-info-circle"></i>
+                                  Si ya subiste el comprobante de pago, aguarda hasta que lo confirmen en administración.
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                        <div class="modal-footer border-0 pb-4 pt-0">
+                          <button type="button" class="btn btn-outline-secondary px-4" (click)="cerrarModalDetalle()">
+                            <i class="bi bi-x-lg"></i> Cerrar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
                 <style>
                   .custom-modal-backdrop {
                     position: fixed;
@@ -125,6 +225,15 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                  }
+                  @media (max-width: 767.98px) {
+                    .modal-dialog.modal-lg {
+                      max-width: 98vw !important;
+                      margin: 0.5rem;
+                    }
+                    .modal-content {
+                      border-radius: 1rem !important;
+                    }
                   }
                 </style>
               </div>
@@ -139,4 +248,5 @@
         </div>
       </div>
     </div>
-  </div>
+    
+  <

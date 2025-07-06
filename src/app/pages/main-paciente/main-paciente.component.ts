@@ -2,12 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ListDoctoresComponent } from '../list-doctores/list-doctores.component';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { PacienteService } from '../../services/paciente.service';
-import { AutenticacionService } from '../../services/autenticacion.service';
-import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { TurnoService } from '../../services/turno.service';
 import { ToastService } from '../../services/toast.service';
 import { Especialidad } from '../list-doctores/list-doctores.component';
+import { UploadFileComponent } from '../../components/upload-file/upload-file.component';
 export interface Paciente {
   _id: string;
   nombre: string;
@@ -44,7 +43,7 @@ export interface Turno {
 }
 @Component({
   selector: 'app-main-paciente',
-  imports: [CommonModule, ListDoctoresComponent],
+  imports: [CommonModule, ListDoctoresComponent, UploadFileComponent],
   standalone: true,
   templateUrl: './main-paciente.component.html',
   styleUrls: ['./main-paciente.component.css']
@@ -71,6 +70,20 @@ export class MainPacienteComponent implements OnInit {
   mostrarModal = false;
   mostrarDoctores = false;
 
+  // MODAL DETALLE TURNO
+  mostrarModalDetalle: boolean = false;
+  detalleTurno: any = null;
+
+  // MODAL SUBIR COMPROBANTE
+  mostrarModalComprobante: boolean = false;
+  abrirModalComprobante() {
+    this.mostrarModalComprobante = true;
+  }
+
+  cerrarModalComprobante() {
+    this.mostrarModalComprobante = false;
+  }
+
   ngOnInit() {
     this.pacienteId = this.route.snapshot.paramMap.get('idPaciente') || '';
     this.pacienteService.getPacienteById(this.pacienteId).subscribe((data: any) => {
@@ -85,6 +98,18 @@ export class MainPacienteComponent implements OnInit {
     }, error => {
       console.error('Error al obtener los turnos del paciente:', error);
     });
+  }
+
+  abrirModalDetalle(turnoId: string) {
+    this.turnoService.getTurnoById(turnoId).subscribe((turno: any) => {
+      this.detalleTurno = turno;
+      this.mostrarModalDetalle = true;
+    });
+  }
+
+  cerrarModalDetalle() {
+    this.mostrarModalDetalle = false;
+    this.detalleTurno = null;
   }
   get tieneTurnos(): boolean {
     return this.turnos.length > 0;
@@ -120,6 +145,17 @@ export class MainPacienteComponent implements OnInit {
 
   onCerrarDoctores() {
     this.mostrarDoctores = false;
+  }
+
+  onComprobanteSubido(archivo: any) {
+    // Refresca los archivos del detalleTurno
+    if (this.detalleTurno && archivo) {
+      this.detalleTurno.archivos = [...(this.detalleTurno.archivos || []), archivo];
+    }
+  }
+  getArchivosPago(archivos: Archivo[] | undefined): Archivo[] {
+    if (!archivos) return [];
+    return archivos.filter(archivo => archivo.tipo === 'comprobante-pago');
   }
 }
 
