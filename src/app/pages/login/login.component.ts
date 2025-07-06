@@ -7,9 +7,13 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AutenticacionService } from '../../services/autenticacion.service';
+import {
+  AutenticacionService,
+  UserProfile,
+} from '../../services/autenticacion.service';
 import { ToastService } from '../../services/toast.service';
 import { AuthFirebaseService } from '../../services/auth-firebase.service';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -55,10 +59,12 @@ export class LoginComponent {
             next: (perfil) => {
               // Verificar que el perfil no sea null
               if (!perfil) {
-                this.toastService.showError('No se pudo obtener el perfil del usuario.');
+                this.toastService.showError(
+                  'No se pudo obtener el perfil del usuario.'
+                );
                 return;
               }
-              
+
               // Mostrar toast de éxito
               this.toastService.showSuccess('Inicio de sesión exitoso');
               // Redirigir según el rol
@@ -139,22 +145,32 @@ export class LoginComponent {
                 },
               });
             } else {
+              // Usuario ya verificado, establecer token y redirigir
               this.autenticacionService.setToken(response.token);
-              this.autenticacionService.getPerfilUsuario().subscribe({
-                next: (perfil) => {
-                  // Verificar que el perfil no sea null
-                  if (!perfil) {
-                    this.toastService.showError('No se pudo obtener el perfil del usuario.');
-                    return;
-                  }
-                  
-                  this.toastService.showSuccess('Inicio de sesión exitoso');
-                  this.router.navigate(['/paciente/', perfil._id]);
-                },
-                error: (error) => {
-                  console.error('Error al obtener perfil del usuario:', error);
-                },
-              });
+
+              // Esperar a que el perfil se cargue automáticamente
+              this.autenticacionService.currentUserProfile$
+                .pipe(
+                  filter((perfil: UserProfile | null) => perfil !== null), // Esperar hasta que el perfil no sea null
+                  take(1) // Tomar solo el primer valor válido
+                )
+                .subscribe({
+                  next: (perfil) => {
+                    if (perfil) {
+                      this.toastService.showSuccess('Inicio de sesión exitoso');
+                      this.router.navigate(['/paciente/', perfil._id]);
+                    }
+                  },
+                  error: (error) => {
+                    console.error(
+                      'Error al obtener perfil del usuario:',
+                      error
+                    );
+                    this.toastService.showError(
+                      'No se pudo obtener el perfil del usuario.'
+                    );
+                  },
+                });
             }
           },
           error: (error) => {

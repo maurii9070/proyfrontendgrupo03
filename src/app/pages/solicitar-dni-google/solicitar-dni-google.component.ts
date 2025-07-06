@@ -61,10 +61,12 @@ export class SolicitarDniGoogleComponent {
             next: (perfil) => {
               // Verificar que el perfil no sea null
               if (!perfil) {
-                this.toastService.showError('No se pudo obtener el perfil del usuario.');
+                this.toastService.showError(
+                  'No se pudo obtener el perfil del usuario.'
+                );
                 return;
               }
-              
+
               this.toastService.showSuccess('DNI vinculado exitosamente');
               this.router.navigate(['/paciente/', perfil._id]);
             },
@@ -74,7 +76,8 @@ export class SolicitarDniGoogleComponent {
           });
         },
         error: (error) => {
-          console.error('Error al vincular DNI:', error);
+          this.toastService.showError(error.error.msg, 'Error al vincular DNI');
+          this.router.navigate(['/login']);
         },
       });
   }
