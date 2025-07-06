@@ -53,6 +53,12 @@ export class LoginComponent {
           // Obtener perfil del usuario autenticado
           this.autenticacionService.getPerfilUsuario().subscribe({
             next: (perfil) => {
+              // Verificar que el perfil no sea null
+              if (!perfil) {
+                this.toastService.showError('No se pudo obtener el perfil del usuario.');
+                return;
+              }
+              
               // Mostrar toast de éxito
               this.toastService.showSuccess('Inicio de sesión exitoso');
               // Redirigir según el rol
@@ -136,6 +142,12 @@ export class LoginComponent {
               this.autenticacionService.setToken(response.token);
               this.autenticacionService.getPerfilUsuario().subscribe({
                 next: (perfil) => {
+                  // Verificar que el perfil no sea null
+                  if (!perfil) {
+                    this.toastService.showError('No se pudo obtener el perfil del usuario.');
+                    return;
+                  }
+                  
                   this.toastService.showSuccess('Inicio de sesión exitoso');
                   this.router.navigate(['/paciente/', perfil._id]);
                 },

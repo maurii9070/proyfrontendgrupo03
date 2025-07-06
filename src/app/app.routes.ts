@@ -14,11 +14,31 @@ import { ResetearPasswordComponent } from './pages/resetear-password/resetear-pa
 import { ResetearPasswordDoctorComponent } from './pages/resetear-password-doctor/resetear-password-doctor.component';
 import { EspecialidadesComponent } from './pages/especialidades/especialidades.component';
 
+// Guards
+import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
+import { AccesoDenegadoComponent } from './pages/acceso-denegado/acceso-denegado.component';
+
 export const routes: Routes = [
+
+  // *****     Rutas públicas (no requieren autenticación) ******
+
   // Pagina de inicio
   {
     path: '',
     component: HomePageComponent,
+  },
+  {
+    path: 'especialidades',
+    component: EspecialidadesComponent,
+  },
+  {
+    path: 'acceso-denegado',
+    component: AccesoDenegadoComponent
+  },
+  {
+    path: 'doctores',
+    component: ListDoctoresComponent,
   },
 
   // Autenticación
@@ -39,49 +59,61 @@ export const routes: Routes = [
     component: ResetearPasswordComponent,
   },
 
-  // paginas privadas
+  // *****     Rutas protegidas por rol (requieren autenticación y un rol específico) ******
+
+  // rutas para pacientes
   {
     path: 'paciente/:idPaciente/turno/:idDoctor',
     component: TurnoReservaComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'Paciente' }, // Solo pacientes pueden acceder a esta ruta
   },
 
   {
     path: 'paciente/:idPaciente',
     component: MainPacienteComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'Paciente' }, // Solo pacientes pueden acceder a esta ruta
+  },
+
+  // rutas para doctores
+
+  {
+    path: 'doctor/:idDoctor',
+    component: MainDoctorComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'Doctor' }, // Solo doctores pueden acceder a esta ruta
   },
 
   {
-    path: 'doctores',
-    component: ListDoctoresComponent,
-  },
-  {
     path: 'registro-doctor',
     component: RegistroDoctorComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'admin' }, // Solo administradores pueden acceder a esta
   },
+  // rutas para administradores
+
+  {
+    path: 'admin',
+    component: MainAdminComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'admin' }, // Solo administradores pueden acceder a esta
+  },
+
   {
     path: 'estadisticas',
     component: EstadisticasComponent,
   },
 
-  // Paginas publicas
-  {
-    path: 'home/especialidades',
-    component: EspecialidadesComponent,
-  },
-
-  // Administración
-
-  {
-    path: 'admin',
-    component: MainAdminComponent,
-  },
-  { path: 'doctor/:idDoctor', component: MainDoctorComponent },
-
-  // Ruta wilcard para manejar rutas no definidas (dejar al final)
   {
     path: 'doctor/:dni/resetear-password-doctor',
     component: ResetearPasswordDoctorComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'admin' }, // Solo administradores pueden acceder a esta
   },
+
+  // Ruta wilcard para manejar rutas no definidas (dejar al final)
+  
   {
     path: '**',
     redirectTo: '',
