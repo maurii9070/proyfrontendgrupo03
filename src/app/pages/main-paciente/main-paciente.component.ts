@@ -1,3 +1,5 @@
+
+
 import { CommonModule } from '@angular/common';
 import { ListDoctoresComponent } from '../list-doctores/list-doctores.component';
 import {
@@ -75,6 +77,14 @@ export class MainPacienteComponent implements OnInit {
     telefono: '',
   };
   turnos: Turno[] = [];
+  estadoFiltro: string = 'todos';
+  estadosTurno: { value: string; label: string; icon: string }[] = [
+    { value: 'todos', label: 'Todos', icon: 'bi-list-check' },
+    { value: 'pendiente', label: 'Pendiente', icon: 'bi-hourglass-split' },
+    { value: 'confirmado', label: 'Confirmado', icon: 'bi-check-circle' },
+    { value: 'realizado', label: 'Realizado', icon: 'bi-calendar-check' },
+    { value: 'cancelado', label: 'Cancelado', icon: 'bi-x-circle' },
+  ];
   @ViewChild('modalCancelarTurno') modalCancelarTurno: any;
   @ViewChild('fileInputComprobante')
   fileInputComprobante!: ElementRef<HTMLInputElement>;
@@ -91,6 +101,17 @@ export class MainPacienteComponent implements OnInit {
   // Variable para controlar si estamos reemplazando un comprobante
   reemplazandoComprobante: Archivo | null = null;
 
+    // Dropdown filtro estado (Angular, sin Bootstrap JS)
+  filtroDropdownAbierto: boolean = false;
+
+  toggleFiltroDropdown() {
+    this.filtroDropdownAbierto = !this.filtroDropdownAbierto;
+  }
+
+
+  cerrarFiltroDropdown() {
+    this.filtroDropdownAbierto = false;
+  }
   ngOnInit() {
     this.pacienteId = this.route.snapshot.paramMap.get('idPaciente') || '';
     this.pacienteService.getPacienteById(this.pacienteId).subscribe(
@@ -101,17 +122,41 @@ export class MainPacienteComponent implements OnInit {
         console.error('Error al obtener los datos del paciente:', error);
       }
     );
-    this.turnoService.getTurnosByPacienteId(this.pacienteId).subscribe(
-      (data: any) => {
-        this.turnos = data.sort((a: Turno, b: Turno) => {
-          return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
-        });
-        console.log('Turnos del paciente:', this.turnos);
-      },
-      (error) => {
-        console.error('Error al obtener los turnos del paciente:', error);
-      }
-    );
+    this.cargarTurnos();
+  }
+
+  cargarTurnos() {
+    console.log('Cargando turnos para el paciente:', this.pacienteId);
+    
+    if (this.estadoFiltro === 'todos') {
+      this.turnoService.getTurnosByPacienteId(this.pacienteId).subscribe(
+        (data: any) => {
+          this.turnos = data.sort((a: Turno, b: Turno) => {
+            return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+          });
+        },
+        (error) => {
+          console.error('Error al obtener los turnos del paciente:', error);
+        }
+      );
+    } else {
+      this.turnoService.getTurnosByEstado(this.estadoFiltro, this.pacienteId).subscribe(
+        (data: any) => {
+          this.turnos = data.sort((a: Turno, b: Turno) => {
+            return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+          });
+        },
+        (error) => {
+          console.error('Error al filtrar los turnos:', error);
+        }
+      );
+    }
+  }
+
+  onEstadoFiltroChange(estado: string) {
+    this.estadoFiltro = estado;
+    this.cargarTurnos();
+    this.filtroDropdownAbierto = false;
   }
 
   abrirModalDetalle(turnoId: string) {
@@ -270,4 +315,16 @@ export class MainPacienteComponent implements OnInit {
     if (!archivos) return [];
     return archivos.filter((archivo) => archivo.tipo === 'medico');
   }
+    getEstadoFiltroLabel(): string {
+    if (!Array.isArray(this.estadosTurno)) return '';
+    const found = this.estadosTurno.find((e: any) => e.value === this.estadoFiltro);
+    return found ? found.label : '';
+  }
+
+  getEstadoFiltroIcon(): string {
+    if (!Array.isArray(this.estadosTurno)) return '';
+    const found = this.estadosTurno.find((e: any) => e.value === this.estadoFiltro);
+    return found ? found.icon : '';
+  }
 }
+
