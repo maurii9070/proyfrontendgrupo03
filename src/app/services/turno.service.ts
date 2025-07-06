@@ -69,8 +69,16 @@ export class TurnoService {
   cancelarTurno(turnoId: string) {
     return this.http.put(`${this.apiUrl}/${turnoId}/cancelado`, {});
   }
-  realizarTurno(turnoId: string) {
-    return this.http.put(`${this.apiUrl}/${turnoId}/realizado`, {});
+  realizarTurno(turnoId: string, token: string) {
+    return this.http.put(
+      `${this.apiUrl}/${turnoId}/realizado`,
+      {}, // body
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   }
   getAllTurnos() {
     return this.http.get<Turno[]>(this.apiUrl);
@@ -84,8 +92,12 @@ export class TurnoService {
   getTurnosByEstado(estado: string,idPaciente:string) {
     return this.http.get<Turno[]>(`${this.apiUrl}/estado/${estado}/paciente/${idPaciente}`);
   }
-  confirmarTurno(turnoId: string) {
-    return this.http.put(`${this.apiUrl}/${turnoId}/confirmado`, {});
+  confirmarTurno(turnoId: string, token: string) {
+    return this.http.put(`${this.apiUrl}/${turnoId}/confirmado`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
   actualizarDetallesTurno(turnoId: string, turno: any) {
     return this.http.put(`${this.apiUrl}/${turnoId}`, turno);

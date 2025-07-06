@@ -4,10 +4,9 @@ import { environment } from '../../environments/environment';
 import { Paciente } from './turno.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PacienteService {
-
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/pacientes`;
 
@@ -22,7 +21,11 @@ export class PacienteService {
   getPacienteByDni(dni: string) {
     return this.http.get(`${this.apiUrl}/dni/${dni}`);
   }
-  getAllPacientes() {
-    return this.http.get<Paciente[]>(`${this.apiUrl}`);
+  getAllPacientes(token: string) {
+    return this.http.get<Paciente[]>(`${this.apiUrl}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 }
