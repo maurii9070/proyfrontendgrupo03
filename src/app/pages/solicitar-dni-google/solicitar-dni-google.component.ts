@@ -59,6 +59,12 @@ export class SolicitarDniGoogleComponent {
           this.autenticacionService.setToken(response.token);
           this.autenticacionService.getPerfilUsuario().subscribe({
             next: (perfil) => {
+              // Verificar que el perfil no sea null
+              if (!perfil) {
+                this.toastService.showError('No se pudo obtener el perfil del usuario.');
+                return;
+              }
+              
               this.toastService.showSuccess('DNI vinculado exitosamente');
               this.router.navigate(['/paciente/', perfil._id]);
             },
