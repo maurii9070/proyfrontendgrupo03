@@ -18,6 +18,7 @@ import { EspecialidadesComponent } from './pages/especialidades/especialidades.c
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 import { AccesoDenegadoComponent } from './pages/acceso-denegado/acceso-denegado.component';
+import { ResetearPasswordPacienteComponent } from './pages/resetear-password-paciente/resetear-password-paciente.component';
 
 export const routes: Routes = [
   // *****     Rutas públicas (no requieren autenticación) ******
@@ -71,6 +72,12 @@ export const routes: Routes = [
   {
     path: 'paciente/:idPaciente',
     component: MainPacienteComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'Paciente' }, // Solo pacientes pueden acceder a esta ruta
+  },
+  {
+    path:'paciente/:dni/resetear-password',
+    component: ResetearPasswordPacienteComponent,
     canActivate: [authGuard, roleGuard],
     data: { role: 'Paciente' }, // Solo pacientes pueden acceder a esta ruta
   },

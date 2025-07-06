@@ -14,10 +14,9 @@ import { ActivatedRoute } from '@angular/router';
 import { TurnoService } from '../../services/turno.service';
 import { ToastService } from '../../services/toast.service';
 import { Especialidad } from '../list-doctores/list-doctores.component';
-import {
-  ArchivosService,
-  ArchivoSubida,
-} from '../../services/archivos.service';
+import { ArchivosService, ArchivoSubida } from '../../services/archivos.service';
+import {ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 export interface Paciente {
   _id: string;
   nombre: string;
@@ -26,6 +25,7 @@ export interface Paciente {
   telefono: string;
   email: string;
   fechaNacimiento: string;
+  uid_firebase?: string;
 }
 export interface Doctor {
   _id: string;
@@ -54,18 +54,24 @@ export interface Turno {
 }
 @Component({
   selector: 'app-main-paciente',
-  imports: [CommonModule, ListDoctoresComponent],
+  imports: [CommonModule, ListDoctoresComponent, ReactiveFormsModule],
   standalone: true,
   templateUrl: './main-paciente.component.html',
   styleUrls: ['./main-paciente.component.css'],
 })
 export class MainPacienteComponent implements OnInit {
+  // Modal edición perfil
+  mostrarModalEditarPerfil = false;
+  formEditarPerfil!: FormGroup;
+  cargandoEdicion = false;
+  formBuilder = inject(FormBuilder);
   pacienteId: string = '';
   pacienteService = inject(PacienteService);
   route = inject(ActivatedRoute);
   turnoService = inject(TurnoService);
   toastService = inject(ToastService);
   archivosService = inject(ArchivosService);
+  private router = inject(Router);
   mostrarBotonTurno = true; // Controla la visibilidad del botón de solicitar turno
   paciente: Paciente = {
     _id: '',
@@ -117,12 +123,66 @@ export class MainPacienteComponent implements OnInit {
     this.pacienteService.getPacienteById(this.pacienteId).subscribe(
       (data: any) => {
         this.paciente = data;
+        this.inicializarFormEditarPerfil();
       },
       (error) => {
         console.error('Error al obtener los datos del paciente:', error);
       }
     );
     this.cargarTurnos();
+  }
+  
+  inicializarFormEditarPerfil() {
+    this.formEditarPerfil = this.formBuilder.group({
+      email: [{ value: this.paciente.email, disabled: !!this.paciente.uid_firebase }, [Validators.required, Validators.email]],
+      telefono: [this.paciente.telefono, [Validators.required, Validators.pattern(/^\d{8,20}$/)]],
+    });
+  }
+
+  abrirModalEditarPerfil() {
+    this.inicializarFormEditarPerfil();
+    this.mostrarModalEditarPerfil = true;
+  }
+
+  cerrarModalEditarPerfil() {
+    this.mostrarModalEditarPerfil = false;
+    this.formEditarPerfil?.reset();
+  }
+
+  onSubmitEditarPerfil() {
+    if (this.formEditarPerfil.invalid) return;
+    this.cargandoEdicion = true;
+    const email = this.formEditarPerfil.get('email')?.value;
+    const telefono:string = this.formEditarPerfil.get('telefono')?.value;
+    this.pacienteService.updatePaciente(this.pacienteId, email, telefono).subscribe({
+      next: (res: any) => {
+        this.toastService.showSuccess('Datos actualizados correctamente');
+        this.paciente.email = email;
+        this.paciente.telefono = telefono;
+        this.cerrarModalEditarPerfil();
+        this.cargandoEdicion = false;
+      },
+      error: (err: any) => {
+        this.toastService.showError('Error al actualizar los datos');
+        this.cargandoEdicion = false;
+      }
+    });
+  }
+  onClickDesvincular(){
+    this.pacienteService.desvincularGoogle(this.pacienteId).subscribe({
+      next: (res: any) => {
+        this.toastService.showSuccess('Cuenta desvinculada exitosamente');
+        this.router.navigate(['/resetear-password']);
+      },
+      error: (err: any) => {
+        this.toastService.showError('Error al desvincular la cuenta');
+      }
+    });
+  }
+  onForgotPassword() {
+    this.router.navigate([
+      '/paciente/' + this.paciente.dni + '/resetear-password',
+    ]);
   }
 
   cargarTurnos() {
@@ -145,6 +205,7 @@ export class MainPacienteComponent implements OnInit {
           this.turnos = data.sort((a: Turno, b: Turno) => {
             return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
           });
+          console.log('Turnos filtrados por estado:', this.estadoFiltro, this.turnos);
         },
         (error) => {
           console.error('Error al filtrar los turnos:', error);
