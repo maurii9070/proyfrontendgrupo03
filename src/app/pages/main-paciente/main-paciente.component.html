@@ -52,7 +52,25 @@
               <i class="bi bi-calendar2-check text-primary"></i> Mis Turnos
             </h2>
           </div>
-          <div class="col-12 col-md-auto text-center text-md-end">
+          <div class="col-12 col-md-auto d-flex gap-2 justify-content-center justify-content-md-end align-items-center">
+            <div class="dropdown filtro-estado-turno position-relative" (mouseleave)="filtroDropdownAbierto = false">
+              <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" type="button"
+                (click)="toggleFiltroDropdown()" [attr.aria-expanded]="filtroDropdownAbierto">
+                <i class="bi" [ngClass]="getEstadoFiltroIcon()"></i>
+                {{ getEstadoFiltroLabel() }}
+              </button>
+              @if (filtroDropdownAbierto) {
+                <ul class="dropdown-menu shadow-sm rounded-3 show" style="display:block; min-width:200px; position:absolute; z-index:1000;">
+                  @for (estado of estadosTurno; track estado.value) {
+                  <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center gap-2" (click)="onEstadoFiltroChange(estado.value)">
+                      <i class="bi" [ngClass]="estado.icon"></i>{{ estado.label }}
+                    </button>
+                  </li>
+                  }
+                </ul>
+              }
+            </div>
             <button
               (click)="onClickSolicitarTurno()"
               class="btn btn-primary btn-turno d-flex align-items-center gap-2 w-100 w-md-auto justify-content-center"

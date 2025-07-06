@@ -89,6 +89,9 @@ export class TurnoService {
   getTurnosPendientes() {
     return this.http.get<Turno[]>(`${this.apiUrl}/estado/pendiente`);
   }
+  getTurnosByEstado(estado: string,idPaciente:string) {
+    return this.http.get<Turno[]>(`${this.apiUrl}/estado/${estado}/paciente/${idPaciente}`);
+  }
   confirmarTurno(turnoId: string, token: string) {
     return this.http.put(`${this.apiUrl}/${turnoId}/confirmado`, {}, {
       headers: {
