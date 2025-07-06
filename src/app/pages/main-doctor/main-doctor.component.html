@@ -69,6 +69,7 @@
           <div class="d-grid gap-2">
             <button
               class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2"
+              (click)="iniciarEdicionPerfil()"
             >
               <i class="bi bi-pencil-square"></i> Editar perfil
             </button>
@@ -76,7 +77,7 @@
               class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2"
               (click)="onForgotPassword(); $event.preventDefault()"
             >
-              <i class="bi bi-key"></i> Cambiar contraseña 
+              <i class="bi bi-key"></i> Cambiar contraseña
             </button>
           </div>
         </div>
@@ -231,7 +232,7 @@
                 </td>
                 <td class="text-center">
                   <div class="d-flex flex-column">
-                    <span>{{ turno.fecha  }}</span>
+                    <span>{{ turno.fecha }}</span>
                     <small class="text-muted"
                       ><i class="bi bi-clock text-primary me-2"></i
                       >{{ turno.hora }}</small
@@ -772,3 +773,155 @@
     </ng-template>
   </div>
 </div>
+
+<!-- Modal de edición de perfil -->
+<div
+  class="modal fade"
+  [class.show]="editandoPerfil"
+  [style.display]="editandoPerfil ? 'block' : 'none'"
+  tabindex="-1"
+  *ngIf="editandoPerfil"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil-square text-primary me-2"></i>
+          Editar Perfil
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="cancelarEdicionPerfil()"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form #perfilForm="ngForm" (ngSubmit)="guardarPerfil()" novalidate>
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="bi bi-envelope text-primary me-1"></i>Email
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              [(ngModel)]="doctorEdit.email"
+              required
+              pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$"
+              #email="ngModel"
+              placeholder="doctor@hospital.com"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="email.invalid && (email.dirty || email.touched)"
+            >
+              <div *ngIf="email.errors?.['required']">
+                El email es obligatorio.
+              </div>
+              <div *ngIf="email.errors?.['pattern']">
+                El email debe ser válido.
+              </div>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="bi bi-telephone text-primary me-1"></i>Teléfono
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              name="telefono"
+              [(ngModel)]="doctorEdit.telefono"
+              required
+              pattern="^388[0-9]{7}$"
+              #telefono="ngModel"
+              placeholder="3881234567"
+            />
+            <div class="form-text text-muted">
+              <i class="bi bi-info-circle me-1"></i>Debe comenzar con 388 y
+              tener 10 dígitos en total.
+            </div>
+            <div
+              class="text-danger small mt-1"
+              *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
+            >
+              <div *ngIf="telefono.errors?.['required']">
+                El teléfono es obligatorio.
+              </div>
+              <div *ngIf="telefono.errors?.['pattern']">
+                El teléfono debe tener el formato 388xxxxxxx.
+              </div>
+            </div>
+          </div>
+
+          <!-- Precio de consulta -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="bi bi-currency-dollar text-primary me-1"></i>Precio de
+              Consulta
+            </label>
+            <input
+              type="number"
+              class="form-control"
+              name="precioConsulta"
+              [(ngModel)]="doctorEdit.precioConsulta"
+              required
+              min="0"
+              #precioConsulta="ngModel"
+              placeholder="0"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="
+                precioConsulta.invalid &&
+                (precioConsulta.dirty || precioConsulta.touched)
+              "
+            >
+              <div *ngIf="precioConsulta.errors?.['required']">
+                El precio es obligatorio.
+              </div>
+              <div *ngIf="precioConsulta.errors?.['min']">
+                El precio debe ser mayor o igual a 0.
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelarEdicionPerfil()"
+          [disabled]="guardandoPerfil"
+        >
+          <i class="bi bi-x-circle me-1"></i>Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="guardarPerfil()"
+          [disabled]="guardandoPerfil"
+        >
+          <span
+            *ngIf="guardandoPerfil"
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+          <i class="bi bi-check-circle me-1" *ngIf="!guardandoPerfil"></i>
+          {{ guardandoPerfil ? "Guardando..." : "Guardar Cambios" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop del modal -->
+<div
+  class="modal-backdrop fade"
+  [class.show]="editandoPerfil"
+  *ngIf="editandoPerfil"
+></div>

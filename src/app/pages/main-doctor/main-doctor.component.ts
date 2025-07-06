@@ -101,8 +101,17 @@ export class MainDoctorComponent {
   // Subida directa de archivos
   subiendoArchivoMedico: boolean = false;
 
+  // Edición de perfil
+  editandoPerfil: boolean = false;
+  doctorEdit: any = {};
+  guardandoPerfil: boolean = false;
+
   token: string = '';
-  constructor(private modalService: NgbModal, private router: Router, private autenticationService: AutenticacionService) {
+  constructor(
+    private modalService: NgbModal,
+    private router: Router,
+    private autenticationService: AutenticacionService
+  ) {
     this.token = this.autenticationService.getToken()!;
   }
 
@@ -139,7 +148,6 @@ export class MainDoctorComponent {
   }
 
   ngOnInit(): void {
-    
     //obtener doctor
     this.doctorId = this.route.snapshot.paramMap.get('idDoctor') || '';
     this.doctorService.getDoctorById(this.doctorId).subscribe(
@@ -370,6 +378,54 @@ export class MainDoctorComponent {
     });
   }
   onForgotPassword() {
-    this.router.navigate(['/doctor/' + this.doctor.dni + '/resetear-password-doctor']);
+    this.router.navigate([
+      '/doctor/' + this.doctor.dni + '/resetear-password-doctor',
+    ]);
+  }
+
+  // Métodos para editar perfil
+  iniciarEdicionPerfil() {
+    this.editandoPerfil = true;
+    this.doctorEdit = {
+      email: this.doctor.email || '',
+      telefono: this.doctor.telefono || '',
+      precioConsulta: this.doctor.precioConsulta || 0,
+    };
+  }
+
+  cancelarEdicionPerfil() {
+    this.editandoPerfil = false;
+    this.doctorEdit = {};
+  }
+
+  guardarPerfil() {
+    if (!this.doctor._id) return;
+
+    this.guardandoPerfil = true;
+    this.doctorService
+      .actualizarDoctor(this.doctor._id, this.doctorEdit, this.token)
+      .subscribe({
+        next: (response: any) => {
+          // Actualizar los datos del doctor en la vista
+          this.doctor.email = this.doctorEdit.email;
+          this.doctor.telefono = this.doctorEdit.telefono;
+          this.doctor.precioConsulta = this.doctorEdit.precioConsulta;
+
+          this.editandoPerfil = false;
+          this.guardandoPerfil = false;
+          this.toastService.showSuccess(
+            'Perfil actualizado exitosamente',
+            'Éxito'
+          );
+        },
+        error: (error) => {
+          console.error('Error al actualizar perfil:', error);
+          this.guardandoPerfil = false;
+          this.toastService.showError(
+            error.error?.message || 'Error al actualizar el perfil',
+            'Error'
+          );
+        },
+      });
   }
 }
