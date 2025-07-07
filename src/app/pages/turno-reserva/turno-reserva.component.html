@@ -93,22 +93,36 @@
             <div class="row g-2 justify-content-center">
               <div class="col-12 col-sm-6">
                 <button
-                  class="btn btn-primary w-100"
+                  class="btn btn-primary w-100 position-relative"
                   type="button"
                   (click)="onClickReservarConMercadoPago()"
+                  [disabled]="botonPagoDeshabilitado"
                 >
                   <i class="fas fa-credit-card me-2"></i>
                   MercadoPago
+                  <span
+                    *ngIf="botonPagoDeshabilitado"
+                    class="spinner-border spinner-border-sm position-absolute top-50 end-0 translate-middle-y me-3"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                 </button>
               </div>
               <div class="col-12 col-sm-6">
                 <button
-                  class="btn btn-success w-100"
+                  class="btn btn-success w-100 position-relative"
                   type="button"
                   (click)="onClickReservarConTransferencia()"
+                  [disabled]="botonPagoDeshabilitado"
                 >
                   <i class="fas fa-university me-2"></i>
-                  Transferencia
+                  Transferencia / Efectivo
+                  <span
+                    *ngIf="botonPagoDeshabilitado"
+                    class="spinner-border spinner-border-sm position-absolute top-50 end-0 translate-middle-y me-3"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                 </button>
               </div>
             </div>
