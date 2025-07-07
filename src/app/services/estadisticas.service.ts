@@ -118,4 +118,36 @@ export class EstadisticasService {
       }
     );
   }
+
+  // Nuevas estadísticas
+
+  // Turnos por día de la semana
+  getTurnosPorDiaSemana(): Observable<EstadisticaResponse> {
+    return this.http.get<EstadisticaResponse>(
+      `${this.apiUrl}/turnos-por-dia-semana`,
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
+
+  // Ingresos por mes
+  getIngresosPorMes(): Observable<EstadisticaResponse> {
+    return this.http.get<EstadisticaResponse>(
+      `${this.apiUrl}/ingresos-por-mes`,
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
+
+  // Top doctores más solicitados
+  getTopDoctoresSolicitados(): Observable<EstadisticaResponse> {
+    return this.http.get<EstadisticaResponse>(
+      `${this.apiUrl}/top-doctores-solicitados`,
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
 }
