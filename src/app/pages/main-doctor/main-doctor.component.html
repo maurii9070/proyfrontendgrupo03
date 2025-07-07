@@ -244,6 +244,7 @@
                     class="badge ms-1 d-flex text-center"
                     [ngClass]="{
                   'bg-warning': turno.estado === 'pendiente',
+                  'bg-info': turno.estado === 'confirmado',
                   'bg-success': turno.estado === 'realizado',
                   'bg-danger': turno.estado === 'cancelado',
                 }"
