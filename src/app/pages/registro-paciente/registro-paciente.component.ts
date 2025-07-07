@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PacienteService } from '../../services/paciente.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-registro-paciente',
@@ -27,7 +28,8 @@ export class RegistroPacienteComponent {
 
   constructor(
     private pacienteService: PacienteService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   registrarPaciente(): void {
@@ -36,8 +38,7 @@ export class RegistroPacienteComponent {
     this.cargando = true;
     this.pacienteService.registrarPaciente(this.paciente).subscribe({
       next: (res) => {
-        this.mensaje =
-          'Paciente registrado exitosamente. Redirigiendo al login...';
+        this.mensaje = 'Paciente registrado exitosamente';
         this.paciente = {
           nombre: '',
           apellido: '',
@@ -48,6 +49,7 @@ export class RegistroPacienteComponent {
           password: '',
         };
         this.cargando = false;
+        this.toastService.showSuccess(this.mensaje, 'Registro Exitoso');
         this.router.navigate(['/login']);
       },
       error: (err) => {
