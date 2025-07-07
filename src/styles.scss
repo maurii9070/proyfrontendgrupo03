@@ -113,3 +113,24 @@ body {
 .btn {
   transition: $custom-transition;
 }
+
+/* Sticky Footer - Para que el footer siempre esté abajo */
+html, body {
+  height: 100%;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* El contenido principal debe expandirse para empujar el footer hacia abajo */
+router-outlet + * {
+  flex: 1;
+}
+
+/* Alternativamente, si el router-outlet no funciona, usar esta clase en el main content */
+.main-content {
+  flex: 1;
+}
