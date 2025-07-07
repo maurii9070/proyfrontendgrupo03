@@ -29,24 +29,26 @@
     }
 
     h1 {
-        font-size: 3.2em; 
-        @media (min-width: 768px) { 
-            font-size: 3.8em; 
-        }
+        font-size: 3.2em;
         margin-bottom: 1rem;
         font-weight: bold;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        
+        @media (min-width: 768px) { 
+            font-size: 3.8em; 
+        }
     }
 
-p {
-    font-size: 1.1em;
-    @media (min-width: 768px) {
-        font-size: 1.4em;
+    p {
+        font-size: 1.1em;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        
+        @media (min-width: 768px) {
+            font-size: 1.4em;
+        }
     }
-    margin-bottom: 2rem;
-    line-height: 1.6;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
 
 .search-bar {
     max-width: 500px;
@@ -238,10 +240,10 @@ p {
 
         h3 {
             font-size: 2.2em;
+            color: var(--bs-dark);
             @media (min-width: 768px) {
                 font-size: 2.8em;
             }
-            color: var(--bs-dark);
         }
 
         p.lead {
