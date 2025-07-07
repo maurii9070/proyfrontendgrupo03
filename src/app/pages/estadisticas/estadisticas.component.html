@@ -145,13 +145,7 @@
         <div class="card-body">
           @if (estadosChartData) {
           <div style="height: 300px; position: relative">
-            <canvas
-              baseChart
-              [data]="estadosChartData"
-              [options]="estadosChartOptions"
-              type="doughnut"
-            >
-            </canvas>
+            <canvas #estadosChart></canvas>
           </div>
           }
         </div>
@@ -170,13 +164,7 @@
         <div class="card-body">
           @if (especialidadesChartData) {
           <div style="height: 300px; position: relative">
-            <canvas
-              baseChart
-              [data]="especialidadesChartData"
-              [options]="especialidadesChartOptions"
-              type="pie"
-            >
-            </canvas>
+            <canvas #especialidadesChart></canvas>
           </div>
           }
         </div>
@@ -198,13 +186,7 @@
         <div class="card-body">
           @if (horariosChartData) {
           <div style="height: 300px; position: relative">
-            <canvas
-              baseChart
-              [data]="horariosChartData"
-              [options]="horariosChartOptions"
-              type="bar"
-            >
-            </canvas>
+            <canvas #horariosChart></canvas>
           </div>
           }
         </div>
@@ -223,13 +205,7 @@
         <div class="card-body">
           @if (doctoresChartData) {
           <div style="height: 300px; position: relative">
-            <canvas
-              baseChart
-              [data]="doctoresChartData"
-              [options]="doctoresChartOptions"
-              type="bar"
-            >
-            </canvas>
+            <canvas #doctoresChart></canvas>
           </div>
           }
         </div>
@@ -251,13 +227,7 @@
         <div class="card-body">
           @if (mesChartData) {
           <div style="height: 300px; position: relative">
-            <canvas
-              baseChart
-              [data]="mesChartData"
-              [options]="mesChartOptions"
-              type="line"
-            >
-            </canvas>
+            <canvas #mesChart></canvas>
           </div>
           }
         </div>
@@ -276,13 +246,69 @@
         <div class="card-body">
           @if (ingresosChartData) {
           <div style="height: 300px; position: relative">
-            <canvas
-              baseChart
-              [data]="ingresosChartData"
-              [options]="ingresosChartOptions"
-              type="bar"
-            >
-            </canvas>
+            <canvas #ingresosChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nuevos gráficos adicionales -->
+  <div class="row mb-4">
+    <!-- Turnos por Día de la Semana -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-calendar-week me-2"></i>
+            Turnos por Día de la Semana
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (diaSemanaChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #diaSemanaChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Doctores Más Solicitados -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-award me-2"></i>
+            Top Doctores Más Solicitados
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (topDoctoresChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #topDoctoresChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico de Ingresos por Mes -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-graph-up-arrow me-2"></i>
+            Evolución de Ingresos por Mes
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (ingresosMesChartData) {
+          <div style="height: 400px; position: relative">
+            <canvas #ingresosMesChart></canvas>
           </div>
           }
         </div>
