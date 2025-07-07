@@ -24,6 +24,7 @@ import { ToastService } from '../../services/toast.service';
   templateUrl: './turno-reserva.component.html',
 })
 export class TurnoReservaComponent implements OnInit {
+  botonPagoDeshabilitado: boolean = false;
   private calendar = inject(NgbCalendar);
   private router = inject(ActivatedRoute);
   private router_redireccion = inject(Router);
@@ -138,8 +139,10 @@ export class TurnoReservaComponent implements OnInit {
   }
 
   onClickReservarConMercadoPago() {
+    this.botonPagoDeshabilitado = true;
     if (!this.selectedDate || !this.selectedHour) {
       console.error('Fecha y hora deben estar seleccionadas');
+      this.botonPagoDeshabilitado = false;
       return;
     }
 
@@ -167,17 +170,21 @@ export class TurnoReservaComponent implements OnInit {
               },
               error: (err) => {
                 console.error('Error al crear preferencia:', err);
+                this.botonPagoDeshabilitado = false;
               },
             });
         },
         error: (error) => {
           console.error('Error al crear el turno:', error);
+          this.botonPagoDeshabilitado = false;
         },
       });
   }
   onClickReservarConTransferencia() {
+    this.botonPagoDeshabilitado = true;
     if (!this.selectedDate || !this.selectedHour) {
       console.error('Fecha y hora deben estar seleccionadas');
+      this.botonPagoDeshabilitado = false;
       return;
     }
 
@@ -211,11 +218,13 @@ export class TurnoReservaComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error al crear el pago:', err);
+              this.botonPagoDeshabilitado = false;
             },
           });
         },
         error: (error) => {
           console.error('Error al crear el turno:', error);
+          this.botonPagoDeshabilitado = false;
         },
       });
   }
