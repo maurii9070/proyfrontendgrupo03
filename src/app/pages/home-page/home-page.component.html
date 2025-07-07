@@ -18,7 +18,7 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
       <div class="col">
         <div class="card h-100 service-card shadow-sm">
-          <a routerLink="/paciente/turno/some-doctor-id" class="card-link-overlay"></a>
+          <a class="card-link-overlay" [routerLink]="['/login']"></a>
           <div class="card-body text-center d-flex flex-column justify-content-center">
             <i class="bi bi-calendar-check-fill card-icon mb-3"></i>
             <h5 class="card-title fw-bold">Turnos Online</h5>
@@ -28,7 +28,7 @@
       </div>
       <div class="col">
         <div class="card h-100 service-card shadow-sm">
-          <a routerLink="/busqueda-profesional" class="card-link-overlay"></a>
+          <a class="card-link-overlay" [routerLink]="['/doctores']"></a>
           <div class="card-body text-center d-flex flex-column justify-content-center">
             <i class="bi bi-search card-icon mb-3"></i>
             <h5 class="card-title fw-bold">Busca tu Profesional</h5>
@@ -38,17 +38,17 @@
       </div>
       <div class="col">
         <div class="card h-100 service-card shadow-sm">
-          <a routerLink="/internaciones" class="card-link-overlay"></a>
+          <a class="card-link-overlay" [routerLink]="['paciente/:idPaciente']"></a>
           <div class="card-body text-center d-flex flex-column justify-content-center">
-            <i class="bi bi-hospital-fill card-icon mb-3"></i>
-            <h5 class="card-title fw-bold">Internaciones</h5>
-            <p class="card-text">Información sobre nuestros servicios de internación y cuidado.</p>
+            <i class="bi bi-credit-card-fill card-icon mb-3"></i>
+            <h5 class="card-title fw-bold">Abona tu Consulta</h5>
+            <p class="card-text">Realiza el pago de tu consulta de forma rápida y segura online.</p>
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card h-100 service-card shadow-sm">
-          <a routerLink="/ubicacion" class="card-link-overlay"></a>
+          <a class="card-link-overlay" (click)="scrollToLocation()"></a>
           <div class="card-body text-center d-flex flex-column justify-content-center">
             <i class="bi bi-geo-alt-fill card-icon mb-3"></i>
             <h5 class="card-title fw-bold">Cómo Llegar</h5>
@@ -77,13 +77,13 @@
             <span class="fw-semibold text-dark-blue">Preguntas Frecuentes</span>
             <i class="bi bi-chevron-right ms-auto text-secondary"></i>
           </a>
-          <a href="#"
+          <a [routerLink]="['paciente/:idPaciente']"
             class="info-link-btn d-flex align-items-center bg-white shadow-sm p-3 rounded-pill text-decoration-none">
             <i class="bi bi-file-earmark-medical-fill me-3 fs-4 text-info-emphasis"></i>
             <span class="fw-semibold text-dark-blue">Acceso a Resultados y Estudios</span>
             <i class="bi bi-chevron-right ms-auto text-secondary"></i>
           </a>
-          <a href="#"
+          <a href="mailto:soporte@consultorioslavalle.com?subject=Consulta%20de%20Soporte&body=Hola,%20necesito%20ayuda%20con:"
             class="info-link-btn d-flex align-items-center bg-white shadow-sm p-3 rounded-pill text-decoration-none">
             <i class="bi bi-chat-dots-fill me-3 fs-4 text-info-emphasis"></i>
             <span class="fw-semibold text-dark-blue">Contacta a Soporte</span>
@@ -238,6 +238,124 @@
             <div>
               <strong class="text-primary d-block">Ana L.</strong>
               <span class="text-secondary small">Paciente de Pediatría</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de Ubicación y Contacto -->
+<section id="location-section" class="location-section py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-dark-blue">Visitanos</h2>
+    <div class="row g-5 align-items-center">
+
+      <!-- Mapa -->
+      <div class="col-lg-8">
+        <div class="map-container rounded-4 shadow-lg overflow-hidden">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3656.2623187156!2d-65.41847628498765!3d-24.194431384398887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941b0f3c6eb910c7%3A0x8b8b8b8b8b8b8b8b!2sSan%20Salvador%20de%20Jujuy%2C%20Jujuy!5e0!3m2!1ses!2sar!4v1641234567890!5m2!1ses!2sar"
+            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Información de contacto -->
+      <div class="col-lg-4">
+        <div class="contact-info-card bg-white p-4 rounded-4 shadow-lg">
+          <h3 class="fw-bold text-dark-blue mb-4">
+            <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+            Información de Contacto
+          </h3>
+
+          <!-- Dirección -->
+          <div class="contact-item mb-4">
+            <h5 class="fw-semibold text-dark-blue mb-2">
+              <i class="bi bi-building me-2 text-secondary"></i>
+              Dirección
+            </h5>
+            <p class="text-muted mb-2">Av. Lavalle 1234</p>
+            <p class="text-muted">San Salvador de Jujuy, Jujuy</p>
+          </div>
+
+          <!-- Teléfonos -->
+          <div class="contact-item mb-4">
+            <h5 class="fw-semibold text-dark-blue mb-2">
+              <i class="bi bi-telephone-fill me-2 text-secondary"></i>
+              Teléfonos
+            </h5>
+            <p class="text-muted mb-1">
+              <a href="tel:+5493884234567" class="text-decoration-none text-muted">
+                📞 (0388) 423-4567
+              </a>
+            </p>
+            <p class="text-muted">
+              <a href="tel:+5493885556666" class="text-decoration-none text-muted">
+                📱 (0388) 15-555-6666
+              </a>
+            </p>
+          </div>
+
+          <!-- Horarios -->
+          <div class="contact-item mb-4">
+            <h5 class="fw-semibold text-dark-blue mb-2">
+              <i class="bi bi-clock-fill me-2 text-secondary"></i>
+              Horarios de Atención
+            </h5>
+            <p class="text-muted mb-1">Lunes a Viernes: 8:00 - 20:00</p>
+            <p class="text-muted mb-1">Sábados: 8:00 - 13:00</p>
+            <p class="text-muted">Domingos: Emergencias</p>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="d-grid gap-2">
+            <a href="https://maps.google.com/?q=Av. Lavalle 1234, San Salvador de Jujuy" target="_blank"
+              class="btn btn-primary">
+              <i class="bi bi-navigation me-2"></i>
+              Cómo Llegar
+            </a>
+            <a href="https://wa.me/5493885556666?text=Hola,%20necesito%20información%20sobre%20turnos" target="_blank"
+              class="btn btn-success">
+              <i class="bi bi-whatsapp me-2"></i>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medios de transporte -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="transport-info bg-white p-4 rounded-4 shadow-sm">
+          <h4 class="fw-bold text-dark-blue mb-3 text-center">
+            <i class="bi bi-bus-front me-2"></i>
+            Medios de Transporte
+          </h4>
+          <div class="row text-center">
+            <div class="col-md-4 mb-3">
+              <div class="transport-item">
+                <i class="bi bi-bus-front fs-3 text-primary mb-2"></i>
+                <h6 class="fw-semibold">Colectivos</h6>
+                <p class="small text-muted">Líneas: 5, 12, 18, 25</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="transport-item">
+                <i class="bi bi-car-front fs-3 text-success mb-2"></i>
+                <h6 class="fw-semibold">Auto Particular</h6>
+                <p class="small text-muted">Estacionamiento disponible</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="transport-item">
+                <i class="bi bi-taxi-front fs-3 text-warning mb-2"></i>
+                <h6 class="fw-semibold">Taxi/Remis</h6>
+                <p class="small text-muted">Parada cercana</p>
+              </div>
             </div>
           </div>
         </div>
