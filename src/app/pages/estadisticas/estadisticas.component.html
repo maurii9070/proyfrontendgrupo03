@@ -1,0 +1,334 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="display-6 fw-bold mb-3 text-primary">
+        <i class="bi bi-graph-up me-3"></i>
+        Dashboard de Estadísticas
+      </h1>
+      <p class="lead text-muted">
+        Panel administrativo con métricas y análisis del sistema
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+  <div class="text-center py-5">
+    <div
+      class="spinner-border text-primary"
+      role="status"
+      style="width: 3rem; height: 3rem"
+    >
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3 text-muted fs-5">Cargando estadísticas...</p>
+  </div>
+  }
+
+  <!-- Error -->
+  @if (error) {
+  <div class="alert alert-danger d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div class="flex-grow-1">
+      {{ error }}
+    </div>
+    <button
+      type="button"
+      class="btn btn-outline-danger btn-sm ms-2"
+      (click)="cargarEstadisticas()"
+    >
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Reintentar
+    </button>
+  </div>
+  }
+
+  <!-- Contenido principal -->
+  @if (!loading && !error) {
+
+  <!-- Resumen General -->
+  @if (resumen) {
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3
+        class="h4 mb-4 text-secondary fw-bold border-bottom border-secondary pb-2"
+      >
+        📊 Resumen General
+      </h3>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card border-0 shadow-sm bg-primary">
+        <div class="card-body text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title text-white opacity-90 mb-1">
+                Total Turnos
+              </h5>
+              <h2 class="mb-0 fw-bold text-white">
+                {{ resumen.estadisticasGenerales.totalTurnos }}
+              </h2>
+            </div>
+            <i class="bi bi-calendar-check fs-1 text-white opacity-25"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card border-0 shadow-sm bg-success">
+        <div class="card-body text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title text-white opacity-90 mb-1">Realizados</h5>
+              <h2 class="mb-0 fw-bold text-white">
+                {{ resumen.estadisticasGenerales.turnosRealizados }}
+              </h2>
+              <small class="text-white opacity-75"
+                >{{
+                  resumen.estadisticasGenerales.porcentajeRealizados
+                }}%</small
+              >
+            </div>
+            <i class="bi bi-check-circle fs-1 text-white opacity-25"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card border-0 shadow-sm bg-warning">
+        <div class="card-body text-dark">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title text-dark mb-1">Pendientes</h5>
+              <h2 class="mb-0 fw-bold text-dark">
+                {{ resumen.estadisticasGenerales.turnosPendientes }}
+              </h2>
+            </div>
+            <i class="bi bi-clock fs-1 text-dark opacity-25"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card border-0 shadow-sm bg-info">
+        <div class="card-body text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title text-white opacity-90 mb-1">Doctores</h5>
+              <h2 class="mb-0 fw-bold text-white">
+                {{ resumen.estadisticasGenerales.totalDoctores }}
+              </h2>
+            </div>
+            <i class="bi bi-person-badge fs-1 text-white opacity-25"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Gráficos principales -->
+  <div class="row mb-4">
+    <!-- Estados de Turnos -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-pie-chart me-2"></i>
+            Estados de Turnos
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (estadosChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #estadosChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Turnos por Especialidad -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-pie-chart-fill me-2"></i>
+            Turnos por Especialidad
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (especialidadesChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #especialidadesChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos de barras -->
+  <div class="row mb-4">
+    <!-- Horarios Más Solicitados -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-bar-chart me-2"></i>
+            Horarios Más Solicitados
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (horariosChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #horariosChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Turnos por Doctor -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-bar-chart-fill me-2"></i>
+            Turnos por Doctor
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (doctoresChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #doctoresChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos adicionales -->
+  <div class="row mb-4">
+    <!-- Evolución por Mes -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-graph-up me-2"></i>
+            Evolución por Mes
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (mesChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #mesChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingresos por Especialidad -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-currency-dollar me-2"></i>
+            Ingresos por Especialidad
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (ingresosChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #ingresosChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nuevos gráficos adicionales -->
+  <div class="row mb-4">
+    <!-- Turnos por Día de la Semana -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-calendar-week me-2"></i>
+            Turnos por Día de la Semana
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (diaSemanaChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #diaSemanaChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Doctores Más Solicitados -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-award me-2"></i>
+            Top Doctores Más Solicitados
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (topDoctoresChartData) {
+          <div style="height: 300px; position: relative">
+            <canvas #topDoctoresChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico de Ingresos por Mes -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+          <h5 class="card-title mb-0 fw-bold text-secondary">
+            <i class="bi bi-graph-up-arrow me-2"></i>
+            Evolución de Ingresos por Mes
+          </h5>
+        </div>
+        <div class="card-body">
+          @if (ingresosMesChartData) {
+          <div style="height: 400px; position: relative">
+            <canvas #ingresosMesChart></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de recarga -->
+  <div class="row mt-4">
+    <div class="col-12 text-center">
+      <button
+        type="button"
+        class="btn btn-primary btn-lg shadow"
+        (click)="cargarEstadisticas()"
+      >
+        <i class="bi bi-arrow-clockwise me-2"></i>
+        Actualizar Datos
+      </button>
+    </div>
+  </div>
+
+  }
+</div>

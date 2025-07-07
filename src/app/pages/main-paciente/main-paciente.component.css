@@ -1,0 +1,100 @@
+
+/* Estilos para el modal custom usando Bootstrap 5 y variables del proyecto */
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30,41,59,0.35);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 32px rgba(79,70,229,0.10);
+  border: none;
+}
+.modal-header {
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
+}
+.modal-footer {
+  border-bottom-left-radius: 1.25rem;
+  border-bottom-right-radius: 1.25rem;
+}
+.modal-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+.btn-danger {
+  background: var(--bs-danger);
+  border-radius: 0.75rem;
+  font-weight: 500;
+}
+.btn-outline-secondary {
+  border-radius: 0.75rem;
+}
+.btn-close {
+  filter: none;
+}
+/* main-paciente.component.css - estilos UI/UX para la página principal del paciente */
+
+.turnos-section {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.turno-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(79,70,229,0.07);
+  transition: box-shadow 0.2s;
+}
+.turno-card:hover {
+  box-shadow: 0 4px 16px rgba(79,70,229,0.13);
+}
+
+.turno-info {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.turno-icon {
+  font-size: 2rem;
+  color: #4f46e5;
+  background: #e0e7ff;
+  border-radius: 50%;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.btn-turno {
+  min-width: 120px;
+}
+
+.no-turnos {
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 600px) {
+  .turnos-section {
+    padding: 1rem;
+  }
+  .turno-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

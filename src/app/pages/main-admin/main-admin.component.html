@@ -1,0 +1,649 @@
+<div class="container-fluid main-admin-container">
+  <!-- Mobile menu toggle button -->
+  <div
+    class="d-md-none bg-light border-bottom p-3 d-flex justify-content-between align-items-center"
+  >
+    <h5 class="fw-bold mb-0 text-primary">Panel Admin</h5>
+    <button
+      class="btn btn-outline-primary"
+      type="button"
+      (click)="toggleMobileMenu()"
+    >
+      <i
+        class="bi"
+        [class.bi-list]="!mobileMenuOpen"
+        [class.bi-x]="mobileMenuOpen"
+      ></i>
+    </button>
+  </div>
+
+  <!-- Mobile navigation collapse -->
+  <div
+    class="d-md-none bg-light border-bottom"
+    [class.d-none]="!mobileMenuOpen"
+  >
+    <nav class="nav flex-column p-3 gap-2">
+      <button
+        class="btn btn-outline-primary w-100"
+        [class.active]="section === 'turnos'"
+        (click)="section = 'turnos'; closeMobileMenu()"
+      >
+        <i class="bi bi-calendar-check"></i> Turnos a confirmar
+      </button>
+      <button
+        class="btn btn-outline-primary w-100"
+        [class.active]="section === 'pacientes'"
+        (click)="section = 'pacientes'; closeMobileMenu()"
+      >
+        <i class="bi bi-people"></i> Pacientes
+      </button>
+      <button
+        class="btn btn-outline-primary w-100"
+        [class.active]="section === 'doctores'"
+        (click)="section = 'doctores'; closeMobileMenu()"
+      >
+        <i class="bi bi-person-badge"></i> Doctores
+      </button>
+      <button
+        class="btn btn-outline-info w-100"
+        [class.active]="section === 'todos-turnos'"
+        (click)="section = 'todos-turnos'; closeMobileMenu()"
+      >
+        <i class="bi bi-list-check"></i> Todos los turnos
+      </button>
+      <button
+        class="btn btn-outline-success w-100"
+        [class.active]="section === 'registrar-doctor'"
+        (click)="onClickRegistrarDoctor(); closeMobileMenu()"
+      >
+        <i class="bi bi-person-plus"></i> Registrar Doctor
+      </button>
+      <button
+        class="btn btn-outline-info w-100"
+        [class.active]="section === 'estadisticas'"
+        (click)="onClickEstadisticas(); closeMobileMenu()"
+      >
+        <i class="bi bi-graph-up"></i> Estadísticas
+      </button>
+    </nav>
+  </div>
+
+  <div class="row">
+    <!-- Desktop Sidebar -->
+    <aside
+      class="col-md-3 col-lg-2 px-0 bg-light shadow-sm min-vh-100 d-none d-md-flex flex-column admin-aside"
+    >
+      <div class="p-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-primary">Panel Admin</h5>
+      </div>
+      <nav class="nav flex-column p-3 gap-2">
+        <button
+          class="btn btn-outline-primary w-100"
+          [class.active]="section === 'turnos'"
+          (click)="section = 'turnos'"
+        >
+          <i class="bi bi-calendar-check"></i> Turnos a confirmar
+        </button>
+        <button
+          class="btn btn-outline-primary w-100"
+          [class.active]="section === 'pacientes'"
+          (click)="section = 'pacientes'"
+        >
+          <i class="bi bi-people"></i> Pacientes
+        </button>
+        <button
+          class="btn btn-outline-primary w-100"
+          [class.active]="section === 'doctores'"
+          (click)="section = 'doctores'"
+        >
+          <i class="bi bi-person-badge"></i> Doctores
+        </button>
+        <button
+          class="btn btn-outline-info w-100"
+          [class.active]="section === 'todos-turnos'"
+          (click)="section = 'todos-turnos'"
+        >
+          <i class="bi bi-list-check"></i> Todos los turnos
+        </button>
+        <button
+          class="btn btn-outline-success w-100"
+          [class.active]="section === 'registrar-doctor'"
+          (click)="onClickRegistrarDoctor()"
+        >
+          <i class="bi bi-person-plus"></i> Registrar Doctor
+        </button>
+        <button
+          class="btn btn-outline-info w-100"
+          [class.active]="section === 'estadisticas'"
+          (click)="onClickEstadisticas()"
+        >
+          <i class="bi bi-graph-up"></i> Estadísticas
+        </button>
+      </nav>
+      <div class="mt-auto p-3 small text-muted">&copy; 2025 Admin</div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="col-12 col-md-9 col-lg-10 px-3 py-4">
+      <!-- Todos los Turnos -->
+      @if (section==='todos-turnos') {
+      <h3 class="mb-4 fw-bold text-primary">Todos los turnos</h3>
+      <div class="mb-3">
+        <form class="row g-2" (submit)="$event.preventDefault()">
+          <div class="col-12 col-sm-6 col-md-4">
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="filtroFecha"
+              name="filtroFecha"
+              placeholder="Fecha"
+            />
+          </div>
+          <div class="col-12 col-sm-6 col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por DNI paciente"
+              [(ngModel)]="filtroDni"
+              name="filtroDni"
+            />
+          </div>
+          <div class="col-12 col-md-4 d-flex gap-2">
+            <button
+              class="btn btn-outline-primary flex-fill"
+              type="button"
+              (click)="filtrarTurnos()"
+            >
+              <i class="bi bi-search d-md-none"></i>
+              <span class="d-none d-md-inline">Filtrar</span>
+            </button>
+            <button
+              class="btn btn-outline-secondary flex-fill"
+              type="button"
+              (click)="limpiarFiltros()"
+            >
+              <i class="bi bi-x-circle d-md-none"></i>
+              <span class="d-none d-md-inline">Limpiar</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Desktop Table View -->
+      <div class="table-responsive rounded shadow-sm d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Paciente</th>
+              <th>DNI</th>
+              <th>Doctor</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (turnosFiltrados.length === 0) {
+            <tr>
+              <td colspan="5" class="text-center text-muted py-4">
+                <i class="bi bi-info-circle"></i> No hay turnos para mostrar.
+              </td>
+            </tr>
+            } @else { @for (turno of turnosFiltrados; track turno) {
+            <tr>
+              <td>{{ turno.paciente.nombre }} {{ turno.paciente.apellido }}</td>
+              <td>{{ turno.paciente.dni }}</td>
+              <td>{{ turno.doctor.nombre }} {{ turno.doctor.apellido }}</td>
+              <td>{{ turno.fecha }}</td>
+              <td>
+                @if (turno.estado==='pendiente') {
+                <span class="badge bg-warning text-dark">Pendiente</span>
+                } @if (turno.estado==='confirmado') {
+                <span class="badge bg-info">Confirmado</span>
+                } @if (turno.estado==='realizado') {
+                <span class="badge bg-success">Realizado</span>
+                } @if (turno.estado==='cancelado') {
+                <span class="badge bg-danger">Cancelado</span>
+                }
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="d-md-none">
+        @if (turnosFiltrados.length === 0) {
+        <div class="card">
+          <div class="card-body text-center text-muted py-4">
+            <i class="bi bi-info-circle fs-1"></i>
+            <p class="mt-2 mb-0">No hay turnos para mostrar.</p>
+          </div>
+        </div>
+        } @else { @for (turno of turnosFiltrados; track turno) {
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title fw-bold mb-0">
+                {{ turno.paciente.nombre }} {{ turno.paciente.apellido }}
+              </h6>
+              @if (turno.estado==='pendiente') {
+              <span class="badge bg-warning text-dark">Pendiente</span>
+              } @if (turno.estado==='confirmado') {
+              <span class="badge bg-info">Confirmado</span>
+              } @if (turno.estado==='realizado') {
+              <span class="badge bg-success">Realizado</span>
+              } @if (turno.estado==='cancelado') {
+              <span class="badge bg-danger">Cancelado</span>
+              }
+            </div>
+            <div class="row text-sm">
+              <div class="col-6">
+                <small class="text-muted">DNI:</small>
+                <div class="fw-semibold">{{ turno.paciente.dni }}</div>
+              </div>
+              <div class="col-6">
+                <small class="text-muted">Fecha:</small>
+                <div class="fw-semibold">{{ turno.fecha }}</div>
+              </div>
+              <div class="col-12 mt-2">
+                <small class="text-muted">Doctor:</small>
+                <div class="fw-semibold">
+                  {{ turno.doctor.nombre }} {{ turno.doctor.apellido }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        } }
+      </div>
+      }
+      <!-- Turnos a confirmar -->
+      @if (section==='turnos') {
+      <h3 class="mb-4 fw-bold text-primary">Turnos a confirmar pago</h3>
+
+      <!-- Desktop Table View -->
+      <div class="table-responsive rounded shadow-sm d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Paciente</th>
+              <th>Doctor</th>
+              <th>Fecha</th>
+              <th>Comprobante</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (turnos.length === 0) {
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">
+                <i class="bi bi-info-circle"></i> No hay turnos pendientes de
+                pago.
+              </td>
+            </tr>
+            } @else { @for (turno of turnos; track turno) {
+            <tr>
+              <td>{{ turno.paciente.nombre }} {{ turno.paciente.apellido }}</td>
+              <td>{{ turno.doctor.nombre }} {{ turno.doctor.apellido }}</td>
+              <td>{{ turno.fecha }}</td>
+              <td>
+                @if (getArchivoPago(turno); as archivoPago) {
+                <a
+                  [href]="archivoPago.url"
+                  target="_blank"
+                  class="btn btn-sm btn-primary"
+                >
+                  Ver comprobante
+                </a>
+                <div class="small text-muted">ID: {{ archivoPago._id }}</div>
+                } @else {
+                <span class="text-secondary">Sin comprobante</span>
+                }
+              </td>
+              <td>
+                @if (turno.estado==='pendiente') {
+                <span class="badge bg-warning text-dark">Pendiente</span>
+                } @if (turno.estado==='confirmado') {
+                <span class="badge bg-success">Confirmado</span>
+                } @if (turno.estado==='realizado') {
+                <span class="badge bg-primary">Realizado</span>
+                } @if (turno.estado==='cancelado') {
+                <span class="badge bg-danger">Cancelado</span>
+                }
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-success me-2"
+                  [disabled]="turno.estado !== 'pendiente'"
+                  (click)="onclickConfirmar(turno._id)"
+                >
+                  Confirmar Pago
+                </button>
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="d-md-none">
+        @if (turnos.length === 0) {
+        <div class="card">
+          <div class="card-body text-center text-muted py-4">
+            <i class="bi bi-info-circle fs-1"></i>
+            <p class="mt-2 mb-0">No hay turnos pendientes de pago.</p>
+          </div>
+        </div>
+        } @else { @for (turno of turnos; track turno) {
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h6 class="card-title fw-bold mb-0">
+                {{ turno.paciente.nombre }} {{ turno.paciente.apellido }}
+              </h6>
+              @if (turno.estado==='pendiente') {
+              <span class="badge bg-warning text-dark">Pendiente</span>
+              } @if (turno.estado==='confirmado') {
+              <span class="badge bg-success">Confirmado</span>
+              } @if (turno.estado==='realizado') {
+              <span class="badge bg-primary">Realizado</span>
+              } @if (turno.estado==='cancelado') {
+              <span class="badge bg-danger">Cancelado</span>
+              }
+            </div>
+            <div class="mb-3">
+              <div class="row text-sm">
+                <div class="col-6">
+                  <small class="text-muted">Doctor:</small>
+                  <div class="fw-semibold">
+                    {{ turno.doctor.nombre }} {{ turno.doctor.apellido }}
+                  </div>
+                </div>
+                <div class="col-6">
+                  <small class="text-muted">Fecha:</small>
+                  <div class="fw-semibold">{{ turno.fecha }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted">Comprobante:</small>
+              <div>
+                @if (getArchivoPago(turno); as archivoPago) {
+                <a
+                  [href]="archivoPago.url"
+                  target="_blank"
+                  class="btn btn-sm btn-primary me-2"
+                >
+                  <i class="bi bi-file-earmark-pdf"></i> Ver comprobante
+                </a>
+                <div class="small text-muted">ID: {{ archivoPago._id }}</div>
+                } @else {
+                <span class="text-secondary">Sin comprobante</span>
+                }
+              </div>
+            </div>
+            <div class="d-grid">
+              <button
+                class="btn btn-success"
+                [disabled]="turno.estado !== 'pendiente'"
+                (click)="onclickConfirmar(turno._id)"
+              >
+                <i class="bi bi-check-circle"></i> Confirmar Pago
+              </button>
+            </div>
+          </div>
+        </div>
+        } }
+      </div>
+
+      <!-- Modal de confirmación de pago -->
+      <div
+        class="modal fade show"
+        tabindex="-1"
+        [ngStyle]="{
+          display: showConfirmPagoModal ? 'block' : 'none',
+          background: showConfirmPagoModal ? 'rgba(0,0,0,0.5)' : 'none'
+        }"
+        *ngIf="showConfirmPagoModal"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-success">
+                <i class="bi bi-check-circle-fill"></i> Pago confirmado
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                aria-label="Close"
+                (click)="showConfirmPagoModal = false"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p>El pago del turno ha sido confirmado con éxito.</p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="showConfirmPagoModal = false"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Pacientes -->
+      @if (section==='pacientes') {
+      <h3 class="mb-4 fw-bold text-primary">Pacientes</h3>
+
+      <!-- Desktop Table View -->
+      <div class="table-responsive rounded shadow-sm d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>DNI</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (paciente of pacientes; track paciente) {
+            <tr>
+              <td>{{ paciente.nombre }}</td>
+              <td>{{ paciente.dni }}</td>
+              <td>{{ paciente.email }}</td>
+              <td>{{ paciente.telefono }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="d-md-none">
+        @if (pacientes.length === 0) {
+        <div class="card">
+          <div class="card-body text-center text-muted py-4">
+            <i class="bi bi-people fs-1"></i>
+            <p class="mt-2 mb-0">No hay pacientes registrados.</p>
+          </div>
+        </div>
+        } @else { @for (paciente of pacientes; track paciente) {
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <h6 class="card-title fw-bold text-primary mb-3">
+              <i class="bi bi-person-circle"></i> {{ paciente.nombre }}
+            </h6>
+            <div class="row text-sm">
+              <div class="col-6">
+                <small class="text-muted">DNI:</small>
+                <div class="fw-semibold">{{ paciente.dni }}</div>
+              </div>
+              <div class="col-6">
+                <small class="text-muted">Teléfono:</small>
+                <div class="fw-semibold">{{ paciente.telefono }}</div>
+              </div>
+              <div class="col-12 mt-2">
+                <small class="text-muted">Email:</small>
+                <div class="fw-semibold text-break">{{ paciente.email }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        } }
+      </div>
+      }
+
+      <!-- Doctores -->
+      @if (section==='doctores') {
+      <h3 class="mb-4 fw-bold text-primary">Doctores</h3>
+
+      <!-- Desktop Table View -->
+      <div class="table-responsive rounded shadow-sm d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Especialidad</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (doctor of doctores; track doctor._id) {
+            <tr>
+              <td>{{ doctor.nombre }} {{ doctor.apellido }}</td>
+              <td>{{ doctor.especialidad.nombre }}</td>
+              <td>{{ doctor.telefono }}</td>
+              <td>
+                @if (doctor.activo === true) {
+                <span class="badge bg-success">Activo</span>
+                } @else {
+                <span class="badge bg-secondary">Inactivo</span>
+                }
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="openEliminarDoctorModal(doctor)"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="d-md-none">
+        @if (doctores.length === 0) {
+        <div class="card">
+          <div class="card-body text-center text-muted py-4">
+            <i class="bi bi-person-badge fs-1"></i>
+            <p class="mt-2 mb-0">No hay doctores registrados.</p>
+          </div>
+        </div>
+        } @else { @for (doctor of doctores; track doctor._id) {
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h6 class="card-title fw-bold text-primary mb-0">
+                <i class="bi bi-person-badge"></i> {{ doctor.nombre }}
+                {{ doctor.apellido }}
+              </h6>
+              @if (doctor.activo === true) {
+              <span class="badge bg-success">Activo</span>
+              } @else {
+              <span class="badge bg-secondary">Inactivo</span>
+              }
+            </div>
+            <div class="row text-sm mb-3">
+              <div class="col-6">
+                <small class="text-muted">Especialidad:</small>
+                <div class="fw-semibold">{{ doctor.especialidad.nombre }}</div>
+              </div>
+              <div class="col-6">
+                <small class="text-muted">Teléfono:</small>
+                <div class="fw-semibold">{{ doctor.telefono }}</div>
+              </div>
+            </div>
+            <div class="d-grid">
+              <button
+                class="btn btn-outline-danger"
+                (click)="openEliminarDoctorModal(doctor)"
+              >
+                <i class="bi bi-trash"></i> Eliminar Doctor
+              </button>
+            </div>
+          </div>
+        </div>
+        } }
+      </div>
+
+      <!-- Modal de confirmación de eliminación de doctor -->
+      <div
+        class="modal fade show"
+        tabindex="-1"
+        [ngStyle]="{
+          display: showEliminarDoctorModal ? 'block' : 'none',
+          background: showEliminarDoctorModal ? 'rgba(0,0,0,0.5)' : 'none'
+        }"
+        *ngIf="showEliminarDoctorModal"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-danger">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                Confirmar eliminación
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                aria-label="Close"
+                (click)="showEliminarDoctorModal = false"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p>
+                ¿Estás seguro que deseas eliminar al doctor
+                <b
+                  >{{ doctorAEliminar?.nombre }}
+                  {{ doctorAEliminar?.apellido }}</b
+                >?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="showEliminarDoctorModal = false"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="confirmarEliminarDoctor()"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </main>
+  </div>
+</div>

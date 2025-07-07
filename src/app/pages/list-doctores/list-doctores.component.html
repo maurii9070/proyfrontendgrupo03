@@ -1,0 +1,61 @@
+<div class="container py-4">
+    <div class="row mb-4 align-items-end g-3">
+        <div class="col-12 col-md-6">
+            <label for="busqueda" class="form-label fw-semibold">Buscar por nombre</label>
+            <div class="input-group">
+                <input id="busqueda" type="text" class="form-control" placeholder="Nombre del doctor"
+                    [(ngModel)]="busquedaNombre" (keyup.enter)="onBuscarNombre()">
+                <button class="btn btn-outline-primary" type="button" (click)="onBuscarNombre()">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <label for="especialidad" class="form-label fw-semibold">Filtrar por especialidad</label>
+            <select id="especialidad" class="form-select" [(ngModel)]="filtroEspecialidad" (change)="onFiltrarEspecialidad()">
+                <option value="">Todas las especialidades</option>
+                @for (esp of especialidades; track esp) {
+                <option [ngValue]="esp._id">{{ esp.nombre }}</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @for (doctor of doctoresFiltrados(); track doctor._id) {
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+            <div class="card-body d-flex flex-column">
+                <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-person-circle fs-1 text-primary me-3"></i>
+                <div>
+                    <h5 class="card-title mb-0">{{ doctor.nombre }} {{ doctor.apellido }}</h5>
+                    <span class="badge bg-secondary">{{ doctor.especialidad.nombre }}</span>
+                </div>
+                </div>
+                <ul class="list-unstyled mb-4 flex-grow-1">
+                <li class="mb-2"><i class="bi bi-cash-coin me-2 text-success"></i> <strong>Precio:</strong> ${{
+                    doctor.precioConsulta }}</li>
+                <li class="mb-2"><i class="bi bi-telephone me-2 text-info"></i> <strong>Contacto:</strong> {{
+                    doctor.telefono }}</li>
+                </ul>
+                @if(mostrarBotonTurno) {
+                    <button class="btn btn-primary w-100 mt-auto" (click)="onClickReservarTurno(doctor._id)"><i class="bi bi-calendar-plus me-2"></i>Solicitar
+                turno</button>  
+                }
+                
+            </div>
+            </div>
+        </div>
+        }
+        @if (doctores.length === 0) {
+            <div class="col-12">
+                <div class="alert alert-warning text-center">No hay doctores cargados en el sistema.</div>
+            </div>
+        } @else if (doctoresFiltrados().length === 0) {
+            <div class="col-12">
+                <div class="alert alert-info text-center">No se encontraron doctores con los filtros seleccionados.</div>
+            </div>
+        }
+    </div>
+</div>

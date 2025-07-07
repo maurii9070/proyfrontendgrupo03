@@ -1,0 +1,201 @@
+<!-- Modal Content -->
+<div class="modal-header bg-primary text-white">
+  <h5 class="modal-title">
+    <i class="bi bi-cloud-upload me-2"></i>Gestión de Archivos
+  </h5>
+  <button
+    type="button"
+    class="btn-close btn-close-white"
+    (click)="cerrar()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <!-- Sección de archivos existentes -->
+  <div class="mb-4">
+    @if (archivosExistentes && archivosExistentes.length > 0) {
+    <h6 class="text-primary fw-bold border-bottom pb-2">
+      <i class="bi bi-files me-2"></i>Archivos Existentes
+    </h6>
+
+    <div class="list-group mt-3">
+      @for (archivo of archivosExistentes; track archivo.url) {
+      <div
+        class="list-group-item d-flex justify-content-between align-items-center py-2"
+      >
+        <div class="d-flex align-items-center">
+          <!-- Icono genérico para archivos -->
+          <i
+            class="me-3"
+            style="font-size: 1.5rem"
+            [ngClass]="getIconoTipo()"
+            title="Archivo"
+          ></i>
+          <div>
+            <div class="fw-medium">
+              {{ archivo.nombre || "Archivo sin nombre" }}
+            </div>
+            <small class="text-muted">{{ archivo.tipo }}</small>
+          </div>
+        </div>
+        <div>
+          <button
+            class="btn btn-outline-primary btn-sm"
+            (click)="verArchivo(archivo.url)"
+            title="Ver archivo"
+          >
+            <i class="bi bi-eye me-1"></i> Ver
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Sección de subida de archivos -->
+  <div>
+    <h6 class="text-primary fw-bold border-bottom pb-2">
+      <i class="bi bi-cloud-upload me-2"></i>Subir Nuevo Archivo
+    </h6>
+
+    <!-- Input para seleccionar archivos (oculto) -->
+    <input
+      type="file"
+      #fileInput
+      (change)="onFileSelected($event)"
+      accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+      class="d-none"
+    />
+
+    <!-- Botón para activar selector de archivos -->
+    @if (!archivoSeleccionado) {
+    <div class="text-center py-4">
+      <button
+        class="btn btn-outline-primary"
+        (click)="fileInput.click()"
+        [disabled]="subiendoArchivo"
+      >
+        <i class="bi bi-cloud-upload me-2"></i>
+        Seleccionar Archivo
+      </button>
+      <p class="text-muted small mt-2 mb-0">
+        Formatos permitidos: PDF, JPG, PNG, DOC, DOCX (Máx. 10MB)
+      </p>
+    </div>
+    }
+
+    <!-- Archivo seleccionado -->
+    @if (archivoSeleccionado) {
+    <div class="mt-3">
+      <div class="alert alert-info py-2">
+        <i class="bi bi-info-circle me-2"></i>
+        Archivo seleccionado
+      </div>
+
+      <div class="card border-primary border-opacity-25 mb-3">
+        <div class="card-body py-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-file-earmark text-primary me-2"></i>
+              <div>
+                <span class="text-truncate d-block">{{
+                  archivoSeleccionado.name
+                }}</span>
+                <small class="text-muted">{{
+                  formatFileSize(archivoSeleccionado.size)
+                }}</small>
+              </div>
+            </div>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="cancelarSubidaArchivo()"
+              [disabled]="subiendoArchivo"
+            >
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if(tipo==='medico'){
+        <!-- Input para nombre personalizado -->
+      <div class="mb-3">
+        <label for="nombrePersonalizado" class="form-label">
+          <i class="bi bi-tag me-1"></i>Nombre del archivo
+          <span class="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          id="nombrePersonalizado"
+          [(ngModel)]="nombrePersonalizado"
+          placeholder="Ingrese un nombre descriptivo para el archivo médico"
+          [disabled]="subiendoArchivo"
+          maxlength="100"
+          required
+          [class.is-invalid]="nombrePersonalizado.trim() === ''"
+        />
+        <small class="form-text text-muted">
+          Este nombre se usará para identificar el archivo en los detalles del
+          turno.
+        </small>
+        @if (nombrePersonalizado.trim() === '') {
+        <div class="invalid-feedback">
+          El nombre del archivo es obligatorio.
+        </div>
+        }
+      </div>
+      }
+      
+
+      <!-- Botones de acción -->
+      <div class="d-flex gap-2 justify-content-end">
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          (click)="cancelarSubidaArchivo()"
+          [disabled]="subiendoArchivo"
+        >
+          <i class="bi bi-x-lg me-1"></i> Cancelar
+        </button>
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="fileInput.click()"
+          [disabled]="subiendoArchivo"
+        >
+          <i class="bi bi-arrow-repeat me-1"></i> Cambiar Archivo
+        </button>
+        <button
+          class="btn btn-success btn-sm"
+          (click)="confirmarSubidaArchivo()"
+          [disabled]="subiendoArchivo || nombrePersonalizado.trim() === ''"
+        >
+          <i class="bi bi-cloud-upload me-1"></i>
+          {{ subiendoArchivo ? "Subiendo..." : "Subir Archivo" }}
+        </button>
+      </div>
+
+      <!-- Barra de progreso -->
+      @if (subiendoArchivo) {
+      <div class="mt-3">
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            style="width: 100%"
+          >
+            Subiendo archivo...
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="cerrar()">
+    <i class="bi bi-x-lg me-1"></i> Cerrar
+  </button>
+</div>

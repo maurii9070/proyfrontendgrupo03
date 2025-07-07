@@ -1,0 +1,245 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top" aria-label="Main navigation">
+  <div class="container">
+    <!-- Logo y nombre -->
+    <a class="navbar-brand d-flex align-items-center" [routerLink]="['']">
+      <!-- Logo solo en desktop -->
+      <img src="assets/images/logoLavalle.png" alt="Lavalle Sanatorio y Clinica logo" width="45" height="45"
+        class="me-3 d-none d-md-block" />
+      <!-- Texto para móvil con estilos mejorados -->
+      <span class="fw-bold brand-text d-md-none fs-5">CONSULTORIOS LAVALLE</span>
+      <!-- Texto para desktop con estilos mejorados -->
+      <span class="fw-bold brand-text d-none d-md-inline fs-4">CONSULTORIOS LAVALLE</span>
+    </a>
+
+    <!-- Toggle button para móvil -->
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="!isMenuCollapsed"
+      aria-controls="navbarNav" aria-label="Alternar navegación">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse" [class.collapse]="isMenuCollapsed" id="navbarNav">
+      <!-- Enlaces de navegación PÚBLICOS ÚNICAMENTE -->
+      <ul class="navbar-nav ms-auto me-3">
+        <!-- Solo enlaces públicos esenciales -->
+        <li class="nav-item">
+          <a class="nav-link custom-hover" [routerLink]="['/especialidades']" routerLinkActive="active"
+            (click)="closeMenu()">
+            <i class="bi bi-hospital-fill me-1"></i>
+            Especialidades
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-hover" [routerLink]="['/doctores']" routerLinkActive="active" (click)="closeMenu()">
+            <i class="bi bi-people-fill me-1"></i>
+            Profesionales
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link custom-hover" [routerLink]="['/login']" routerLinkActive="active" (click)="closeMenu()">
+            <i class="bi bi-calendar-check-fill me-1"></i>
+            Agendar Turno
+          </a>
+        </li>
+      </ul>
+
+      <!-- Botones de autenticación -->
+      <div class="d-flex align-items-center">
+        <ng-container *ngIf="isLoggedIn$ | async; else loginButton">
+          <!-- Usuario logueado -->
+          <ng-container *ngIf="currentUserProfile$ | async as profile">
+
+            <!-- DESKTOP: Dropdown de usuario -->
+            <div class="dropdown d-none d-md-block" [class.show]="isDropdownOpen">
+              <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" type="button"
+                (click)="toggleDropdown()" [attr.aria-expanded]="isDropdownOpen">
+                <i class="bi bi-person-circle me-2"></i>
+                <span>{{ profile.nombre }} {{ profile.apellido }}</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen" (click)="closeDropdown()">
+                <li>
+                  <h6 class="dropdown-header">
+                    <i class="bi bi-person-badge me-2"></i>
+                    {{ profile.nombre }} {{ profile.apellido }}
+                  </h6>
+                </li>
+                <li>
+                  <span class="dropdown-item-text text-muted small">
+                    <i class="bi bi-shield-check me-2"></i>
+                    {{ profile._rol | titlecase }}
+                  </span>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+
+                <!-- Enlaces específicos del perfil -->
+                <ng-container [ngSwitch]="profile._rol">
+                  <ng-container *ngSwitchCase="'Paciente'">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/paciente', profile._id]" (click)="closeDropdown()">
+                        <i class="bi bi-house-door me-2"></i>
+                        Mi Panel
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/turno-reserva']" (click)="closeDropdown()">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Reservar Turno
+                      </a>
+                    </li>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'Doctor'">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/doctor', profile._id]" (click)="closeDropdown()">
+                        <i class="bi bi-stethoscope me-2"></i>
+                        Mi Panel
+                      </a>
+                    </li>
+                  </ng-container>
+
+                  <!-- Admin simplificado -->
+                  <ng-container *ngSwitchCase="'Admin'">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/admin']" (click)="closeDropdown()">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Panel Admin
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/estadisticas']" (click)="closeDropdown()">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Estadísticas
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/registro-doctor']" (click)="closeDropdown()">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Registrar Doctor
+                      </a>
+                    </li>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'admin'">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/admin']" (click)="closeDropdown()">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Panel Admin
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/estadisticas']" (click)="closeDropdown()">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Estadísticas
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/registro-doctor']" (click)="closeDropdown()">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Registrar Doctor
+                      </a>
+                    </li>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'ADMIN'">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/admin']" (click)="closeDropdown()">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Panel Admin
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/estadisticas']" (click)="closeDropdown()">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Estadísticas
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['/registro-doctor']" (click)="closeDropdown()">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Registrar Doctor
+                      </a>
+                    </li>
+                  </ng-container>
+                </ng-container>
+
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <button class="dropdown-item text-danger" (click)="logout()">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Cerrar Sesión
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- MOBILE: Enlaces directos sin dropdown -->
+            <div class="d-md-none d-flex flex-column w-100">
+              <!-- Información del usuario -->
+              <div class="text-center py-2 border-bottom">
+                <div class="fw-bold text-primary">{{ profile.nombre }} {{ profile.apellido }}</div>
+                <small class="text-muted">{{ profile._rol | titlecase }}</small>
+              </div>
+
+              <!-- Enlaces directos según el rol -->
+              <ng-container [ngSwitch]="profile._rol">
+                <ng-container *ngSwitchCase="'Paciente'">
+                  <a class="btn btn-outline-primary my-1" [routerLink]="['/paciente', profile._id]"
+                    (click)="closeMenu()">
+                    <i class="bi bi-person-circle me-2"></i>
+                    Mi Panel
+                  </a>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'Doctor'">
+                  <a class="btn btn-outline-primary my-1" [routerLink]="['/doctor', profile._id]" (click)="closeMenu()">
+                    <i class="bi bi-stethoscope me-2"></i>
+                    Mi Panel
+                  </a>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'Admin'">
+                  <a class="btn btn-outline-primary my-1" [routerLink]="['/admin']" (click)="closeMenu()">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Panel Admin
+                  </a>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'admin'">
+                  <a class="btn btn-outline-primary my-1" [routerLink]="['/admin']" (click)="closeMenu()">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Panel Admin
+                  </a>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'ADMIN'">
+                  <a class="btn btn-outline-primary my-1" [routerLink]="['/admin']" (click)="closeMenu()">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Panel Admin
+                  </a>
+                </ng-container>
+              </ng-container>
+
+              <!-- Botón de cerrar sesión -->
+              <button class="btn btn-outline-danger my-1" (click)="logout()">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                Cerrar Sesión
+              </button>
+            </div>
+
+          </ng-container>
+        </ng-container>
+
+        <!-- Template para usuario no logueado -->
+        <ng-template #loginButton>
+          <a class="btn btn-primary" [routerLink]="['/login']">
+            <i class="bi bi-box-arrow-in-right me-2"></i>
+            Iniciar Sesión
+          </a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav>

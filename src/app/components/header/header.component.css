@@ -1,0 +1,172 @@
+/* Estilos del navbar */
+.navbar {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  transition: all 0.3s ease;
+}
+
+/* Estilos del brand */
+.navbar-brand {
+  transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.02);
+}
+
+/* Estilos específicos para el logo */
+.navbar-brand img {
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+  transition: filter 0.3s ease;
+}
+
+.navbar-brand:hover img {
+  filter: drop-shadow(2px 2px 6px rgba(0,0,0,0.15));
+}
+
+/* Estilos para el texto del brand - Unificado para todas las medidas */
+.brand-text {
+  color: #2c5530 !important;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  letter-spacing: 0.8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #2c5530 0%, #1a472a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect para el texto del brand */
+.navbar-brand:hover .brand-text {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+  letter-spacing: 1px;
+}
+
+/* Estilos de los enlaces de navegación */
+.navbar-nav .nav-link {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 0 2px;
+  font-weight: 500;
+  position: relative;
+}
+
+.navbar-nav .nav-link.custom-hover:hover {
+  background-color: var(--bs-primary);
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.navbar-nav .nav-link.active {
+  background-color: var(--bs-primary);
+  color: white !important;
+  font-weight: 600;
+}
+
+/* Estilos del dropdown de usuario */
+.dropdown-toggle {
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  border: 2px solid var(--bs-primary);
+}
+
+.dropdown-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 0.5rem 0;
+  min-width: 250px;
+}
+
+.dropdown-header {
+  color: var(--bs-primary);
+  font-weight: 600;
+  padding: 0.75rem 1rem 0.5rem;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bs-primary);
+  color: white;
+  transform: translateX(5px);
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: rgba(220, 53, 69, 0.8) !important; /* Prioridad alta para evitar conflictos */
+  color: white !important;
+}
+
+.dropdown-item-text {
+  padding: 0.25rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Botón de login */
+.btn-primary {
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+}
+
+/* Iconos */
+.bi {
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .navbar-nav .nav-link {
+    margin: 2px 0;
+  }
+  
+  .dropdown-menu {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-brand span {
+    font-size: 1.1rem;
+  }
+  
+  .dropdown-toggle {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu {
+  animation: fadeIn 0.3s ease;
+}

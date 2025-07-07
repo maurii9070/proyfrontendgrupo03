@@ -1,0 +1,63 @@
+.footer {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #ffffff;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.footer-link:hover {
+  color: #4f46e5;
+  background-color: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.footer h6 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.footer img {
+  filter: brightness(0.9) contrast(1.1);
+  transition: filter 0.3s ease;
+}
+
+.footer img:hover {
+  filter: brightness(1) contrast(1.2);
+}
+
+/* Optimización para móvil */
+@media (max-width: 767.98px) {
+  .footer {
+    font-size: 0.85rem;
+  }
+  
+  .footer-link {
+    padding: 8px 12px;
+    border-radius: 20px;
+  }
+  
+  .footer h6 {
+    font-size: 1rem;
+  }
+}
+
+/* Animación sutil para el texto de desarrolladores */
+.footer small:last-child {
+  transition: opacity 0.3s ease;
+}
+
+.footer small:last-child:hover {
+  opacity: 1 !important;
+}

@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row py-5 align-items-center justify-content-center">
+    <div class="col-11 col-sm-8 col-md-6 col-lg-5 text-center">
+      <div class="card border-0 shadow-sm p-3 mx-auto">
+        <div class="error-icon mb-3">
+          <i class="bi bi-shield-exclamation text-danger" style="font-size: 3rem;"></i>
+        </div>
+
+        <h2 class="text-danger fw-bold mb-2">Acceso Denegado</h2>
+
+        <p class="text-muted mb-3">
+          Lo sentimos, no tienes los permisos necesarios para acceder a esta página.
+        </p>
+
+        <ng-container *ngIf="isLoggedIn$ | async; else notLoggedIn">
+          <!-- Usuario autenticado pero sin permisos -->
+          <p class="small text-muted mb-4">
+            Tu rol actual no tiene acceso a esta sección.
+          </p>
+          <button class="btn btn-primary btn-lg" (click)="goToHome()">
+            <i class="bi bi-house-fill me-2"></i>
+            Volver al Inicio
+          </button>
+        </ng-container>
+
+        <ng-template #notLoggedIn>
+          <!-- Usuario no autenticado -->
+          <p class="small text-muted mb-4">
+            Debes iniciar sesión con una cuenta que tenga los permisos necesarios.
+          </p>
+          <button class="btn btn-primary btn-lg" (click)="goToLogin()">
+            <i class="bi bi-box-arrow-in-right me-2"></i>
+            Iniciar Sesión
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

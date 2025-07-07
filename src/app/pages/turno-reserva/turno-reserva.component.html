@@ -1,0 +1,156 @@
+<div class="container mt-4 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7 col-xl-6">
+      <div class="w-100 d-flex justify-content-end mb-3">
+        <button
+          class="btn btn-secondary"
+          (click)="onClickVolver()"
+          title="Volver al perfil del paciente"
+        >
+          <i class="bi bi-arrow-left"></i> Volver
+        </button>
+      </div>
+      <div class="card">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Reservar Turno</h5>
+          <span class="badge bg-success fs-6">
+            {{ precioConsulta | currency : "ARS" : "symbol" : "1.0-0" : "es" }}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <!-- Columna del calendario -->
+            <div class="col-12 col-lg-6 text-center text-lg-start">
+              <h6 class="mb-3">📅 Seleccionar fecha</h6>
+              <div class="d-inline-block">
+                <ngb-datepicker
+                  [(ngModel)]="selectedDate"
+                  [markDisabled]="isDisabled"
+                  (dateSelect)="onDateSelect($event)"
+                  [displayMonths]="1"
+                  [showWeekNumbers]="false"
+                  [firstDayOfWeek]="7"
+                >
+                </ngb-datepicker>
+              </div>
+            </div>
+
+            <!-- Columna de las horas -->
+            <div class="col-12 col-lg-6">
+              <h6 class="mb-3 text-center text-lg-start">
+                ⏰ Seleccionar hora
+              </h6>
+
+              @if (!selectedDate) {
+              <div class="alert alert-warning py-2">
+                <small>
+                  <i class="fas fa-info-circle"></i> Primero selecciona una
+                  fecha
+                </small>
+              </div>
+              } @else {
+
+              <!-- Layout en 2 columnas desde SM -->
+              <div class="row g-2 d-sm-flex">
+                @for (hora of horas; track hora) {
+                <div class="col-6">
+                  <button
+                    type="button"
+                    class="btn btn-sm w-100"
+                    [class.btn-primary]="selectedHour === hora"
+                    [class.btn-outline-primary]="selectedHour !== hora"
+                    (click)="onHourSelect(hora)"
+                    [disabled]="deshabilitarHora(hora)"
+                  >
+                    {{ hora }}
+                    @if (deshabilitarHora(hora)) {
+                    <i
+                      class="bi bi-lock-fill text-muted ms-1"
+                      title="Hora no disponible"
+                    ></i>
+                    }
+                  </button>
+                </div>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- Opciones de pago -->
+          @if (selectedDate && selectedHour) {
+          <div class="mt-4 text-center">
+            <hr />
+            <div class="alert alert-primary py-2 mb-3">
+              <strong>Turno:</strong> {{ selectedDate.day }}/{{
+                selectedDate.month
+              }}/{{ selectedDate.year }} a las {{ selectedHour }}
+            </div>
+
+            <h6 class="mb-3">💳 Selecciona tu método de pago</h6>
+            <div class="row g-2 justify-content-center">
+              <div class="col-12 col-sm-6">
+                <button
+                  class="btn btn-primary w-100 position-relative"
+                  type="button"
+                  (click)="onClickReservarConMercadoPago()"
+                  [disabled]="botonPagoDeshabilitado"
+                >
+                  <i class="fas fa-credit-card me-2"></i>
+                  MercadoPago
+                  <span
+                    *ngIf="botonPagoDeshabilitado"
+                    class="spinner-border spinner-border-sm position-absolute top-50 end-0 translate-middle-y me-3"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                </button>
+              </div>
+              <div class="col-12 col-sm-6">
+                <button
+                  class="btn btn-success w-100 position-relative"
+                  type="button"
+                  (click)="onClickReservarConTransferencia()"
+                  [disabled]="botonPagoDeshabilitado"
+                >
+                  <i class="fas fa-university me-2"></i>
+                  Transferencia / Efectivo
+                  <span
+                    *ngIf="botonPagoDeshabilitado"
+                    class="spinner-border spinner-border-sm position-absolute top-50 end-0 translate-middle-y me-3"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Información importante -->
+            <div class="mt-3 text-start">
+              <div class="alert alert-info mb-2">
+                <small class="text-muted">
+                  <i class="fas fa-info-circle me-1"></i>
+                  <strong>Mercado Pago:</strong> Si el pago es rechazado deberá
+                  volver a reservar el turno.
+                </small>
+                <small class="text-muted">
+                  <i class="fas fa-info-circle me-1"></i>
+                  <strong>Transferencia:</strong> Deberás enviar el comprobante
+                  de pago en tu turno registrado.
+                </small>
+                <small class="text-muted">
+                  <i class="fas fa-clock me-1"></i>
+                  <strong>Importante:</strong> Tenés 24hs para completar el pago
+                  y confirmar tu reserva.
+                </small>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

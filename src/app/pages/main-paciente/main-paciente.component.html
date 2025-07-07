@@ -1,0 +1,583 @@
+<div class="container py-4">
+  <div class="row g-4">
+    <!-- Perfil Paciente a la izquierda -->
+    <div class="col-12 col-lg-4">
+      <div class="perfil-section d-flex flex-column gap-3 p-4 bg-white h-100">
+        <div class="d-flex align-items-center gap-4">
+          <div>
+            <i
+              class="bi bi-person-circle text-primary"
+              style="font-size: 3rem"
+            ></i>
+          </div>
+          <div>
+            <div class="fw-bold fs-4 mb-1">
+              {{ paciente.nombre }} {{ paciente.apellido }}
+            </div>
+            <div class="text-muted mb-1">
+              <i class="bi bi-envelope text-primary"></i> 
+              @if( paciente.email ) {
+                {{ paciente.email }}
+              } @else {
+                <span class="text-muted"> Sin email registrado</span>
+              }
+            </div>
+            <div class="text-muted">
+              <i class="bi bi-card-text text-primary"></i> DNI:
+              {{ paciente.dni }}
+            </div>
+          </div>
+        </div>
+        <hr class="my-2" />
+        <div class="d-flex flex-column gap-2">
+          <button
+            class="btn btn-outline-primary d-flex align-items-center gap-2 w-100"
+            (click)="abrirModalEditarPerfil()"
+          >
+            <i class="bi bi-pencil-square"></i> Editar perfil
+          </button>
+<!-- Modal Edición de Perfil Paciente -->
+<div *ngIf="mostrarModalEditarPerfil" class="modal fade show d-block custom-modal-backdrop">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 400px">
+    <div class="modal-content shadow rounded-4 border-0">
+      <div class="modal-header bg-primary bg-opacity-10 border-0 rounded-top-4">
+        <h5 class="modal-title text-primary d-flex align-items-center gap-2">
+          <i class="bi bi-person-lines-fill"></i> Editar Perfil
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarModalEditarPerfil()" aria-label="Cerrar"></button>
+      </div>
+      <form [formGroup]="formEditarPerfil" (ngSubmit)="onSubmitEditarPerfil()" autocomplete="off">
+        <div class="modal-body py-4">
+          <div class="mb-3">
+            <label for="email" class="form-label fw-medium">Email</label>
+            <input
+              id="email"
+              type="email"
+              class="form-control"
+              formControlName="email"
+              [readonly]="paciente.uid_firebase"
+              [ngClass]="{'is-invalid': formEditarPerfil.get('email')?.invalid && (formEditarPerfil.get('email')?.touched || formEditarPerfil.get('email')?.dirty)}"
+            />
+            <div *ngIf="paciente.uid_firebase" class="alert alert-warning d-flex align-items-start gap-2 mt-2 py-2 px-3 border-0 rounded-3" style="background-color: #fff3cd; border-left: 4px solid #ffc107 !important;">
+              <i class="bi bi-info-circle-fill text-warning mt-1" style="font-size: 1.1rem;"></i>
+              <div class="small">
+                <div class="fw-semibold mb-1">Cuenta vinculada con Google</div>
+                <div class="text-muted">Para cambiar tu email, desvincula tu cuenta de Google</div>
+                <div class="text-muted">Deberás resetear tu contraseña</div>
+              </div>
+            </div>
+            <div *ngIf="paciente.uid_firebase" class="mt-2">
+              <button
+                type="button"
+                class="btn btn-outline-warning btn-sm d-flex align-items-center gap-2"
+                (click)="onClickDesvincular()"
+              >
+                <i class="bi bi-unlink"></i> Desvincular cuenta de Google
+              </button>
+            </div>
+            <div *ngIf="formEditarPerfil.get('email')?.invalid && (formEditarPerfil.get('email')?.touched || formEditarPerfil.get('email')?.dirty) && !paciente.uid_firebase" class="invalid-feedback d-flex align-items-center gap-1">
+              <i class="bi bi-exclamation-circle-fill"></i>
+              Por favor, ingresa un email válido.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="telefono" class="form-label fw-medium">Teléfono</label>
+            <input
+              id="telefono"
+              type="text"
+              class="form-control"
+              formControlName="telefono"
+              maxlength="20"
+              [ngClass]="{'is-invalid': formEditarPerfil.get('telefono')?.invalid && (formEditarPerfil.get('telefono')?.touched || formEditarPerfil.get('telefono')?.dirty)}"
+            />
+            <div *ngIf="formEditarPerfil.get('telefono')?.invalid && (formEditarPerfil.get('telefono')?.touched || formEditarPerfil.get('telefono')?.dirty)" class="invalid-feedback">
+              Ingresa un teléfono válido (solo números, mínimo 8 dígitos).
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between border-0 pb-4 pt-0">
+          <button type="button" class="btn btn-outline-secondary px-4" (click)="cerrarModalEditarPerfil()">
+            <i class="bi bi-x-lg"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary px-4" [disabled]="formEditarPerfil.invalid || cargandoEdicion">
+            <span *ngIf="cargandoEdicion" class="spinner-border spinner-border-sm me-1" role="status"></span>
+            <i class="bi bi-check-lg"></i> Guardar cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+          <button
+            class="btn btn-outline-secondary d-flex align-items-center gap-2 w-100"
+            (click)="onForgotPassword()">
+            <i class="bi bi-key"></i> Cambiar contraseña
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Turnos a la derecha -->
+    <div class="col-12 col-lg-8">
+      <div class="turnos-section mb-4 h-100">
+        <div class="row g-2 align-items-center mb-3 flex-column flex-md-row">
+          <div class="col-12 col-md-auto flex-grow-1 mb-2 mb-md-0">
+            <h2 class="mb-0 text-center text-md-start">
+              <i class="bi bi-calendar2-check text-primary"></i> Mis Turnos
+            </h2>
+          </div>
+          <div class="col-12 col-md-auto d-flex gap-2 justify-content-center justify-content-md-end align-items-center">
+            <div class="dropdown filtro-estado-turno position-relative" (mouseleave)="filtroDropdownAbierto = false">
+              <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" type="button"
+                (click)="toggleFiltroDropdown()" [attr.aria-expanded]="filtroDropdownAbierto">
+                <i class="bi" [ngClass]="getEstadoFiltroIcon()"></i>
+                {{ getEstadoFiltroLabel() }}
+              </button>
+              @if (filtroDropdownAbierto) {
+                <ul class="dropdown-menu shadow-sm rounded-3 show" style="display:block; min-width:200px; position:absolute; z-index:1000;">
+                  @for (estado of estadosTurno; track estado.value) {
+                  <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center gap-2" (click)="onEstadoFiltroChange(estado.value)">
+                      <i class="bi" [ngClass]="estado.icon"></i>{{ estado.label }}
+                    </button>
+                  </li>
+                  }
+                </ul>
+              }
+            </div>
+            <button
+              (click)="onClickSolicitarTurno()"
+              class="btn btn-primary btn-turno d-flex align-items-center gap-2 w-100 w-md-auto justify-content-center"
+            >
+              <i class="bi bi-plus-circle text-white"></i> Nuevo Turno
+            </button>
+          </div>
+        </div>
+        <!-- Mostrar el componente de doctores como hijo si mostrarDoctores es true, si no la lista de turnos -->
+        @if (mostrarDoctores) {
+        <div class="card shadow-sm p-3 mb-4">
+          <div
+            class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+          >
+            <h3 class="mb-0">
+              <i class="bi bi-person-badge text-primary"></i> Selecciona un
+              doctor
+            </h3>
+            <button
+              class="btn btn-outline-danger d-flex align-items-center gap-2 fw-bold"
+              (click)="onCerrarDoctores()"
+            >
+              <i class="bi bi-x-circle"></i> Cerrar selección
+            </button>
+          </div>
+          <app-list-doctores
+            [pacienteId]="pacienteId"
+            [mostrarBotonTurno]="true"
+            (cerrar)="onCerrarDoctores()"
+          ></app-list-doctores>
+        </div>
+        } @else {
+        <div class="d-flex flex-column align-items-center justify-content-center w-100" style="min-height: 300px;">
+          <div class="turnos-scroll w-100" style="max-width: 650px; max-height: 60vh; overflow-y: auto; margin: 0 auto;">
+            @if (tieneTurnos) {
+              @for (turno of turnos; track turno._id) {
+                <div
+                  class="turno-card align-items-center mb-3"
+                  [class.turno-cancelado]="turno.estado === 'cancelado'"
+                >
+                  <div class="turno-info">
+                    <i class="bi bi-clock-history text-primary"></i>
+                    <div>
+                      <div class="fw-bold">
+                        {{ turno.doctor.especialidad.nombre }} -
+                        {{ turno.doctor.nombre }}
+                      </div>
+                      <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-event text-primary"></i>
+                        {{ turno.fecha }} &nbsp;
+                        <i class="bi bi-clock text-primary"></i> {{ turno.hora }}
+                      </div>
+                      <span
+                        class="badge ms-1"
+                        [ngClass]="{
+                          'bg-warning text-dark': turno.estado === 'pendiente',
+                          'bg-info': turno.estado === 'confirmado',
+                          'bg-success': turno.estado === 'realizado',
+                          'bg-danger': turno.estado === 'cancelado'
+                        }"
+                      >
+                        <i
+                          class="bi"
+                          [ngClass]="{
+                            'bi-hourglass-split': turno.estado === 'pendiente',
+                            'bi-check-circle':
+                              turno.estado === 'confirmado' ||
+                              turno.estado === 'realizado',
+                            'bi-x-circle': turno.estado === 'cancelado'
+                          }"
+                        ></i>
+                        {{ turno.estado | titlecase }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="d-flex gap-2 flex-wrap mt-2">
+                    <button
+                      class="btn btn-outline-info btn-turno d-flex align-items-center gap-2"
+                      (click)="abrirModalDetalle(turno._id)"
+                    >
+                      <i class="bi bi-eye"></i> Ver detalles
+                    </button>
+                    <button
+                      class="btn btn-outline-danger btn-turno d-flex align-items-center gap-2"
+                      (click)="mostrarModalCancelar(turno._id)"
+                      [disabled]="turno.estado === 'cancelado'"
+                    >
+                      <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                  </div>
+                  <!-- Modal de confirmación para cancelar turno (manejado por variable booleana) -->
+                  <div
+                    *ngIf="mostrarModal"
+                    class="modal fade show d-block custom-modal-backdrop"
+                  >
+                    <div
+                      class="modal-dialog modal-dialog-centered"
+                      style="max-width: 400px"
+                    >
+                      <div class="modal-content shadow rounded-4 border-0">
+                        <div
+                          class="modal-header bg-danger bg-opacity-10 border-0 rounded-top-4"
+                        >
+                          <h5
+                            class="modal-title text-danger d-flex align-items-center gap-2"
+                            id="modalCancelarTurnoLabel"
+                          >
+                            <i class="bi bi-exclamation-triangle-fill"></i> Confirmar
+                            cancelación
+                          </h5>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            (click)="cerrarModalCancelar()"
+                            aria-label="Cerrar"
+                          ></button>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                          <p class="mb-3 fs-5">
+                            ¿Estás seguro de que deseas cancelar este turno?
+                          </p>
+                          <i
+                            class="bi bi-calendar-x text-danger"
+                            style="font-size: 3rem"
+                          ></i>
+                        </div>
+                        <div
+                          class="modal-footer d-flex justify-content-between border-0 pb-4 pt-0"
+                        >
+                          <button
+                            type="button"
+                            class="btn btn-outline-secondary px-4"
+                            (click)="cerrarModalCancelar()"
+                          >
+                            <i class="bi bi-x-lg"></i> No, volver
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-danger px-4"
+                            (click)="confirmarCancelarTurno()"
+                          >
+                            <i class="bi bi-check-lg"></i> Sí, cancelar turno
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Modal Detalle Turno -->
+                  @if (mostrarModalDetalle && detalleTurno) {
+                  <div class="modal fade show d-block custom-modal-backdrop">
+                    <div
+                      class="modal-dialog modal-dialog-centered modal-lg"
+                      style="max-width: 700px"
+                    >
+                      <div class="modal-content shadow rounded-4 border-0">
+                        <div
+                          class="modal-header bg-primary bg-opacity-10 border-0 rounded-top-4"
+                        >
+                          <h5
+                            class="modal-title text-primary d-flex align-items-center gap-2"
+                          >
+                            <i class="bi bi-calendar2-week"></i> Detalle del Turno
+                          </h5>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            (click)="cerrarModalDetalle()"
+                            aria-label="Cerrar"
+                          ></button>
+                        </div>
+                        <div class="modal-body py-4">
+                          <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                              <h6 class="fw-bold mb-2">
+                                <i class="bi bi-person-badge text-primary"></i> Doctor
+                              </h6>
+                              <div>
+                                {{ detalleTurno.doctor.nombre }}
+                                {{ detalleTurno.doctor.apellido }}
+                              </div>
+                              <div class="text-muted small">
+                                {{ detalleTurno.doctor.especialidad.nombre }}
+                              </div>
+                              <div class="text-muted small">
+                                <i class="bi bi-envelope"></i>
+                                {{ detalleTurno.doctor.email }}
+                              </div>
+                              <div class="text-muted small">
+                                <i class="bi bi-telephone"></i>
+                                {{ detalleTurno.doctor.telefono }}
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                              <h6 class="fw-bold mb-2">
+                                <i class="bi bi-calendar-event text-primary"></i>
+                                Información del Turno
+                              </h6>
+                              <div>
+                                <i class="bi bi-calendar"></i> {{ detalleTurno.fecha }}
+                              </div>
+                              <div>
+                                <i class="bi bi-clock"></i> {{ detalleTurno.hora }}
+                              </div>
+                              <div>
+                                <span
+                                  class="badge ms-1"
+                                  [ngClass]="{
+                                    'bg-warning text-dark':
+                                      detalleTurno.estado === 'pendiente',
+                                    'bg-success':
+                                      detalleTurno.estado === 'confirmado' ||
+                                      detalleTurno.estado === 'realizado',
+                                    'bg-danger': detalleTurno.estado === 'cancelado'
+                                  }"
+                                >
+                                  <i
+                                    class="bi"
+                                    [ngClass]="{
+                                      'bi-hourglass-split':
+                                        detalleTurno.estado === 'pendiente',
+                                      'bi-check-circle':
+                                        detalleTurno.estado === 'confirmado' ||
+                                        detalleTurno.estado === 'realizado',
+                                      'bi-x-circle': detalleTurno.estado === 'cancelado'
+                                    }"
+                                  ></i>
+                                  {{ detalleTurno.estado | titlecase }}
+                                </span>
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <h6 class="fw-bold mb-2">
+                                <i class="bi bi-card-text text-primary"></i>
+                                Observaciones
+                              </h6>
+                              <div class="text-muted">
+                                {{ detalleTurno.observaciones || "Sin observaciones." }}
+                              </div>
+                            </div>
+                            <!-- Archivos médicos -->
+                            <div class="col-12">
+                              <h6 class="fw-bold mb-2">
+                                <i class="bi bi-file-medical text-primary"></i> Archivos
+                                médicos
+                              </h6>
+                              @if (getArchivosMedicos(detalleTurno.archivos).length > 0)
+                              {
+                              <div class="row g-2">
+                                @for (archivo of
+                                getArchivosMedicos(detalleTurno.archivos); track
+                                archivo._id) {
+                                <div class="col-12 col-md-6">
+                                  <div class="card shadow-sm border-0 mb-2">
+                                    <div class="card-body d-flex flex-column gap-2">
+                                      <div class="d-flex align-items-center gap-2">
+                                        <i
+                                          class="bi bi-file-earmark-medical text-primary"
+                                          style="font-size: 1.5rem"
+                                        ></i>
+                                        <div>
+                                          <div class="fw-medium">
+                                            {{ archivo.nombre }}
+                                          </div>
+                                          <small class="text-muted">{{
+                                            archivo.fechaSubida | date : "short"
+                                          }}</small>
+                                        </div>
+                                      </div>
+                                      <a
+                                        [href]="archivo.url"
+                                        target="_blank"
+                                        class="btn btn-outline-primary btn-sm mt-2"
+                                      >
+                                        <i class="bi bi-eye"></i> Ver archivo
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                                }
+                              </div>
+                              } @else {
+                              <div class="alert alert-light text-center py-3">
+                                <i
+                                  class="bi bi-file-medical text-muted"
+                                  style="font-size: 2rem"
+                                ></i>
+                                <p class="mb-0 text-muted mt-2">
+                                  No hay archivos médicos disponibles para este turno.
+                                </p>
+                              </div>
+                              }
+                            </div>
+                            <!-- Comprobantes de pago existentes -->
+                            <div class="col-12">
+                              <h6 class="fw-bold mb-2">
+                                <i class="bi bi-receipt-cutoff text-primary"></i>
+                                Comprobante de pago
+                              </h6>
+                              @if (getArchivosPago(detalleTurno.archivos).length > 0) {
+                              @for (archivo of getArchivosPago(detalleTurno.archivos);
+                              track archivo._id) {
+                              <div class="card shadow-sm border-0 mb-3">
+                                <div class="card-body">
+                                  <div class="d-flex align-items-center gap-3 mb-3">
+                                    <i
+                                      class="bi bi-receipt text-success"
+                                      style="font-size: 2rem"
+                                    ></i>
+                                    <div class="flex-grow-1">
+                                      <div class="fw-medium">{{ archivo.nombre }}</div>
+                                      <small class="text-muted"
+                                        >Subido el
+                                        {{
+                                          archivo.fechaSubida | date : "short"
+                                        }}</small
+                                      >
+                                    </div>
+                                  </div>
+                                  <div class="d-flex gap-2">
+                                    <a
+                                      [href]="archivo.url"
+                                      target="_blank"
+                                      class="btn btn-outline-success btn-sm"
+                                    >
+                                      <i class="bi bi-eye"></i> Ver comprobante
+                                    </a>
+                                    @if (detalleTurno.estado === 'pendiente') {
+                                    <button
+                                      class="btn btn-outline-warning btn-sm"
+                                      (click)="iniciarReemplazoComprobante(archivo)"
+                                      [disabled]="subiendoComprobante"
+                                    >
+                                      @if (subiendoComprobante &&
+                                      reemplazandoComprobante?._id === archivo._id) {
+                                      <span
+                                        class="spinner-border spinner-border-sm me-1"
+                                        role="status"
+                                      ></span>
+                                      Reemplazando... } @else {
+                                      <i class="bi bi-arrow-repeat"></i> Reemplazar }
+                                    </button>
+                                    }
+                                  </div>
+                                </div>
+                              </div>
+                              } } @else {
+                              <div class="alert alert-light text-center py-3 mb-3">
+                                <i
+                                  class="bi bi-receipt text-muted"
+                                  style="font-size: 2rem"
+                                ></i>
+                                <p class="mb-0 text-muted mt-2">
+                                  No hay comprobante de pago subido.
+                                </p>
+                              </div>
+                              }
+                            </div>
+                            <!-- Botón para subir comprobante (solo si no existe y el turno está pendiente) -->
+                            @if (detalleTurno.estado === 'pendiente' &&
+                            getArchivosPago(detalleTurno.archivos).length === 0) {
+                            <div class="col-12">
+                              <div class="d-flex gap-2 mb-3">
+                                <button
+                                  class="btn btn-outline-primary d-flex align-items-center gap-2"
+                                  (click)="iniciarSubidaComprobante()"
+                                  [disabled]="subiendoComprobante"
+                                >
+                                  @if (subiendoComprobante && !reemplazandoComprobante)
+                                  {
+                                  <span
+                                    class="spinner-border spinner-border-sm"
+                                    role="status"
+                                  ></span>
+                                  Subiendo... } @else {
+                                  <i class="bi bi-cloud-upload"></i> Subir comprobante
+                                  de pago }
+                                </button>
+                              </div>
+                              <div class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                Después de subir el comprobante, aguarda hasta que lo
+                                confirmen en administración.
+                              </div>
+                              @if (subiendoComprobante && !reemplazandoComprobante) {
+                              <div class="alert alert-primary" role="alert">
+                                <div class="d-flex align-items-center">
+                                  <span
+                                    class="spinner-border spinner-border-sm me-2"
+                                    role="status"
+                                  ></span>
+                                  <span>Subiendo comprobante de pago...</span>
+                                </div>
+                              </div>
+                              }
+                            </div>
+                            }
+                          </div>
+                        </div>
+                        <div class="modal-footer border-0 pb-4 pt-0">
+                          <button
+                            type="button"
+                            class="btn btn-outline-secondary px-4"
+                            (click)="cerrarModalDetalle()"
+                          >
+                            <i class="bi bi-x-lg"></i> Cerrar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              }
+            } @else {
+              <div class="no-turnos text-center py-5">
+                <i class="bi bi-emoji-frown text-primary" style="font-size: 2rem"></i><br />
+                No tienes turnos reservados.
+              </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Input file oculto para subir comprobantes, siempre presente en el DOM -->
+<input
+  type="file"
+  #fileInputComprobante
+  (change)="onArchivoSeleccionado($event)"
+  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+  class="d-none"
+/>
+

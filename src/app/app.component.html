@@ -1,103 +1,22 @@
-<div class="container mt-5">
-  <h1 class="text-center mb-5">Bootstrap con Colores Personalizados</h1>
-  <!-- Botones con colores personalizados -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <h3>Botones con Colores Personalizados</h3>
-      <button type="button" class="btn btn-primary me-2">Primary</button>
-      <button type="button" class="btn btn-secondary me-2">Secondary</button>
-      <button type="button" class="btn btn-success me-2">Success</button>
-      <button type="button" class="btn btn-danger me-2">Danger</button>
-      <button type="button" class="btn btn-warning me-2">Warning</button>
-      <button type="button" class="btn btn-info me-2">Info</button>
-      <button type="button" class="btn btn-light me-2">Light</button>
-      <button type="button" class="btn btn-dark me-2">Dark</button>
-      <button type="button" class="btn btn-custom">Custom Purple</button>
+<!--  top-bar - Solo en desktop grande -->
+<div *ngIf="showTopBar" class="top-bar d-none d-xl-block">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="contact-info">
+      <span>📞 (0388) 423-4567</span>
+      <span>📱 (0388) 15-555-6666</span>
     </div>
-  </div>
-
-  <!-- Nuevos colores adicionales -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <h3>Colores Adicionales Personalizados</h3>
-      <button type="button" class="btn bg-purple text-white me-2">
-        Purple
-      </button>
-      <button type="button" class="btn bg-pink text-white me-2">Pink</button>
-      <button type="button" class="btn bg-orange text-white me-2">
-        Orange
-      </button>
-      <button type="button" class="btn bg-teal text-white me-2">Teal</button>
-    </div>
-  </div>
-
-  <!-- Alertas con colores personalizados -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <h3>Alertas con Colores Personalizados</h3>
-      <div class="alert alert-primary" role="alert">
-        Esta es una alerta primary con color personalizado!
-      </div>
-      <div class="alert alert-success" role="alert">
-        Esta es una alerta success con color personalizado!
-      </div>
-      <div class="alert alert-danger" role="alert">
-        Esta es una alerta danger con color personalizado!
-      </div>
-      <div class="alert alert-warning" role="alert">
-        Esta es una alerta warning con color personalizado!
-      </div>
-    </div>
-  </div>
-
-  <!-- Cards con colores personalizados -->
-  <div class="row">
-    <div class="col-md-4 mb-3">
-      <div class="card border-primary">
-        <div class="card-header bg-primary text-white">Card Primary</div>
-        <div class="card-body">
-          <p class="card-text">
-            Contenido del card con border y header primary personalizado.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 mb-3">
-      <div class="card border-success">
-        <div class="card-header bg-success text-white">Card Success</div>
-        <div class="card-body">
-          <p class="card-text">
-            Contenido del card con border y header success personalizado.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 mb-3">
-      <div class="card border-danger">
-        <div class="card-header bg-danger text-white">Card Danger</div>
-        <div class="card-body">
-          <p class="card-text">
-            Contenido del card con border y header danger personalizado.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Badges con colores personalizados -->
-  <div class="row mt-4">
-    <div class="col-12">
-      <h3>Badges con Colores Personalizados</h3>
-      <span class="badge bg-primary me-2">Primary</span>
-      <span class="badge bg-secondary me-2">Secondary</span>
-      <span class="badge bg-success me-2">Success</span>
-      <span class="badge bg-danger me-2">Danger</span>
-      <span class="badge bg-warning text-dark me-2">Warning</span>
-      <span class="badge bg-info me-2">Info</span>
-      <span class="badge bg-light text-dark me-2">Light</span>
-      <span class="badge bg-dark">Dark</span>
+    <div class="actions">
+      <a href="https://wa.me/5493885556666" target="_blank" class="whatsapp-link me-3">
+        <i class="bi bi-whatsapp"></i> WhatsApp
+      </a>
+      <button class="btn btn-emergency">Emergencia</button>
     </div>
   </div>
 </div>
 
+<app-header></app-header>
 <router-outlet></router-outlet>
+<app-toast-container></app-toast-container>
+
+<!-- Footer condicional - Solo en rutas específicas -->
+<app-footer *ngIf="showFooter"></app-footer>

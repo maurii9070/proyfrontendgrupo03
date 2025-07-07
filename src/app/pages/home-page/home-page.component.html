@@ -1,0 +1,382 @@
+<section class="hero-section d-none d-md-block">
+  <div class="hero-content">
+    <h1>Tu Bienestar, Nuestra Prioridad</h1>
+    <p>Expertos en salud, cuidando de ti y de tu familia con calidez y profesionalismo.</p>
+    <div class="input-group search-bar rounded-pill overflow-hidden shadow-sm">
+      <input type="text" class="form-control border-0 px-4 py-3"
+        placeholder="Buscar profesionales, especialidades, turnos..." aria-label="Buscar">
+      <button class="btn btn-primary px-4" type="button"><i class="bi bi-search"></i> Buscar</button>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de Servicios Destacados -->
+
+<section class="service-cards py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-primary">Acceso Rápido a Nuestros Servicios</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
+      <div class="col">
+        <div class="card h-100 service-card shadow-sm">
+          <a class="card-link-overlay" [routerLink]="['/login']"></a>
+          <div class="card-body text-center d-flex flex-column justify-content-center">
+            <i class="bi bi-calendar-check-fill card-icon mb-3"></i>
+            <h5 class="card-title fw-bold">Turnos Online</h5>
+            <p class="card-text">Agenda tu cita con el profesional ideal, a tu conveniencia.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100 service-card shadow-sm">
+          <a class="card-link-overlay" [routerLink]="['/doctores']"></a>
+          <div class="card-body text-center d-flex flex-column justify-content-center">
+            <i class="bi bi-search card-icon mb-3"></i>
+            <h5 class="card-title fw-bold">Busca tu Profesional</h5>
+            <p class="card-text">Encuentra al experto que necesitas entre nuestras especialidades.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100 service-card shadow-sm">
+          <a class="card-link-overlay" [routerLink]="['paciente/:idPaciente']"></a>
+          <div class="card-body text-center d-flex flex-column justify-content-center">
+            <i class="bi bi-credit-card-fill card-icon mb-3"></i>
+            <h5 class="card-title fw-bold">Abona tu Consulta</h5>
+            <p class="card-text">Realiza el pago de tu consulta de forma rápida y segura online.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100 service-card shadow-sm">
+          <a class="card-link-overlay" (click)="scrollToLocation()"></a>
+          <div class="card-body text-center d-flex flex-column justify-content-center">
+            <i class="bi bi-geo-alt-fill card-icon mb-3"></i>
+            <h5 class="card-title fw-bold">Cómo Llegar</h5>
+            <p class="card-text">Encuentra nuestra ubicación y las rutas más convenientes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Sección de Información del Paciente -->
+
+<section class="patient-info py-5 bg-gradient-light-blue">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-md-6 order-md-1 order-1">
+        <h2 class="mb-4 display-6 fw-bold text-dark-blue">Tu Salud, Tu Información al Alcance</h2>
+        <p class="lead text-dark-gray mb-4">
+          Accede a un mundo de posibilidades: desde agendar citas médicas con facilidad hasta consultar tu historial
+          clínico y resultados de laboratorio, todo en un solo lugar seguro y amigable.
+        </p>
+        <div class="d-grid gap-3 mb-4">
+          <a href="#"
+            class="info-link-btn d-flex align-items-center bg-white shadow-sm p-3 rounded-pill text-decoration-none">
+            <i class="bi bi-question-circle-fill me-3 fs-4 text-info-emphasis"></i>
+            <span class="fw-semibold text-dark-blue">Preguntas Frecuentes</span>
+            <i class="bi bi-chevron-right ms-auto text-secondary"></i>
+          </a>
+          <a [routerLink]="['paciente/:idPaciente']"
+            class="info-link-btn d-flex align-items-center bg-white shadow-sm p-3 rounded-pill text-decoration-none">
+            <i class="bi bi-file-earmark-medical-fill me-3 fs-4 text-info-emphasis"></i>
+            <span class="fw-semibold text-dark-blue">Acceso a Resultados y Estudios</span>
+            <i class="bi bi-chevron-right ms-auto text-secondary"></i>
+          </a>
+          <a href="mailto:soporte@consultorioslavalle.com?subject=Consulta%20de%20Soporte&body=Hola,%20necesito%20ayuda%20con:"
+            class="info-link-btn d-flex align-items-center bg-white shadow-sm p-3 rounded-pill text-decoration-none">
+            <i class="bi bi-chat-dots-fill me-3 fs-4 text-info-emphasis"></i>
+            <span class="fw-semibold text-dark-blue">Contacta a Soporte</span>
+            <i class="bi bi-chevron-right ms-auto text-secondary"></i>
+          </a>
+        </div>
+        <a routerLink="/login" class="btn btn-primary btn-lg mt-3 portal-btn shadow-lg w-100 w-md-auto">
+          <i class="bi bi-person-circle me-2"></i> Ingresar al Portal del Paciente
+        </a>
+      </div>
+      <div class="col-md-6 text-center order-md-2 order-2">
+        <img
+          src="https://www.diagnosticointegralmedico.com.ar/wp-content/uploads/2023/05/Publicacion_2_PortadaRetrato-820x1024.png"
+          alt="Portal del Paciente" class="img-fluid rounded-4 shadow-lg pulse-animation">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de Profesionales y especialidades -->
+
+<section class="professionals-specialties py-5 bg-gradient-soft">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-dark-blue">Nuestro Compromiso: Profesionales de Vanguardia</h2>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="feature-block p-4 p-md-5 text-center rounded-4 shadow-lg text-dark-blue position-relative">
+          <a routerLink="/list-doctores" class="feature-link-overlay"></a>
+          <i class="bi bi-people-fill feature-icon mb-4 text-primary"></i>
+          <h3 class="display-6 fw-bold mb-3">Conoce a Nuestros Profesionales</h3>
+          <p class="lead mb-4 text-dark-gray">
+            Un equipo apasionado y altamente calificado, dedicado a tu bienestar con un enfoque humano y experto en cada
+            especialidad.
+          </p>
+          <span class="btn btn-outline-primary btn-lg">Explora el Equipo</span>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-5">
+        <div class="feature-block p-4 p-md-5 text-center rounded-4 shadow-lg text-dark-blue position-relative">
+          <a routerLink="/especialidades" class="feature-link-overlay"></a>
+          <i class="bi bi-hospital-fill feature-icon mb-4 text-success"></i>
+          <h3 class="display-6 fw-bold mb-3">Descubre Nuestras Especialidades</h3>
+          <p class="lead mb-4 text-dark-gray">
+            Desde diagnósticos precisos hasta tratamientos innovadores, ofrecemos una amplia gama de especialidades para
+            cubrir todas tus necesidades.
+          </p>
+          <span class="btn btn-outline-success btn-lg">Ver Especialidades</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Sección de noticias -->
+
+<section class="news-section py-5 d-none d-md-block">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-dark-blue">Últimas Noticias y Novedades</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col">
+        <div class="card news-card h-100 shadow-hover-zoom">
+          <img
+            src="https://cdn.aarp.net/content/dam/aarp/health/conditions_treatments/2019/09/1140-exablate-neuro-esp.jpg"
+            class="card-img-top news-img" alt="Innovación en Tratamientos Crónicos">
+          <div class="card-body">
+            <small class="text-muted d-block mb-2">3 de Julio, 2025</small>
+            <h5 class="card-title fw-bold text-dark-blue">Innovación en Tratamientos Crónicos</h5>
+            <p class="card-text text-secondary">Descubre los avances más recientes en el manejo de enfermedades a largo
+              plazo en nuestro consultorio.</p>
+            <a href="#" class="btn btn-sm btn-link text-primary text-decoration-none">Leer Más <i
+                class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card news-card h-100 shadow-hover-zoom">
+          <img
+            src="https://educowebmedia.blob.core.windows.net/educowebmedia/educospain/media/images/blog/293209-p6wzuj-130.jpg"
+            class="card-img-top news-img" alt="Consejos para Mantener una Vida Saludable">
+          <div class="card-body">
+            <small class="text-muted d-block mb-2">28 de Junio, 2025</small>
+            <h5 class="card-title fw-bold text-dark-blue">Consejos para Mantener una Vida Saludable</h5>
+            <p class="card-text text-secondary">Pequeños cambios y hábitos para grandes beneficios en tu bienestar
+              diario, según nuestros especialistas.</p>
+            <a href="#" class="btn btn-sm btn-link text-primary text-decoration-none">Leer Más <i
+                class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card news-card h-100 shadow-hover-zoom">
+          <img
+            src="https://media.urgente24.com/p/b9635ee68a2cea2c55285bd9c003b8bb/adjuntos/319/imagenes/003/234/0003234448/1200x675/smart/telemedicina-teleconsulta-doctor-freepikjpg.jpg"
+            class="card-img-top news-img" alt="Avances en Telemedicina: Tu Doctor más Cerca">
+          <div class="card-body">
+            <small class="text-muted d-block mb-2">20 de Junio, 2025</small>
+            <h5 class="card-title fw-bold text-dark-blue">Avances en Telemedicina: Tu Doctor más Cerca</h5>
+            <p class="card-text text-secondary">Cómo la tecnología está transformando el acceso a la atención médica y
+              sus beneficios para ti.</p>
+            <a href="#" class="btn btn-sm btn-link text-primary text-decoration-none">Leer Más <i
+                class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de Testimonios -->
+
+<section class="testimonials-section py-5 d-none d-md-block">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-info-emphasis">Lo que Dicen Nuestros Pacientes</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col">
+        <div class="testimonial-card h-100 p-4 rounded-4 shadow-hover-zoom">
+          <p class="testimonial-text lead mb-3">"La atención fue excelente, desde la recepción hasta el doctor. Me sentí
+            realmente escuchado y cuidado. ¡Totalmente recomendado!"</p>
+          <div class="d-flex align-items-center">
+            <img
+              src="https://media.istockphoto.com/id/1457415526/es/foto/linda-ni%C3%B1a-latina-abrazando-a-su-madre-al-aire-libre.jpg?s=612x612&w=0&k=20&c=0RvwBwbp8Syh0Ud88iQQ-4gNNG1PoBl3mA37SBeMIMs="
+              alt="Avatar María G." class="rounded-circle me-3 testimonial-avatar">
+            <div>
+              <strong class="text-primary d-block">María G.</strong>
+              <span class="text-secondary small">Paciente de Medicina General</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="testimonial-card h-100 p-4 rounded-4 shadow-hover-zoom">
+          <p class="testimonial-text lead mb-3">"Pude sacar mi turno online en segundos y me atendieron a la hora
+            exacta. La modernidad y eficiencia que uno busca hoy."</p>
+          <div class="d-flex align-items-center">
+            <img src="https://www.rionegro.com.ar/wp-content/uploads/2024/08/adultos-m.jpg?w=375&h=211&crop=1"
+              alt="Avatar Juan P." class="rounded-circle me-3 testimonial-avatar">
+            <div>
+              <strong class="text-primary d-block">Juan P.</strong>
+              <span class="text-secondary small">Paciente de Traumatología</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="testimonial-card h-100 p-4 rounded-4 shadow-hover-zoom">
+          <p class="testimonial-text lead mb-3">"La calidez del personal es impresionante. Me ayudaron en todo el
+            proceso y me hicieron sentir muy cómoda en un momento difícil."</p>
+          <div class="d-flex align-items-center">
+            <img src="https://cuidadoadultomayor.com/wp-content/uploads/2022/12/Cuidados-basicos-del-adulto-mayor.jpg"
+              alt="Avatar Ana L." class="rounded-circle me-3 testimonial-avatar">
+            <div>
+              <strong class="text-primary d-block">Ana L.</strong>
+              <span class="text-secondary small">Paciente de Pediatría</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de Ubicación y Contacto -->
+<section id="location-section" class="location-section py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-dark-blue">Visitanos</h2>
+    <div class="row g-5 align-items-center">
+
+      <!-- Mapa -->
+      <div class="col-lg-8">
+        <div class="map-container rounded-4 shadow-lg overflow-hidden">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3656.2623187156!2d-65.41847628498765!3d-24.194431384398887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941b0f3c6eb910c7%3A0x8b8b8b8b8b8b8b8b!2sSan%20Salvador%20de%20Jujuy%2C%20Jujuy!5e0!3m2!1ses!2sar!4v1641234567890!5m2!1ses!2sar"
+            width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Información de contacto -->
+      <div class="col-lg-4">
+        <div class="contact-info-card bg-white p-4 rounded-4 shadow-lg">
+          <h3 class="fw-bold text-dark-blue mb-4">
+            <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+            Información de Contacto
+          </h3>
+
+          <!-- Dirección -->
+          <div class="contact-item mb-4">
+            <h5 class="fw-semibold text-dark-blue mb-2">
+              <i class="bi bi-building me-2 text-secondary"></i>
+              Dirección
+            </h5>
+            <p class="text-muted mb-2">Av. Lavalle 1234</p>
+            <p class="text-muted">San Salvador de Jujuy, Jujuy</p>
+          </div>
+
+          <!-- Teléfonos -->
+          <div class="contact-item mb-4">
+            <h5 class="fw-semibold text-dark-blue mb-2">
+              <i class="bi bi-telephone-fill me-2 text-secondary"></i>
+              Teléfonos
+            </h5>
+            <p class="text-muted mb-1">
+              <a href="tel:+5493884234567" class="text-decoration-none text-muted">
+                📞 (0388) 423-4567
+              </a>
+            </p>
+            <p class="text-muted">
+              <a href="tel:+5493885556666" class="text-decoration-none text-muted">
+                📱 (0388) 15-555-6666
+              </a>
+            </p>
+          </div>
+
+          <!-- Horarios -->
+          <div class="contact-item mb-4">
+            <h5 class="fw-semibold text-dark-blue mb-2">
+              <i class="bi bi-clock-fill me-2 text-secondary"></i>
+              Horarios de Atención
+            </h5>
+            <p class="text-muted mb-1">Lunes a Viernes: 8:00 - 20:00</p>
+            <p class="text-muted mb-1">Sábados: 8:00 - 13:00</p>
+            <p class="text-muted">Domingos: Emergencias</p>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="d-grid gap-2">
+            <a href="https://maps.google.com/?q=Av. Lavalle 1234, San Salvador de Jujuy" target="_blank"
+              class="btn btn-primary">
+              <i class="bi bi-navigation me-2"></i>
+              Cómo Llegar
+            </a>
+            <a href="https://wa.me/5493885556666?text=Hola,%20necesito%20información%20sobre%20turnos" target="_blank"
+              class="btn btn-success">
+              <i class="bi bi-whatsapp me-2"></i>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medios de transporte -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="transport-info bg-white p-4 rounded-4 shadow-sm">
+          <h4 class="fw-bold text-dark-blue mb-3 text-center">
+            <i class="bi bi-bus-front me-2"></i>
+            Medios de Transporte
+          </h4>
+          <div class="row text-center">
+            <div class="col-md-4 mb-3">
+              <div class="transport-item">
+                <i class="bi bi-bus-front fs-3 text-primary mb-2"></i>
+                <h6 class="fw-semibold">Colectivos</h6>
+                <p class="small text-muted">Líneas: 5, 12, 18, 25</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="transport-item">
+                <i class="bi bi-car-front fs-3 text-success mb-2"></i>
+                <h6 class="fw-semibold">Auto Particular</h6>
+                <p class="small text-muted">Estacionamiento disponible</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="transport-item">
+                <i class="bi bi-taxi-front fs-3 text-warning mb-2"></i>
+                <h6 class="fw-semibold">Taxi/Remis</h6>
+                <p class="small text-muted">Parada cercana</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de CTA Final -->
+
+<section class="cta-bottom py-5 text-center bg-primary text-white">
+  <div class="container">
+    <h2 class="display-5 fw-bold mb-3">¿Listo para Cuidar tu Salud?</h2>
+    <p class="lead mb-4">Agenda tu turno online o contáctanos para más información.</p>
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+      <a href="mailto:info@consultorio.com" class="btn btn-light btn-lg cta-btn-custom shadow-lg">
+        <i class="bi bi-envelope-fill me-2"></i> Contáctanos
+      </a>
+      <a routerLink="/login" class="btn btn-outline-light btn-lg cta-btn-custom shadow-lg">
+        <i class="bi bi-calendar-check-fill me-2"></i> Agendar Turno Online
+      </a>
+    </div>
+  </div>
+</section>

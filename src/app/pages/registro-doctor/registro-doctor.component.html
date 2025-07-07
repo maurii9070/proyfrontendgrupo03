@@ -1,0 +1,328 @@
+<div
+  class="container d-flex align-items-center justify-content-center py-5 my-4"
+>
+  <div
+    class="card shadow-lg border-0"
+    style="max-width: 600px; width: 100%; border-radius: 15px"
+  >
+    <div
+      class="card-header text-center border-0 bg-white"
+      style="border-radius: 15px 15px 0 0"
+    >
+      <h2 class="mb-0 text-primary fw-bold">
+        <i class="fas fa-user-md me-2"></i>Registro de Doctor
+      </h2>
+      <p class="text-muted mt-2 mb-0">
+        Complete sus datos profesionales para crear su cuenta
+      </p>
+    </div>
+
+    <div class="card-body p-4">
+      <form (ngSubmit)="registrarDoctor()" #form="ngForm">
+        <!-- Nombre y Apellido en una fila -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-dark">
+              <i class="fas fa-user me-1 text-primary"></i>Nombre
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              name="nombre"
+              [(ngModel)]="doctor.nombre"
+              required
+              #nombre="ngModel"
+              placeholder="Ingrese su nombre"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
+            >
+              El nombre es obligatorio.
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-dark">
+              <i class="fas fa-user me-1 text-primary"></i>Apellido
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              name="apellido"
+              [(ngModel)]="doctor.apellido"
+              required
+              #apellido="ngModel"
+              placeholder="Ingrese su apellido"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)"
+            >
+              El apellido es obligatorio.
+            </div>
+          </div>
+        </div>
+
+        <!-- DNI y Matrícula en una fila -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-dark">
+              <i class="fas fa-id-card me-1 text-primary"></i>DNI
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              name="dni"
+              [(ngModel)]="doctor.dni"
+              required
+              pattern="^[0-9]{7,8}$"
+              #dni="ngModel"
+              placeholder="1234567 o 12345678"
+            />
+            <div class="form-text text-muted">
+              <i class="fas fa-info-circle me-1"></i>Entre 7 y 8 números sin
+              puntos ni letras.
+            </div>
+            <div
+              class="text-danger small mt-1"
+              *ngIf="dni.invalid && (dni.dirty || dni.touched)"
+            >
+              <div *ngIf="dni.errors?.['required']">El DNI es obligatorio.</div>
+              <div *ngIf="dni.errors?.['pattern']">
+                El DNI debe tener entre 7 y 8 números.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-dark">
+              <i class="fas fa-certificate me-1 text-primary"></i>Matrícula
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              name="matricula"
+              [(ngModel)]="doctor.matricula"
+              required
+              #matricula="ngModel"
+              placeholder="Número de matrícula"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="
+                matricula.invalid && (matricula.dirty || matricula.touched)
+              "
+            >
+              La matrícula es obligatoria.
+            </div>
+          </div>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="mb-3">
+          <label class="form-label fw-bold text-dark">
+            <i class="fas fa-phone me-1 text-primary"></i>Teléfono
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            name="telefono"
+            [(ngModel)]="doctor.telefono"
+            required
+            pattern="^388[0-9]{7}$"
+            #telefono="ngModel"
+            placeholder="3881234567"
+          />
+          <div class="form-text text-muted">
+            <i class="fas fa-info-circle me-1"></i>Debe comenzar con 388 y tener
+            10 dígitos en total.
+          </div>
+          <div
+            class="text-danger small mt-1"
+            *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
+          >
+            <div *ngIf="telefono.errors?.['required']">
+              El teléfono es obligatorio.
+            </div>
+            <div *ngIf="telefono.errors?.['pattern']">
+              El teléfono debe tener el formato 388xxxxxxx.
+            </div>
+          </div>
+        </div>
+
+        <!-- Especialidad y Precio en una fila -->
+        <div class="row mb-3">
+          <div class="col-md-8">
+            <label class="form-label fw-bold text-dark">
+              <i class="fas fa-stethoscope me-1 text-primary"></i>Especialidad
+            </label>
+            <select
+              class="form-select"
+              name="especialidad"
+              [(ngModel)]="doctor.especialidad"
+              required
+              #especialidad="ngModel"
+            >
+              <option value="">Seleccione una especialidad</option>
+              <option *ngFor="let esp of especialidades" [value]="esp._id">
+                {{ esp.nombre }} - {{ esp.descripcion }}
+              </option>
+            </select>
+            <div
+              class="text-danger small mt-1"
+              *ngIf="
+                especialidad.invalid &&
+                (especialidad.dirty || especialidad.touched)
+              "
+            >
+              La especialidad es obligatoria.
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold text-dark">
+              <i class="fas fa-dollar-sign me-1 text-primary"></i>Precio
+              Consulta
+            </label>
+            <input
+              type="number"
+              class="form-control"
+              name="precioConsulta"
+              [(ngModel)]="doctor.precioConsulta"
+              required
+              min="0"
+              #precioConsulta="ngModel"
+              placeholder="0"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="
+                precioConsulta.invalid &&
+                (precioConsulta.dirty || precioConsulta.touched)
+              "
+            >
+              <div *ngIf="precioConsulta.errors?.['required']">
+                El precio es obligatorio.
+              </div>
+              <div *ngIf="precioConsulta.errors?.['min']">
+                El precio debe ser mayor o igual a 0.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label fw-bold text-dark">
+            <i class="fas fa-envelope me-1 text-primary"></i>Email
+          </label>
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            [(ngModel)]="doctor.email"
+            required
+            pattern="^[^&#64;\s]+&#64;[^&#64;\s]+\.[^&#64;\s]+$"
+            #email="ngModel"
+            placeholder="doctor@hospital.com"
+          />
+          <div class="form-text text-muted">
+            <i class="fas fa-info-circle me-1"></i>Formato de correo electrónico
+            válido.
+          </div>
+          <div
+            class="text-danger small mt-1"
+            *ngIf="email.invalid && (email.dirty || email.touched)"
+          >
+            <div *ngIf="email.errors?.['required']">
+              El email es obligatorio.
+            </div>
+            <div *ngIf="email.errors?.['pattern']">
+              El email debe ser válido y contener un &#64;.
+            </div>
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-4">
+          <label class="form-label fw-bold text-dark">
+            <i class="fas fa-lock me-1 text-primary"></i>Contraseña
+          </label>
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            [(ngModel)]="doctor.password"
+            required
+            minlength="6"
+            #password="ngModel"
+            placeholder="Mínimo 6 caracteres"
+          />
+          <div class="form-text text-muted">
+            <i class="fas fa-info-circle me-1"></i>Mínimo 6 caracteres.
+          </div>
+          <div
+            class="text-danger small mt-1"
+            *ngIf="password.invalid && (password.dirty || password.touched)"
+          >
+            <div *ngIf="password.errors?.['required']">
+              La contraseña es obligatoria.
+            </div>
+            <div *ngIf="password.errors?.['minlength']">
+              La contraseña debe tener al menos 6 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="d-grid mb-3">
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg fw-bold py-3"
+            [disabled]="!form.valid || cargando"
+            style="
+              border-radius: 10px;
+              background: linear-gradient(45deg, #007bff, #0056b3);
+            "
+          >
+            <span
+              *ngIf="cargando"
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            <i class="fas fa-user-md me-2" *ngIf="!cargando"></i>
+            {{ cargando ? "Registrando..." : "Registrar Doctor" }}
+          </button>
+        </div>
+
+        <!-- Mensajes -->
+        <div class="mt-3">
+          <div
+            class="alert alert-success d-flex align-items-center"
+            *ngIf="mensaje"
+            style="border-radius: 10px"
+          >
+            <i class="fas fa-check-circle me-2"></i>
+            {{ mensaje }}
+          </div>
+          <div
+            class="alert alert-danger d-flex align-items-center"
+            *ngIf="error"
+            style="border-radius: 10px"
+          >
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ error }}
+          </div>
+        </div>
+
+        <!-- Link al login -->
+        <div class="text-center mt-3">
+          <p class="text-muted mb-0">
+            ¿Ya tienes cuenta?
+            <a href="/login" class="text-primary text-decoration-none fw-bold">
+              <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+            </a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

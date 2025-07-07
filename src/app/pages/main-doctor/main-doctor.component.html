@@ -1,0 +1,928 @@
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-12 col-lg-3">
+      <!-- Perfil Doctor a la izquierda -->
+      <div
+        class="perfil-section d-flex flex-column gap-3 p-4 bg-white rounded-3 shadow-sm"
+      >
+        <!-- Encabezado del perfil -->
+        <div class="d-flex align-items-center gap-4 mb-3">
+          <div>
+            <i
+              class="bi bi-person-badge text-primary"
+              style="font-size: 3.5rem"
+            ></i>
+          </div>
+          <div>
+            <h2 class="fw-bold mb-1">
+              {{ doctor.nombre }} {{ doctor.apellido }}
+            </h2>
+            <span class="badge bg-primary bg-opacity-10 text-primary"
+              >{{ doctor?.especialidad?.nombre || "Sin especialidad" }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Información de contacto -->
+        <div class="mb-3">
+          <h5 class="fw-semibold mb-3">
+            <i class="bi bi-info-circle text-primary me-2"></i>Información
+            personal
+          </h5>
+          <div class="ps-3">
+            <div class="d-flex align-items-center mb-2" *ngIf="doctor.email">
+              <i class="bi bi-envelope text-muted me-2" style="width: 24px"></i>
+              <span>{{ doctor.email }}</span>
+            </div>
+            <div class="d-flex align-items-center mb-2" *ngIf="doctor.dni">
+              <i class="bi bi-person text-muted me-2" style="width: 24px"></i>
+              <span>DNI: {{ doctor.dni }}</span>
+            </div>
+            <div class="d-flex align-items-center mb-2" *ngIf="doctor.telefono">
+              <i
+                class="bi bi-telephone text-muted me-2"
+                style="width: 24px"
+              ></i>
+              <span>Telefono: {{ doctor.telefono }}</span>
+            </div>
+            <div
+              class="d-flex align-items-center mb-2"
+              *ngIf="doctor.precioConsulta"
+            >
+              <i class="bi bi-cash text-muted me-2" style="width: 24px"></i>
+              <span>Precio consulta: ${{ doctor.precioConsulta }}</span>
+            </div>
+            <div
+              class="d-flex align-items-center mb-2"
+              *ngIf="doctor.matricula"
+            >
+              <i
+                class="bi bi-card-text text-muted me-2"
+                style="width: 24px"
+              ></i>
+              <span>Matricula: {{ doctor.matricula }}</span>
+            </div>
+          </div>
+        </div>
+        <!-- Acciones -->
+        <div class="mt-1">
+          <div class="d-grid gap-2">
+            <button
+              class="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2"
+              (click)="iniciarEdicionPerfil()"
+            >
+              <i class="bi bi-pencil-square"></i> Editar perfil
+            </button>
+            <button
+              class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2"
+              (click)="onForgotPassword(); $event.preventDefault()"
+            >
+              <i class="bi bi-key"></i> Cambiar contraseña
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Lista de turnos (columna derecha) -->
+    <div class="col-12 col-lg-9">
+      <div class="turnos-section bg-white p-4 rounded-3 shadow-sm h-100">
+        <!-- Encabezado con filtros -->
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom"
+        >
+          <div class="mb-3 mb-md-0">
+            <h2 class="mb-1 fw-bold d-flex align-items-center gap-2">
+              <i class="bi bi-calendar2-check text-primary"></i>
+              <span>Gestión de Turnos</span>
+            </h2>
+            <p class="text-muted small mb-0">
+              Administra los turnos de tus pacientes
+            </p>
+          </div>
+          <!-- filtros-->
+          <div class="d-flex flex-wrap gap-2">
+            <div class="col-12 col-md-6">
+              <input
+                type="number"
+                min="0"
+                [ngModel]="dni === 0 ? '' : dni"
+                (ngModelChange)="
+                  dni = $event === '' ? 0 : $event; paginaActual = 1
+                "
+                class="form-control text-primary mb-2"
+                placeholder="Buscar por DNI"
+              />
+            </div>
+            <div ngbDropdown class="d-inline-block">
+              <button
+                ngbDropdownToggle
+                class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2"
+                type="button"
+              >
+                <i class="bi bi-funnel"></i> Filtros
+              </button>
+              <ul ngbDropdownMenu class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <h6 class="dropdown-header">Estado del turno</h6>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    (click)="setFiltroEstado('todos'); $event.preventDefault()"
+                  >
+                    <i class="bi bi-circle-fill text-secondary me-2"></i
+                    >Todos</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    (click)="
+                      setFiltroEstado('pendiente'); $event.preventDefault()
+                    "
+                    ><i class="bi bi-circle-fill text-warning me-2"></i
+                    >Pendientes</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    (click)="
+                      setFiltroEstado('realizado'); $event.preventDefault()
+                    "
+                    ><i class="bi bi-circle-fill text-success me-2"></i
+                    >Realizados</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    (click)="
+                      setFiltroEstado('cancelado'); $event.preventDefault()
+                    "
+                    ><i class="bi bi-circle-fill text-danger me-2"></i
+                    >Cancelados</a
+                  >
+                </li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li>
+                  <h6 class="dropdown-header">Ordenar por</h6>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    (click)="setOrdenFecha('proxima'); $event.preventDefault()"
+                    ><i class="bi bi-sort-up-alt me-2"></i>Fecha más próxima</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    (click)="setOrdenFecha('lejana'); $event.preventDefault()"
+                    ><i class="bi bi-sort-down-alt me-2"></i>Fecha más lejana</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Listado de turnos -->
+        @if (tieneTurnos) {
+        <div class="table-responsive moda">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="text-center">Paciente</th>
+                <th scope="col" class="text-center">DNI</th>
+                <th scope="col" class="text-center">Fecha y Hora</th>
+                <th scope="col" class="text-center">Estado</th>
+                <th scope="col" class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (turno of turnosPaginaActual; track turno) {
+              <tr>
+                <td class="text-center">
+                  <div class="d-flex align-items-center gap-2">
+                    <div
+                      class="avatar-sm bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                    >
+                      <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div>
+                      <div class="fw-semibold">
+                        {{ turno.paciente.nombre }}
+                        {{ turno.paciente.apellido }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <i class="bi bi-info-circle text-primary me-2"></i
+                  >{{ turno.paciente.dni }}
+                </td>
+                <td class="text-center">
+                  <div class="d-flex flex-column">
+                    <span>{{ turno.fecha }}</span>
+                    <small class="text-muted"
+                      ><i class="bi bi-clock text-primary me-2"></i
+                      >{{ turno.hora }}</small
+                    >
+                  </div>
+                </td>
+                <td class="text-center">
+                  <span
+                    class="badge ms-1 d-flex text-center"
+                    [ngClass]="{
+                  'bg-warning': turno.estado === 'pendiente',
+                  'bg-info': turno.estado === 'confirmado',
+                  'bg-success': turno.estado === 'realizado',
+                  'bg-danger': turno.estado === 'cancelado',
+                }"
+                  >
+                    <i
+                      class="bi bi-circle-fill me-1"
+                      style="font-size: 0.5rem; position: relative; top: 2px"
+                    ></i>
+                    {{ turno.estado | titlecase }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex gap-3 justify-content-center">
+                    <button
+                      class="btn d-flex align-items-center gap-2"
+                      [ngClass]="
+                        turno.estado === 'cancelado'
+                          ? 'btn-secondary'
+                          : 'btn-outline-primary'
+                      "
+                      [disabled]="turno.estado === 'cancelado'"
+                      (click)="
+                        abrirModal(detalleTurnoModal, turno, 'lg', 'realizado')
+                      "
+                    >
+                      <i class="bi bi-eye"></i> Ver
+                    </button>
+
+                    <button
+                      class="btn d-flex align-items-center gap-2"
+                      [ngClass]="
+                        turno.estado === 'cancelado' ||
+                        turno.estado === 'realizado'
+                          ? 'btn-secondary'
+                          : 'btn-outline-success'
+                      "
+                      [disabled]="
+                        turno.estado === 'cancelado' ||
+                        turno.estado === 'realizado'
+                      "
+                      (click)="abrirModal(turnoModal, turno, 'md', 'realizado')"
+                    >
+                      <i class="bi bi-check-circle"></i> Realizado
+                    </button>
+
+                    <button
+                      class="btn d-flex align-items-center gap-2"
+                      [ngClass]="
+                        turno.estado === 'cancelado' ||
+                        turno.estado === 'realizado'
+                          ? 'btn-secondary'
+                          : 'btn-outline-danger'
+                      "
+                      [disabled]="
+                        turno.estado === 'cancelado' ||
+                        turno.estado === 'realizado'
+                      "
+                      (click)="abrirModal(turnoModal, turno, 'md', 'cancelar')"
+                    >
+                      <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- Paginación real -->
+        <nav
+          aria-label="Paginación de turnos"
+          class="mt-4"
+          *ngIf="totalPaginas > 1"
+        >
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="paginaActual === 1">
+              <a
+                class="page-link"
+                href="#"
+                (click)="
+                  cambiarPagina(paginaActual - 1); $event.preventDefault()
+                "
+                >Anterior</a
+              >
+            </li>
+            <li
+              class="page-item"
+              *ngFor="let p of paginasParaMostrar()"
+              [class.active]="p === paginaActual"
+            >
+              <a
+                class="page-link"
+                href="#"
+                (click)="cambiarPagina(p); $event.preventDefault()"
+                >{{ p }}</a
+              >
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="paginaActual === totalPaginas"
+            >
+              <a
+                class="page-link"
+                href="#"
+                (click)="
+                  cambiarPagina(paginaActual + 1); $event.preventDefault()
+                "
+                >Siguiente</a
+              >
+            </li>
+          </ul>
+        </nav>
+        } @else {
+        <!-- Estado vacío -->
+        <div
+          class="d-flex flex-column align-items-center justify-content-center py-5 text-center"
+        >
+          <div class="bg-opacity-10 p-4 mb-2">
+            <i
+              class="bi bi-calendar-x text-primary"
+              style="font-size: 5rem"
+            ></i>
+          </div>
+          <h3 class="fw-semibold mb-2">No hay turnos programados</h3>
+          <p class="text-muted mb-4">
+            Actualmente no tienes turnos agendados para mostrar
+          </p>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Modal para detalles del turno -->
+    <ng-template #detalleTurnoModal let-modal>
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-calendar2-check me-2"></i>Detalles del Turno #{{
+            turno._id.substring(0, 8) || "N/A"
+          }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          aria-label="Close"
+          (click)="modal.close()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <h6 class="text-primary fw-bold border-bottom pb-2">
+                <i class="bi bi-calendar2-event me-2"></i>Información del Turno
+              </h6>
+              <div class="row">
+                <div class="col-6">
+                  <p class="mb-1"><span class="fw-semibold">Fecha:</span></p>
+                  <p>{{ turno.fecha | date : "dd/MM/yyyy" }}</p>
+                </div>
+                <div class="col-6">
+                  <p class="mb-1"><span class="fw-semibold">Hora:</span></p>
+                  <p>{{ turno.hora }} hs</p>
+                </div>
+              </div>
+              <p class="mb-1"><span class="fw-semibold">Estado:</span></p>
+              <span
+                class="badge rounded-pill mb-2"
+                [ngClass]="{
+                  'bg-success': turno.estado === 'realizado',
+                  'bg-warning text-dark': turno.estado === 'pendiente',
+                  'bg-danger': turno.estado === 'cancelado'
+                }"
+              >
+                <i
+                  class="bi me-1"
+                  [ngClass]="{
+                    'bi-check-circle': turno.estado === 'realizado',
+                    'bi-hourglass-split': turno.estado === 'pendiente',
+                    'bi-x-circle': turno.estado === 'cancelado'
+                  }"
+                ></i>
+                {{ turno.estado | titlecase }}
+              </span>
+            </div>
+            <div class="col-md-6">
+              <h6 class="text-primary fw-bold border-bottom pb-2">
+                <i class="bi bi-person-badge me-2"></i>Profesional
+              </h6>
+              <p class="mb-1">
+                <span class="fw-semibold">Nombre:</span>
+                {{ turno.doctor.nombre }} {{ turno.doctor.apellido }}
+              </p>
+              <p class="mb-1">
+                <span class="fw-semibold">Especialidad:</span>
+                {{ turno.doctor.especialidad.nombre }}
+              </p>
+              <p class="mb-1">
+                <span class="fw-semibold">Matrícula:</span>
+                {{ turno.doctor.matricula }}
+              </p>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <h6 class="text-primary fw-bold border-bottom pb-2">
+                <i class="bi bi-person-heart me-2"></i>Paciente
+              </h6>
+              <p class="mb-1">
+                <span class="fw-semibold">Nombre:</span>
+                {{ turno.paciente.nombre }} {{ turno.paciente.apellido }}
+              </p>
+              <p class="mb-1">
+                <span class="fw-semibold">DNI:</span> {{ turno.paciente.dni }}
+              </p>
+              <p class="mb-1">
+                <span class="fw-semibold">Teléfono:</span>
+                {{ turno.paciente.telefono || "N/A" }}
+              </p>
+              <p class="mb-1">
+                <span class="fw-semibold">Fecha de nacimiento:</span>
+                {{ turno.paciente.fechaNacimiento | date : "dd/MM/yyyy" }}
+              </p>
+              <p class="mb-1">
+                <span class="fw-semibold">Correo electrónico:</span>
+                {{ turno.paciente.email }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <h6 class="text-primary fw-bold border-bottom pb-2">
+                <i class="bi bi-card-text me-2"></i>Observaciones
+              </h6>
+              <div *ngIf="!editandoObservacion">
+                <div
+                  *ngIf="turno.observaciones; else sinObservaciones"
+                  class="p-3 bg-light rounded border"
+                >
+                  <p class="mb-0">{{ turno.observaciones }}</p>
+                </div>
+                <ng-template #sinObservaciones>
+                  <div class="text-muted fst-italic">
+                    No hay observaciones registradas
+                  </div>
+                </ng-template>
+                <button
+                  class="btn btn-outline-success btn-sm mt-2"
+                  (click)="iniciarEdicionObservacion()"
+                >
+                  <i class="bi bi-pencil-square me-1"></i> Editar
+                </button>
+              </div>
+              <div
+                *ngIf="editandoObservacion"
+                class="p-3 bg-light rounded border"
+              >
+                <textarea
+                  class="form-control mb-2"
+                  [(ngModel)]="observacionEdit"
+                  rows="3"
+                ></textarea>
+                <div class="d-flex gap-2">
+                  <button
+                    class="btn btn-success btn-sm"
+                    [disabled]="guardandoObservacion"
+                    (click)="guardarObservacion()"
+                  >
+                    <i class="bi bi-check-circle me-1"></i> Guardar
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    [disabled]="guardandoObservacion"
+                    (click)="cancelarEdicionObservacion()"
+                  >
+                    <i class="bi bi-x-lg me-1"></i> Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección de archivos del paciente -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div
+                class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3"
+              >
+                <h6 class="text-primary fw-bold mb-0">
+                  <i class="bi bi-files me-2"></i>Archivos del Turno
+                </h6>
+                <!-- Input file oculto para archivos médicos -->
+                <input
+                  #fileInputMedico
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                  style="display: none"
+                  (change)="onArchivoMedicoSeleccionado($event)"
+                />
+                <button
+                  class="btn btn-outline-primary btn-sm"
+                  [disabled]="subiendoArchivoMedico"
+                  (click)="iniciarSubidaArchivoMedico()"
+                >
+                  @if (subiendoArchivoMedico) {
+                  <span
+                    class="spinner-border spinner-border-sm me-1"
+                    role="status"
+                  ></span>
+                  Subiendo... } @else {
+                  <i class="bi bi-cloud-upload me-1"></i> Subir Archivo }
+                </button>
+              </div>
+
+              @if (turno.archivos && turno.archivos.length > 0) {
+              <div class="row">
+                @for (archivo of turno.archivos; track archivo.url) {
+                <div class="col-md-6 mb-2">
+                  <div class="card border-light">
+                    <div class="card-body py-2 px-3">
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <div class="d-flex align-items-center">
+                          <i
+                            class="me-2"
+                            style="font-size: 1.2rem"
+                            [ngClass]="getIconoTipo()"
+                            title="Archivo"
+                          ></i>
+                          <div>
+                            <div class="small fw-medium">
+                              {{ archivo.nombre || "Archivo sin nombre" }}
+                            </div>
+                            <small class="text-muted">{{ archivo.tipo }}</small>
+                          </div>
+                        </div>
+                        <div class="d-flex gap-1">
+                          <button
+                            class="btn btn-outline-primary btn-sm"
+                            (click)="verArchivo(archivo.url)"
+                            title="Ver archivo"
+                          >
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <button
+                            class="btn btn-outline-danger btn-sm"
+                            (click)="eliminarArchivoMedico(archivo)"
+                            title="Eliminar archivo"
+                          >
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
+              </div>
+              } @else {
+              <div class="text-center py-3">
+                <div class="text-muted">
+                  <i class="bi bi-file-earmark-x" style="font-size: 2rem"></i>
+                  <p class="mt-2 mb-0 small">No hay archivos disponibles</p>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          (click)="modal.close()"
+        >
+          <i class="bi bi-x-lg me-1"></i> Cerrar
+        </button>
+      </div>
+    </ng-template>
+
+    <!-- Modal de confirmación/cancelación de turno -->
+    <ng-template #turnoModal let-modal>
+      <div class="modal-content rounded-4 border-0">
+        <div
+          class="modal-header {{
+            modalModo === 'realizado'
+              ? 'bg-success bg-opacity-25 border-0 rounded-top-4'
+              : 'bg-danger bg-opacity-25 border-0 rounded-top-4'
+          }}"
+        >
+          <h5
+            class="modal-title {{
+              modalModo === 'realizado' ? 'text-success' : 'text-danger'
+            }} d-flex align-items-center gap-2"
+            id="modalConfirmarTurnoLabel"
+          >
+            <i
+              class="{{
+                modalModo === 'realizado'
+                  ? 'bi bi-check-circle-fill'
+                  : 'bi bi-x-circle-fill'
+              }}"
+            ></i
+            >{{ modalModo === "realizado" ? "Realizar" : "Cancelar" }} Turno
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="modal.close()"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+        <div class="modal-body py-3">
+          <p class="mb-3 fw-semibold">
+            ¿Está seguro que desea
+            {{ modalModo === "realizado" ? "realizar" : "cancelar" }} este
+            turno?
+          </p>
+          <!-- Sección de información del turno -->
+          <div class="card mb-3 border-primary border-opacity-25">
+            <div class="card-body p-3">
+              <h6
+                class="card-title {{
+                  modalModo === 'realizado' ? 'text-success' : 'text-danger'
+                }} mb-2"
+              >
+                Detalles del Turno
+              </h6>
+              <ul class="list-unstyled mb-0 small">
+                <li class="d-flex justify-content-between">
+                  <span class="text-muted">Fecha:</span>
+                  <span>{{ turno.fecha | date : "dd/MM/yyyy" }}</span>
+                </li>
+                <li class="d-flex justify-content-between">
+                  <span class="text-muted">Hora:</span>
+                  <span>{{ turno.hora }}</span>
+                </li>
+                <li class="d-flex justify-content-between">
+                  <span class="text-muted">Estado actual:</span>
+                  <span
+                    class="badge ms-1 d-flex text-center"
+                    [ngClass]="{
+                  'bg-warning': turno.estado === 'pendiente',
+                }"
+                  >
+                    <i
+                      class="bi bi-circle-fill me-1"
+                      style="font-size: 0.5rem; position: relative; top: 2px"
+                    ></i>
+                    {{ turno.estado | titlecase }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Sección de datos del paciente -->
+          <div class="card mb-3 border-primary border-opacity-25">
+            <div class="card-body p-3">
+              <h6
+                class="card-title {{
+                  modalModo === 'realizado' ? 'text-success' : 'text-danger'
+                }} mb-2"
+              >
+                Datos del Paciente
+              </h6>
+              <ul class="list-unstyled mb-0 small">
+                <li class="d-flex justify-content-between">
+                  <span class="text-muted">Nombre:</span>
+                  <span
+                    >{{ turno.paciente.nombre }}
+                    {{ turno.paciente.apellido }}</span
+                  >
+                </li>
+                <li class="d-flex justify-content-between">
+                  <span class="text-muted">DNI:</span>
+                  <span>{{ turno.paciente.dni }}</span>
+                </li>
+                <li class="d-flex justify-content-between">
+                  <span class="text-muted">Teléfono:</span>
+                  <span>{{ turno.paciente.telefono }}</span>
+                </li>
+                <li class="d-flex justify-content-between">
+                  <span class="text-muted">Email:</span>
+                  <span>{{ turno.paciente.email }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="alert alert-warning small py-2 mb-0">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            Esta acción no se puede deshacer. Verifique los datos antes de
+            {{ modalModo === "realizado" ? "realizar" : "cancelar" }} el turno.
+          </div>
+        </div>
+        <div
+          class="modal-footer d-flex justify-content-between border-0 pb-3 pt-0"
+        >
+          <div>
+            <button
+              type="button"
+              class="btn d-flex align-items-center gap-2 btn-outline-secondary px-3"
+              (click)="modal.close()"
+            >
+              <i class="bi bi-arrow-left"></i> Volver
+            </button>
+          </div>
+          <div class="d-flex gap-3 justify-content-end me-4">
+            <button
+              *ngIf="modalModo === 'realizado'"
+              type="button"
+              class="btn d-flex align-items-center gap-2 btn-outline-success px-3"
+              (click)="confirmarRealizarTurno()"
+            >
+              <i class="bi bi-check-circle"></i> Realizar
+            </button>
+            <button
+              *ngIf="modalModo === 'cancelar'"
+              type="button"
+              class="btn d-flex align-items-center gap-2 btn-outline-danger px-3"
+              (click)="confirmarCancelarTurno()"
+            >
+              <i class="bi bi-x-circle"></i> Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- Modal de edición de perfil -->
+<div
+  class="modal fade"
+  [class.show]="editandoPerfil"
+  [style.display]="editandoPerfil ? 'block' : 'none'"
+  tabindex="-1"
+  *ngIf="editandoPerfil"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil-square text-primary me-2"></i>
+          Editar Perfil
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="cancelarEdicionPerfil()"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form #perfilForm="ngForm" (ngSubmit)="guardarPerfil()" novalidate>
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="bi bi-envelope text-primary me-1"></i>Email
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              [(ngModel)]="doctorEdit.email"
+              required
+              pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$"
+              #email="ngModel"
+              placeholder="doctor@hospital.com"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="email.invalid && (email.dirty || email.touched)"
+            >
+              <div *ngIf="email.errors?.['required']">
+                El email es obligatorio.
+              </div>
+              <div *ngIf="email.errors?.['pattern']">
+                El email debe ser válido.
+              </div>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="bi bi-telephone text-primary me-1"></i>Teléfono
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              name="telefono"
+              [(ngModel)]="doctorEdit.telefono"
+              required
+              pattern="^388[0-9]{7}$"
+              #telefono="ngModel"
+              placeholder="3881234567"
+            />
+            <div class="form-text text-muted">
+              <i class="bi bi-info-circle me-1"></i>Debe comenzar con 388 y
+              tener 10 dígitos en total.
+            </div>
+            <div
+              class="text-danger small mt-1"
+              *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
+            >
+              <div *ngIf="telefono.errors?.['required']">
+                El teléfono es obligatorio.
+              </div>
+              <div *ngIf="telefono.errors?.['pattern']">
+                El teléfono debe tener el formato 388xxxxxxx.
+              </div>
+            </div>
+          </div>
+
+          <!-- Precio de consulta -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="bi bi-currency-dollar text-primary me-1"></i>Precio de
+              Consulta
+            </label>
+            <input
+              type="number"
+              class="form-control"
+              name="precioConsulta"
+              [(ngModel)]="doctorEdit.precioConsulta"
+              required
+              min="0"
+              #precioConsulta="ngModel"
+              placeholder="0"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="
+                precioConsulta.invalid &&
+                (precioConsulta.dirty || precioConsulta.touched)
+              "
+            >
+              <div *ngIf="precioConsulta.errors?.['required']">
+                El precio es obligatorio.
+              </div>
+              <div *ngIf="precioConsulta.errors?.['min']">
+                El precio debe ser mayor o igual a 0.
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelarEdicionPerfil()"
+          [disabled]="guardandoPerfil"
+        >
+          <i class="bi bi-x-circle me-1"></i>Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="guardarPerfil()"
+          [disabled]="guardandoPerfil"
+        >
+          <span
+            *ngIf="guardandoPerfil"
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+          <i class="bi bi-check-circle me-1" *ngIf="!guardandoPerfil"></i>
+          {{ guardandoPerfil ? "Guardando..." : "Guardar Cambios" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop del modal -->
+<div
+  class="modal-backdrop fade"
+  [class.show]="editandoPerfil"
+  *ngIf="editandoPerfil"
+></div>

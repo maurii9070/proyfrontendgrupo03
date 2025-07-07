@@ -1,0 +1,98 @@
+/* Estilos para las cards de especialidades */
+.card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Gradiente para el ícono de especialidad */
+.bg-primary.bg-gradient {
+  background: linear-gradient(135deg, var(--bs-primary), #0056b3);
+}
+
+/* Badge de contador de profesionales */
+.badge.bg-primary.bg-opacity-10 {
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Cards de profesionales */
+.bg-light {
+  background-color: #f8f9fa !important;
+  transition: background-color 0.2s ease;
+}
+
+.bg-light:hover {
+  background-color: #e9ecef !important;
+}
+
+/* Botones */
+.btn-outline-primary:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+/* Texto principal */
+.text-dark {
+  color: #2c3e50 !important;
+}
+
+/* Bordes */
+.border-top {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Animación para el spinner de carga */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Estados de hover para elementos interactivos */
+.card:hover .btn-outline-primary {
+  background-color: var(--bs-primary);
+  color: white;
+  border-color: var(--bs-primary);
+}
+
+/* Mejora visual para el estado vacío */
+.display-1 {
+  font-size: 4rem;
+}
+
+/* Animación sutil para los íconos */
+.bi {
+  transition: transform 0.2s ease;
+}
+
+.card:hover .bi-eye {
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .col-md-6 .d-flex {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .col-md-6 .flex-shrink-0 {
+    align-self: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem !important;
+  }
+  
+  .badge.bg-primary.bg-opacity-10 {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+

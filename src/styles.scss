@@ -34,22 +34,26 @@
   $spacer: 1rem
 );
 
-// Colores adicionales personalizados
-$purple: #8b5cf6;
-$pink: #ec4899;
-$orange: #f97316;
-$teal: #14b8a6;
-$indigo: #6366f1;
+// Importar Bootstrap Icons
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
-// Personalización de sombras
-$box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+// Definir variables personalizadas DESPUÉS de importar Bootstrap
+// para evitar conflictos
+$purple-custom: #8b5cf6;
+$pink-custom: #ec4899;
+$orange-custom: #f97316;
+$teal-custom: #14b8a6;
+$indigo-custom: #6366f1;
+
+// Sombras personalizadas (con nombres únicos)
+$custom-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
   0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+$custom-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$custom-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
   0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
-// Personalización de transiciones
-$transition-base: all 0.2s ease-in-out;
+// Transición personalizada
+$custom-transition: all 0.2s ease-in-out;
 
 /* Estilos personalizados adicionales */
 body {
@@ -59,53 +63,74 @@ body {
 
 /* Clases utilitarias personalizadas */
 .btn-custom {
-  background-color: $purple;
-  border-color: $purple;
+  background-color: $purple-custom;
+  border-color: $purple-custom;
   color: white;
 
   &:hover {
-    background-color: color.adjust($purple, $lightness: -10%);
-    border-color: color.adjust($purple, $lightness: -10%);
+    background-color: color.adjust($purple-custom, $lightness: -10%);
+    border-color: color.adjust($purple-custom, $lightness: -10%);
   }
 }
 
 .text-purple {
-  color: $purple !important;
+  color: $purple-custom !important;
 }
 .text-pink {
-  color: $pink !important;
+  color: $pink-custom !important;
 }
 .text-orange {
-  color: $orange !important;
+  color: $orange-custom !important;
 }
 .text-teal {
-  color: $teal !important;
+  color: $teal-custom !important;
 }
 
 .bg-purple {
-  background-color: $purple !important;
+  background-color: $purple-custom !important;
 }
 .bg-pink {
-  background-color: $pink !important;
+  background-color: $pink-custom !important;
 }
 .bg-orange {
-  background-color: $orange !important;
+  background-color: $orange-custom !important;
 }
 .bg-teal {
-  background-color: $teal !important;
+  background-color: $teal-custom !important;
 }
 
 /* Estilos para mejorar la apariencia general */
 .card {
-  box-shadow: $box-shadow;
-  transition: $transition-base;
+  box-shadow: $custom-shadow;
+  transition: $custom-transition;
 
   &:hover {
-    box-shadow: $box-shadow-lg;
+    box-shadow: $custom-shadow-lg;
     transform: translateY(-2px);
   }
 }
 
 .btn {
-  transition: $transition-base;
+  transition: $custom-transition;
+}
+
+/* Sticky Footer - Para que el footer siempre esté abajo */
+html, body {
+  height: 100%;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* El contenido principal debe expandirse para empujar el footer hacia abajo */
+router-outlet + * {
+  flex: 1;
+}
+
+/* Alternativamente, si el router-outlet no funciona, usar esta clase en el main content */
+.main-content {
+  flex: 1;
 }

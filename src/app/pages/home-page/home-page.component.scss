@@ -1,0 +1,437 @@
+ /* hero section */
+
+.hero-section {
+    background-image: url('https://centrichealthcare.org/wp-content/uploads/2021/09/z.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative; 
+    min-height: 450px; 
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 3.2em;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        
+        @media (min-width: 768px) { 
+            font-size: 3.8em; 
+        }
+    }
+
+    p {
+        font-size: 1.1em;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        
+        @media (min-width: 768px) {
+            font-size: 1.4em;
+        }
+    }
+
+.search-bar {
+    max-width: 500px;
+    margin: 0 auto;
+
+    .form-control {
+        border-top-left-radius: 2rem !important; 
+        border-bottom-left-radius: 2rem !important;
+        padding: 0.8rem 1.5rem; 
+        font-size: 1.05em;
+    }
+    .btn-primary {
+        border-top-right-radius: 2rem !important; 
+        border-bottom-right-radius: 2rem !important;
+        padding: 0.8rem 1.5rem;
+        font-size: 1.05em;
+    }
+}
+} 
+
+
+/* section servicios */
+/* Cards de Servicios */
+.service-cards {
+    background-color: var(--bs-gray-100);
+
+    h2 {
+        color: var(--bs-primary);
+        cursor: default;
+    }
+
+    .service-card {
+        border: none;
+        border-radius: var(--bs-border-radius-lg);
+        box-shadow: var(--bs-box-shadow-sm);
+        position: relative; 
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: default; 
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .card-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 3.8em;
+            color: var(--bs-primary);
+            transition: color 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 1.35em;
+            font-weight: var(--bs-font-weight-bold);
+            color: var(--bs-dark);
+            transition: color 0.3s ease;
+        }
+
+        .card-text {
+            font-size: 0.95em;
+            color: var(--bs-secondary);
+            transition: color 0.3s ease;
+        }
+
+        // Enlace invisible que cubre toda la tarjeta
+        .card-link-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        &:hover {
+            transform: translateY(-0.5rem);
+            background-color: var(--bs-primary);
+            box-shadow: var(--bs-box-shadow);
+            
+            .card-icon,
+            .card-title,
+            .card-text {
+                color: var(--bs-white);
+            }
+        }
+    }
+}
+
+/* Sección "Información para Pacientes" y Portal Paciente */
+
+.patient-info {
+    background: linear-gradient(135deg, var(--bs-light) 0%, var(--bs-info-bg-subtle) 100%); 
+    border-top: 1px solid var(--bs-gray-200);
+    
+    .text-dark-blue {
+        color: var(--bs-dark); 
+    }
+    
+    .text-dark-gray {
+        color: var(--bs-secondary);
+    }
+    
+    h2 {
+        font-size: 2.5em;
+        @media (min-width: 768px) {
+            font-size: 3em;
+        }
+    }
+    
+    p.lead {
+        font-size: 1.1em;
+        line-height: 1.7;
+    }
+    
+    .info-link-btn {
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    
+        span {
+            font-size: 1.05em;
+        }
+    
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--bs-box-shadow) !important;
+            border-color: var(--bs-primary); 
+            .text-info-emphasis {
+                color: var(--bs-primary) !important; 
+            }
+        }
+    }
+    
+    .portal-btn {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--bs-box-shadow-lg) !important;
+        }
+    }
+    
+    img {
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: var(--bs-border-radius-4); 
+        animation: pulse 2s infinite ease-in-out;
+    }
+}
+    
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: var(--bs-box-shadow-lg);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: var(--bs-box-shadow-lg);
+    }
+}
+
+/* Sección Profesionales y Especialidades */
+.professionals-specialties {
+    background: linear-gradient(135deg, var(--bs-white) 0%, var(--bs-light) 100%); 
+
+    h2 {
+        color: var(--bs-dark);
+    }
+
+    .feature-block {
+        background-color: var(--bs-white); 
+        border-radius: var(--bs-border-radius-4); 
+        box-shadow: var(--bs-box-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        min-height: 400px; 
+
+        .feature-icon {
+            font-size: 4em; 
+            line-height: 1;
+        }
+
+        h3 {
+            font-size: 2.2em;
+            color: var(--bs-dark);
+            @media (min-width: 768px) {
+                font-size: 2.8em;
+            }
+        }
+
+        p.lead {
+            font-size: 1.05em;
+            color: var(--bs-secondary);
+        }
+
+        .btn-outline-primary,
+        .btn-outline-success {
+            border-width: 2px; 
+            font-weight: var(--bs-font-weight-semibold); 
+        }
+
+        .feature-link-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        &:hover {
+            transform: translateY(-0.5rem);
+            box-shadow: var(--bs-box-shadow-lg);
+        }
+    }
+}
+
+
+
+/* Sección de Noticias */
+
+.news-section {
+    background-color: var(--bs-white);
+
+    h2 {
+        color: var(--bs-dark);
+    }
+
+    .news-card {
+        border: none; 
+        border-radius: var(--bs-border-radius-lg);
+        overflow: hidden;
+        box-shadow: var(--bs-box-shadow-sm);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        .news-img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.3s ease; 
+        }
+
+        .card-body {
+            padding: 1.5rem; 
+        }
+
+        .card-title {
+            font-size: 1.25em;
+            color: var(--bs-dark);
+            line-height: 1.4;
+        }
+
+        .card-text {
+            font-size: 0.9em;
+            color: var(--bs-secondary);
+        }
+
+        .btn-link {
+            padding: 0; 
+            font-size: 0.9em;
+            &:hover {
+                text-decoration: underline !important;
+            }
+        }
+
+        &:hover {
+            transform: translateY(-0.3rem);
+            box-shadow: var(--bs-box-shadow);
+            .news-img {
+                transform: scale(1.05); 
+            }
+        }
+    }
+}
+
+
+
+/* Sección de Testimonios/Comentarios de Pacientes */
+
+.testimonials-section {
+    background-color: var(--bs-info-bg-subtle);
+    color: var(--bs-info-text-emphasis);
+
+    h2 {
+        color: var(--bs-info-text-emphasis);
+    }
+
+    .testimonial-card {
+        background-color: var(--bs-white);
+        border: none;
+        border-radius: var(--bs-border-radius-4); 
+        box-shadow: var(--bs-box-shadow-sm);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--bs-dark);
+            font-size: 1.1em; 
+        }
+
+        .testimonial-avatar {
+            width: 60px; 
+            height: 60px;
+            object-fit: cover;
+            border: 2px solid var(--bs-primary);
+        }
+
+        .testimonial-author {
+            strong {
+                color: var(--bs-primary);
+            }
+            span {
+                font-size: 0.85em; 
+                color: var(--bs-secondary);
+            }
+        }
+
+        &:hover {
+            transform: translateY(-0.3rem);
+            box-shadow: var(--bs-box-shadow);
+        }
+    }
+}
+
+
+
+/* Sección de CTA (Call to Action) Final */
+
+.cta-bottom {
+    background-color: var(--bs-primary);
+    color: var(--bs-white);
+    padding: 60px 20px;
+
+    h2 {
+        color: var(--bs-white);
+        font-size: 2.5em;
+        @media (min-width: 768px) {
+            font-size: 3em;
+        }
+    }
+
+    p.lead {
+        font-size: 1.1em;
+        line-height: 1.7;
+    }
+
+    .cta-btn-custom {
+        min-width: 250px; 
+        font-size: 1.1em;
+        padding: 0.8rem 1.5rem;
+        transition: all 0.3s ease;
+        border-width: 2px; 
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--bs-box-shadow-lg) !important;
+        }
+    }
+
+    .btn-light {
+        color: var(--bs-primary);
+        &:hover {
+            background-color: var(--bs-white);
+            color: #3f39c2; 
+        }
+    }
+    .btn-outline-light {
+        color: var(--bs-white);
+        border-color: var(--bs-white);
+        &:hover {
+            background-color: var(--bs-white);
+            color: var(--bs-primary);
+        }
+    }
+}
+
+
